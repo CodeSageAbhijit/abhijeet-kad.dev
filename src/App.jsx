@@ -2,7 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Spline from "@splinetool/react-spline";
 
-import { About, Contact, Experience, Feedbacks, Hero, Navbar, Tech, Works, StarsCanvas } from "./components";
+import { About, Contact, Experience, Hero, Navbar, Tech, Works, StarsCanvas } from "./components";
 
 const SplineSection = () => {
   const hovered = useRef(false);
@@ -112,7 +112,6 @@ const App = () => {
 
         <Tech />
         <Works />
-        <Feedbacks />
         <div className='relative z-0'>
           <Contact />
           <StarsCanvas />
