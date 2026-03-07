@@ -1,5 +1,5 @@
 import React from "react";
-import Tilt from "react-tilt";
+import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 
 import { styles } from "../styles";
@@ -109,7 +109,7 @@ const BioTerminal = () => {
 
 /* ── Cyber service card ── */
 const ServiceCard = ({ index, title, icon }) => (
-  <Tilt className='xs:w-[220px] w-full' options={{ max: 20, scale: 1.04, speed: 500 }}>
+  <Tilt className='xs:w-[220px] w-full' tiltMaxAngleX={20} tiltMaxAngleY={20} scale={1.04} transitionSpeed={500}>
     <motion.div
       variants={fadeIn("right", "spring", index * 0.5, 0.75)}
       className="cyber-card"
