@@ -3,7 +3,7 @@
 const SESSION = {
   boot: [
     { type: "system", text: "Initializing session..." },
-    { type: "system", text: "Connected to abhijeet-kad.dev" },
+    { type: "system", text: "Connected to abhijit-kad.dev" },
     { type: "blank" },
   ],
   commands: [

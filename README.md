@@ -74,8 +74,8 @@ Make sure you have the following installed:
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/CodeSageAbhijit/abhijeet-kad.dev.git
-cd abhijeet-kad.dev
+git clone https://github.com/CodeSageAbhijit/abhijit-kad.dev.git
+cd abhijit-kad.dev
 ```
 
 ### Install Dependencies

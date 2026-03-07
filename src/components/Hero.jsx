@@ -83,7 +83,7 @@ const Hero = () => {
           letterSpacing: 3,
         }}>
           <span className="status-dot" />
-          SYSTEM ONLINE — abhijeet-kad.dev
+          SYSTEM ONLINE — abhijit-kad.dev
         </div>
         <div style={{
           height: 1, flex: 1,
@@ -175,7 +175,7 @@ const Hero = () => {
                 }}
                   onClick={isLeet ? () => window.open("https://leetcode.com/u/AbhijitKad/", "_blank") : undefined}
                   title={isLeet ? "View LeetCode profile" : undefined}
-                >>
+                >
                   <span style={{
                     fontFamily: "'Bebas Neue', sans-serif",
                     fontSize: 28, lineHeight: 1,
