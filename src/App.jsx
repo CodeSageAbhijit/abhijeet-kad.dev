@@ -7,6 +7,7 @@ import { About, Contact, Experience, Hero, Navbar, Tech, Works, StarsCanvas } fr
 const SplineSection = () => {
   const hovered = useRef(false);
   const [loading, setLoading] = useState(true);
+  const typed = useRef(false);
 
   useEffect(() => {
     const handler = (e) => {
@@ -18,17 +19,19 @@ const SplineSection = () => {
 
   const handleLoad = (splineApp) => {
     setLoading(false);
+    if (typed.current) return;   // prevent re-typing on hot-reload / re-mount
+    typed.current = true;
     const canvas = splineApp?.canvas;
     if (!canvas) return;
     const BOOT_TEXT = "Try this minigame for fun!";
     let i = 0;
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       const interval = setInterval(() => {
         if (i >= BOOT_TEXT.length) { clearInterval(interval); return; }
         const ch = BOOT_TEXT[i];
-        canvas.dispatchEvent(new KeyboardEvent("keydown", { key: ch, code: `Key${ch.toUpperCase()}`, bubbles: true, cancelable: true }));
+        canvas.dispatchEvent(new KeyboardEvent("keydown",  { key: ch, code: `Key${ch.toUpperCase()}`, bubbles: true, cancelable: true }));
         canvas.dispatchEvent(new KeyboardEvent("keypress", { key: ch, code: `Key${ch.toUpperCase()}`, bubbles: true, cancelable: true }));
-        canvas.dispatchEvent(new KeyboardEvent("keyup", { key: ch, code: `Key${ch.toUpperCase()}`, bubbles: true, cancelable: true }));
+        canvas.dispatchEvent(new KeyboardEvent("keyup",    { key: ch, code: `Key${ch.toUpperCase()}`, bubbles: true, cancelable: true }));
         i++;
       }, 140);
     }, 800);
