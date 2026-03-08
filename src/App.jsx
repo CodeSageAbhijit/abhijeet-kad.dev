@@ -23,9 +23,14 @@ const SplineSection = () => {
     typed.current = true;
     const canvas = splineApp?.canvas;
     if (!canvas) return;
-    const BOOT_TEXT = "Try this minigame for fun!";
+    const BOOT_TEXT = "$try this minigame for fun!";
     let i = 0;
     const timer = setTimeout(() => {
+      canvas.focus();
+      // Clear any persisted text from previous session
+      canvas.dispatchEvent(new KeyboardEvent("keydown",  { key: "Backspace", code: "Backspace", bubbles: true, cancelable: true }));
+      canvas.dispatchEvent(new KeyboardEvent("keypress", { key: "Backspace", code: "Backspace", bubbles: true, cancelable: true }));
+      canvas.dispatchEvent(new KeyboardEvent("keyup",    { key: "Backspace", code: "Backspace", bubbles: true, cancelable: true }));
       const interval = setInterval(() => {
         if (i >= BOOT_TEXT.length) { clearInterval(interval); return; }
         const ch = BOOT_TEXT[i];

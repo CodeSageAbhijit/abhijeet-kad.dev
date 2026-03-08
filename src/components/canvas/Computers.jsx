@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Spline from "@splinetool/react-spline";
 
 // Text to auto-type on the vintage PC screen when the scene first loads
-const BOOT_TEXT = "Try this minigame for fun!";
+const BOOT_TEXT = "$try this minigame for fun!";
 
 const ComputersCanvas = () => {
   const [loading, setLoading] = useState(true);
