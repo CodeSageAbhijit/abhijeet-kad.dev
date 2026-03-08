@@ -17,9 +17,18 @@ import {
   docker,
   afiml,
   irlLogo,
-  carrent,
-  jobit,
-  tripguide,
+  irlInventory,
+  irlInventory2,
+  irlInventory3,
+  miniCloud,
+  miniCloud2,
+  miniCloud3,
+  irlApp1,
+  irlApp2,
+  irlApp3,
+  mha1,
+  mha2,
+  mha3,
   threejs,
 } from "../assets";
 
@@ -200,67 +209,65 @@ const testimonials = [
 
 const projects = [
   {
-    name: "Car Rent",
+    name: "I&RL Inventory Dashboard",
+    type: "web",
     description:
-      "Web-based platform that allows users to search, book, and manage car rentals from various providers, providing a convenient and efficient solution for transportation needs.",
+      "Flutter + Firebase inventory management system for the Innovation & Robotics Lab. Tracks equipment requests, approvals, and stock levels — reducing manual tracking overhead by 80%.",
     tags: [
-      {
-        name: "react",
-        color: "blue-text-gradient",
-      },
-      {
-        name: "mongodb",
-        color: "green-text-gradient",
-      },
-      {
-        name: "tailwind",
-        color: "pink-text-gradient",
-      },
+      { name: "react", color: "blue-text-gradient" },
+      { name: "typescript", color: "green-text-gradient" },
+      { name: "firebase", color: "pink-text-gradient" },
+      { name: "vercel", color: "blue-text-gradient" },
     ],
-    image: carrent,
-    source_code_link: "https://github.com/",
+    images: [irlInventory, irlInventory2, irlInventory3],
+    source_code_link: "https://github.com/CodeSageAbhijit/irl_admin_dashboard",
+    live_link: "https://irl-admin-dashboard.vercel.app/",
   },
   {
-    name: "Job IT",
+    name: "Mini Cloud",
+    type: "web",
     description:
-      "Web application that enables users to search for job openings, view estimated salary ranges for positions, and locate available jobs based on their current location.",
+      "Converted old hard drives into a personal cloud system using a Raspberry Pi (Ubuntu), accessible over the internet via Ngrok tunneling and port forwarding. Built a simple web UI with Flask.",
     tags: [
-      {
-        name: "react",
-        color: "blue-text-gradient",
-      },
-      {
-        name: "restapi",
-        color: "green-text-gradient",
-      },
-      {
-        name: "scss",
-        color: "pink-text-gradient",
-      },
+      { name: "flask", color: "blue-text-gradient" },
+      { name: "raspberry-pi", color: "green-text-gradient" },
+      { name: "ngrok", color: "pink-text-gradient" },
+      { name: "html", color: "blue-text-gradient" },
+      { name: "css", color: "green-text-gradient" },
+      { name: "javascript", color: "pink-text-gradient" },
+      { name: "php", color: "blue-text-gradient" },
     ],
-    image: jobit,
-    source_code_link: "https://github.com/",
+    images: [miniCloud, miniCloud2, miniCloud3],
+    source_code_link: "https://github.com/CodeSageAbhijit/mini_cloud",
+    live_link: "https://minicloud.vercel.app/",
   },
   {
-    name: "Trip Guide",
+    name: "I&RL Inventory App",
+    type: "mobile",
     description:
-      "A comprehensive travel booking platform that allows users to book flights, hotels, and rental cars, and offers curated recommendations for popular destinations.",
+      "Flutter mobile app built for the Innovation & Robotics Lab robotics society to digitalise component borrowing. Features real-time request management, wishlist, and admin approval flow — actively serving 100+ students.",
     tags: [
-      {
-        name: "nextjs",
-        color: "blue-text-gradient",
-      },
-      {
-        name: "supabase",
-        color: "green-text-gradient",
-      },
-      {
-        name: "css",
-        color: "pink-text-gradient",
-      },
+      { name: "flutter", color: "blue-text-gradient" },
+      { name: "firebase", color: "green-text-gradient" },
+      { name: "dart", color: "pink-text-gradient" },
     ],
-    image: tripguide,
-    source_code_link: "https://github.com/",
+    images: [irlApp1, irlApp2, irlApp3],
+    source_code_link: "https://github.com/CodeSageAbhijit",
+    apk_link: "https://drive.google.com/file/d/1p0hH_cj27MMg9cqcek4tCIkWnKWME3z_/view?usp=drive_link",
+  },
+  {
+    name: "My Health App",
+    type: "mobile",
+    description:
+      "Freelance Flutter app connecting patients with psychiatrists, counselors, and wellness buddies. Features mood tracking, session booking, real-time chat, and a wallet system — serving 1000+ users via REST API backend.",
+    tags: [
+      { name: "flutter", color: "blue-text-gradient" },
+      { name: "rest-api", color: "green-text-gradient" },
+      { name: "dart", color: "pink-text-gradient" },
+    ],
+    images: [mha1, mha2, mha3],
+    source_code_link: "https://github.com/CodeSageAbhijit",
+    apk_blocked: true,
   },
 ];
 

@@ -24,9 +24,20 @@ import threejs from "./tech/threejs.svg";
 import afiml from "./company/AFIML.jpg";
 import irlLogo from "./company/irl_logo.jpeg";
 
-import carrent from "./carrent.png";
-import jobit from "./jobit.png";
-import tripguide from "./tripguide.png";
+import irlInventory from "./irl_inventory_1.png";
+import irlInventory2 from "./irl_inventory_2.png";
+import irlInventory3 from "./irl_inventory_3.png";
+import miniCloud from "./mini_cloud_1.png";
+import miniCloud2 from "./mini_cloud_2.png";
+import miniCloud3 from "./mini_cloud_3.png";
+
+import irlApp1 from "./irl_inventory_app/irl_inventory_1.png";
+import irlApp2 from "./irl_inventory_app/irl-inventory_2.png";
+import irlApp3 from "./irl_inventory_app/irl_inventory_3.png";
+
+import mha1 from "./mha_app/mha_app_1.png";
+import mha2 from "./mha_app/mha_app_2.png";
+import mha3 from "./mha_app/mha_app_3.png";
 
 export {
   logo,
@@ -52,7 +63,16 @@ export {
   threejs,
   afiml,
   irlLogo,
-  carrent,
-  jobit,
-  tripguide,
+  irlInventory,
+  irlInventory2,
+  irlInventory3,
+  miniCloud,
+  miniCloud2,
+  miniCloud3,
+  irlApp1,
+  irlApp2,
+  irlApp3,
+  mha1,
+  mha2,
+  mha3,
 };

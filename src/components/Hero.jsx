@@ -15,7 +15,7 @@ const ROLES = [
 const RED_ROLES = ["Penetration Tester"];
 
 const STATS = [
-  { val: "20+",  label: "Projects Built" },
+  { val: "10+",  label: "Projects Built" },
   { val: "eJPTv2", label: "Certified" },
   { val: "150+", label: "LeetCode Solved" },
   { val: "∞",   label: "Bugs Squashed" },
@@ -170,11 +170,11 @@ const Hero = () => {
                   background: isRedStat ? "rgba(230,48,48,0.05)" : isLeet ? "rgba(248,161,0,0.05)" : "rgba(158,255,0,0.04)",
                   border: isRedStat ? "1px solid rgba(230,48,48,0.22)" : isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgba(158,255,0,0.18)",
                   borderTop: isRedStat ? "2px solid rgba(230,48,48,0.65)" : isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgba(158,255,0,0.5)",
-                  cursor: isLeet ? "pointer" : "default",
+                  cursor: (isLeet || isRedStat) ? "pointer" : "default",
                   textDecoration: "none",
                 }}
-                  onClick={isLeet ? () => window.open("https://leetcode.com/u/AbhijitKad/", "_blank") : undefined}
-                  title={isLeet ? "View LeetCode profile" : undefined}
+                  onClick={isRedStat ? () => window.open("https://certs.ine.com/2f9a7d9f-48a7-451f-b2d2-17f45c5e2566#acc.hUf9P1VK", "_blank") : isLeet ? () => window.open("https://leetcode.com/u/AbhijitKad/", "_blank") : undefined}
+                  title={isRedStat ? "View eJPTv2 Certificate" : isLeet ? "View LeetCode profile" : undefined}
                 >
                   <span style={{
                     fontFamily: "'Bebas Neue', sans-serif",
