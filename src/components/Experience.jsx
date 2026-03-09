@@ -33,6 +33,11 @@ const ExperienceCard = ({ experience }) => {
     >
       <div>
         <h3 className='text-white text-[24px] font-bold'>{experience.title}</h3>
+        {experience.subtitle && (
+          <p style={{ margin: "4px 0 0", fontFamily: "'Share Tech Mono', monospace", fontSize: 13, color: "rgba(158,255,0,0.75)", letterSpacing: 1 }}>
+            {experience.subtitle}
+          </p>
+        )}
         <p
           className='text-secondary text-[16px] font-semibold'
           style={{ margin: 0 }}
