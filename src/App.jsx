@@ -2,7 +2,40 @@ import { BrowserRouter } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Spline from "@splinetool/react-spline";
 
-import { About, Contact, Experience, Hero, Navbar, Tech, Works, StarsCanvas } from "./components";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Experience from "./components/Experience";
+import Tech from "./components/Tech";
+import Works from "./components/Works";
+import Contact from "./components/Contact";
+import StarsCanvas from "./components/canvas/Stars";
+
+const ViewportRender = ({ children, minHeight = 0, rootMargin = "300px" }) => {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (visible) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { root: null, rootMargin, threshold: 0.01 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [visible, rootMargin]);
+
+  return <div ref={ref} style={{ minHeight }}>{visible ? children : null}</div>;
+};
 
 const SplineSection = () => {
   const hovered = useRef(false);
@@ -115,8 +148,10 @@ const App = () => {
         <About />
         <Experience />
 
-        {/* Spline interactive PC — between experience and tech stack */}
-        <SplineSection />
+        {/* Defer heavy Spline scene until it's near viewport */}
+        <ViewportRender minHeight={560} rootMargin="400px">
+          <SplineSection />
+        </ViewportRender>
 
         <Tech />
         <Works />

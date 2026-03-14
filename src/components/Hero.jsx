@@ -121,7 +121,7 @@ const Hero = () => {
           {/* Glitch Name */}
           <div
             className="glitch flicker"
-            data-text="ABHIJEET KAD"
+            data-text="Abhijeet Kad"
             style={{
               fontFamily: "'Bebas Neue', sans-serif",
               fontSize: "clamp(52px, 8vw, 96px)",
@@ -132,7 +132,7 @@ const Hero = () => {
               textShadow: "0 0 40px rgba(158,255,0,0.15)",
             }}
           >
-            ABHIJEET KAD
+            Abhijeet Kad
           </div>
 
           {/* Typewriter role */}

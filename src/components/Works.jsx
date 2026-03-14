@@ -58,6 +58,8 @@ const BrowserFrame = ({ images, name }) => {
             key={idx}
             src={images[idx]}
             alt={`${name} screenshot ${idx + 1}`}
+            loading="lazy"
+            decoding="async"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -103,6 +105,8 @@ const PhoneFrame = ({ images, name }) => {
             key={idx}
             src={images[idx]}
             alt={`${name} ${idx + 1}`}
+            loading="lazy"
+            decoding="async"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -150,7 +154,7 @@ const TerminalFrame = ({ image, name }) => (
         {name.toLowerCase().replace(/[^a-z0-9]+/g, "-")} — bash
       </span>
     </div>
-    <img src={image} alt={name} style={{ width: "100%", height: 300, objectFit: "cover", objectPosition: "top", display: "block" }} />
+    <img src={image} alt={name} loading="lazy" decoding="async" style={{ width: "100%", height: 300, objectFit: "cover", objectPosition: "top", display: "block" }} />
   </div>
 );
 
