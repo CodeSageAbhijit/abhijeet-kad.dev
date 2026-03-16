@@ -204,7 +204,7 @@ const Hero = () => {
             {[
               { icon: "✉", val: "abhijitkad62@gmail.com" },
               { icon: "⬡", val: "linkedin.com/in/abhijit-kad" },
-              { icon: "⌥", val: "+91 913729367" },
+              { icon: "⌥", val: "+91 9137292367" },
             ].map(({ icon, val }) => (
               <span key={val} style={{ display: "flex", alignItems: "center", gap: 5 }}>
                 <span style={{ color: "#9eff00" }}>{icon}</span>
