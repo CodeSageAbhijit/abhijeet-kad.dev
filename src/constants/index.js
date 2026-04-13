@@ -30,6 +30,11 @@ import {
   mha2,
   mha3,
   threejs,
+  rawTorrent3,
+  rawTorrent4,
+  rawTorrent5,
+  rawTorrent6,
+  rawTorrent7,
 } from "../assets";
 
 export const navLinks = [
@@ -187,6 +192,24 @@ const testimonials = [
 ];
 
 const projects = [
+  {
+    name: "RawTorrent",
+    type: "desktop",
+    description:
+      "A high-performance modern Desktop BitTorrent client built with web technologies but designed to operate seamlessly as a native desktop application. Implements an isomorphic, multi-process architecture with a Next.js frontend and a backend daemon powered by Node.js, Express, WebTorrent, and bittorrent-dht to bypass Electron memory constraints. Features granular protocol controls including geospatial swarm mapping, live WebSocket integration, and a dedicated sequential writing pipeline.",
+    tags: [
+      { name: "nextjs", color: "blue-text-gradient" },
+      { name: "electron", color: "green-text-gradient" },
+      { name: "nodejs", color: "pink-text-gradient" },
+      { name: "webtorrent", color: "blue-text-gradient" },
+      { name: "bittorrent-dht", color: "green-text-gradient" },
+      { name: "websockets", color: "pink-text-gradient" },
+      { name: "express", color: "blue-text-gradient" },
+    ],
+    images: [rawTorrent3, rawTorrent4, rawTorrent5, rawTorrent6, rawTorrent7],
+    source_code_link: "https://github.com/CodeSageAbhijit/raw-torrent",
+    exe_link: "https://github.com/CodeSageAbhijit/raw-torrent/releases/download/v0.1.0/RawTorrent.Setup.0.1.0.exe",
+  },
   {
     name: "I&RL Inventory Dashboard",
     type: "web",

@@ -10,9 +10,10 @@ import { textVariant } from "../utils/motion";
 const TYPE_CONFIG = {
   web:    { icon: "🌐", label: "Web App",    color: "#4fc3f7" },
   mobile: { icon: "📱", label: "Mobile App", color: "#9eff00" },
+  desktop:{ icon: "💻", label: "Desktop App", color: "#ffb700" },
 };
 
-const FILTERS = ["all", "web", "mobile"];
+const FILTERS = ["all", "web", "mobile", "desktop"];
 
 /* ── Browser frame with auto-slider ── */
 const BrowserFrame = ({ images, name }) => {
@@ -318,7 +319,7 @@ const Works = () => {
                   </button>
 
                   {/* Web: live button */}
-                  {current.type !== "mobile" && current.live_link && (
+                  {current.type === "web" && current.live_link && (
                     <button
                       onClick={() => window.open(current.live_link, "_blank")}
                       style={{
@@ -339,6 +340,25 @@ const Works = () => {
                         animation: "pulse-dot 1.4s ease-in-out infinite",
                       }} />
                       // live
+                    </button>
+                  )}
+
+                  {/* Desktop: exe download button */}
+                  {current.type === "desktop" && current.exe_link && (
+                    <button
+                      onClick={() => window.open(current.exe_link, "_blank")}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 8,
+                        fontFamily: "'Share Tech Mono', monospace",
+                        fontSize: 11, letterSpacing: 2, color: "#ffb700",
+                        background: "rgba(255,183,0,0.07)", border: "1px solid rgba(255,183,0,0.35)",
+                        padding: "7px 16px", cursor: "pointer", borderRadius: 4,
+                        flexShrink: 0, transition: "all 0.2s",
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = "rgba(255,183,0,0.18)"}
+                      onMouseLeave={e => e.currentTarget.style.background = "rgba(255,183,0,0.07)"}
+                    >
+                      ↓ // download .exe
                     </button>
                   )}
 

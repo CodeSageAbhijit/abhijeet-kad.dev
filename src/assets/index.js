@@ -39,6 +39,13 @@ import mha1 from "./mha_app/mha_app_1.png";
 import mha2 from "./mha_app/mha_app_2.png";
 import mha3 from "./mha_app/mha_app_3.png";
 
+
+import rawTorrent3 from "./rawtorrent/3.png";
+import rawTorrent4 from "./rawtorrent/4.png";
+import rawTorrent5 from "./rawtorrent/5.png";
+import rawTorrent6 from "./rawtorrent/6.png";
+import rawTorrent7 from "./rawtorrent/7.png";
+
 export {
   logo,
   backend,
@@ -75,4 +82,9 @@ export {
   mha1,
   mha2,
   mha3,
+  rawTorrent3,
+  rawTorrent4,
+  rawTorrent5,
+  rawTorrent6,
+  rawTorrent7,
 };

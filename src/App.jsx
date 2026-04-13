@@ -45,19 +45,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <div className='relative z-0 bg-primary'>
-        {/* Global cyber grid */}
-        <div style={{
-          position: "fixed",
-          inset: 0,
-          backgroundImage: `linear-gradient(rgba(158,255,0,0.025) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(158,255,0,0.025) 1px, transparent 1px)`,
-          backgroundSize: "40px 40px",
-          pointerEvents: "none",
-          zIndex: 0,
-        }} />
 
-        {/* Global scanlines overlay */}
-        <div className="scanlines" />
 
         {/* Bottom edge glow */}
         <div style={{
