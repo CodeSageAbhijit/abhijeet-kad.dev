@@ -56,7 +56,7 @@ const HeroMobile = () => {
   const { text: role, isRed: roleIsRed } = useTypewriter(ROLES);
 
   return (
-    <section className="relative w-full min-h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center py-20 px-6">
+    <section className="relative w-full min-h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center pt-32 pb-20 px-6">
       {/* Deep radial glow */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
@@ -65,7 +65,7 @@ const HeroMobile = () => {
 
       {/* Status bar */}
       <div style={{
-        position: "absolute", top: 20, left: 0, right: 0,
+        position: "absolute", top: 86, left: 0, right: 0,
         display: "flex", alignItems: "center", justifyContent: "center",
         gap: 12, zIndex: 10, padding: "0 16px",
         fontSize: "10px",

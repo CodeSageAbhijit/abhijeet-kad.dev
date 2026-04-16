@@ -145,14 +145,28 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Mobile hamburger */}
-        <div className='sm:hidden flex flex-1 justify-end items-center'>
+        {/* Mobile hamburger & Prank (Right side) */}
+        <div className='flex sm:hidden flex-1 justify-end items-center gap-4'>
+          {/* Light Mode Prank Toggle for Mobile */}
+          <button
+            onClick={() => setPrankActive(true)}
+            title="Toggle Light Mode"
+            style={{
+              background: "transparent", border: "1px solid rgba(255, 235, 59, 0.4)", width: "32px", height: "32px", 
+              borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+              color: "#ffeb3b", transition: "all 0.3s ease",
+              boxShadow: "0 0 10px rgba(255, 235, 59, 0.1) inset"
+            }}
+          >
+            ☼
+          </button>
+
           <button
             onClick={() => setToggle(!toggle)}
             style={{ background: "none", border: "none", cursor: "pointer", padding: "4px" }}
           >
             <img src={toggle ? close : menu} alt='menu' className='w-[28px] h-[28px] object-contain'
-              style={{ filter: "invert(1) sepia(1) saturate(3) hue-rotate(60deg)" }} />
+              style={{ filter: "brightness(0) invert(1)" }} />
           </button>
 
           {toggle && (
@@ -198,3 +212,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

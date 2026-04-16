@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
-import Contact from "./components/Contact";
+import ContactMobile from "./components/ContactMobile";
 import SplineSectionMobile from "./components/SplineSectionMobile";
 
 import HeroMobile from "./components/HeroMobile";
@@ -65,7 +65,7 @@ const AppMobile = ({ isBooting }) => {
       <WorksMobile />
       
       <div className='relative z-0'>
-        <Contact isBooting={isBooting} />
+        <ContactMobile isBooting={isBooting} />
       </div>
 
       {/* Footer tailored for Mobile */}

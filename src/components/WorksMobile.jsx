@@ -13,7 +13,7 @@ const TYPE_CONFIG = {
 const FILTERS = ["all", "web", "mobile", "desktop"];
 
 /* Simple mobile-optimized image display */
-const SimpleImageCard = ({ images, name }) => {
+const SimpleImageCard = ({ images, name, type }) => {
   const [idx, setIdx] = React.useState(0);
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -25,29 +25,41 @@ const SimpleImageCard = ({ images, name }) => {
     return () => clearInterval(t);
   }, [images.length, isHovered]);
 
+  const isMobileApp = type === "mobile";
+
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="w-full rounded-lg overflow-hidden bg-black"
+      className="w-full rounded-t-lg overflow-hidden bg-[#0a0a0a]"
       style={{
-        border: "1px solid rgba(158,255,0,0.1)",
-        boxShadow: "0 0 20px rgba(158,255,0,0.04)",
+        borderBottom: "1px solid rgba(158,255,0,0.1)",
       }}
     >
       {/* Image container */}
-      <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
+      <div style={{ 
+        position: "relative", 
+        width: "100%", 
+        aspectRatio: isMobileApp ? "4/5" : "16/9",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: isMobileApp ? "radial-gradient(circle, #222 0%, #000 100%)" : "#000"
+      }}>
         <img
           src={images[idx]}
           alt={`${name} screenshot ${idx + 1}`}
           loading="lazy"
           decoding="async"
           style={{
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
+            width: isMobileApp ? "auto" : "100%",
+            height: isMobileApp ? "90%" : "100%",
+            objectFit: isMobileApp ? "contain" : "cover",
             objectPosition: "center",
             display: "block",
+            borderRadius: isMobileApp ? "12px" : "0",
+            boxShadow: isMobileApp ? "0 0 20px rgba(0,0,0,0.8)" : "none",
+            border: isMobileApp ? "2px solid #333" : "none"
           }}
         />
         {/* Image counter */}
@@ -108,13 +120,14 @@ const ProjectCard = ({ project, index }) => {
       viewport={{ once: true, amount: 0.2 }}
       style={{
         borderRadius: 12,
-        border: "1px solid rgba(158,255,0,0.1)",
-        background: "rgba(0,0,0,0.3)",
+        border: "1px solid rgba(158,255,0,0.15)",
+        background: "rgba(0,0,0,0.5)",
+        boxShadow: "0 0 20px rgba(158,255,0,0.05)",
         overflow: "hidden",
       }}
     >
       {/* Image */}
-      <SimpleImageCard images={images} name={project.name} />
+      <SimpleImageCard images={images} name={project.name} type={project.type} />
 
       {/* Content */}
       <div style={{ padding: "16px" }}>
@@ -298,7 +311,7 @@ const WorksMobile = () => {
   const handleFilter = (f) => setFilter(f);
 
   return (
-    <div>
+    <div className="w-full px-6 py-10">
       <motion.div variants={textVariant()}>
         <p className={`${styles.sectionSubText}`}>// My work</p>
         <h2 className={`${styles.sectionHeadText}`}>Projects.</h2>
