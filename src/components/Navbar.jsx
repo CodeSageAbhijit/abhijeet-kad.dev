@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { styles } from "../styles";
 import { navLinks } from "../constants";
 import { menu, close } from "../assets";
+import LightModePrank from "./LightModePrank";
 
 const NAV_STYLE = {
   fontFamily: "'Share Tech Mono', monospace",
@@ -16,6 +17,7 @@ const Navbar = () => {
   const [active, setActive] = useState("");
   const [toggle, setToggle] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [prankActive, setPrankActive] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -123,6 +125,24 @@ const Navbar = () => {
               ONLINE
             </span>
           </li>
+          
+          {/* Light Mode Prank Toggle */}
+          <li>
+             <button
+                onClick={() => setPrankActive(true)}
+                title="Toggle Light Mode"
+                style={{
+                  background: "transparent", border: "1px solid rgba(255, 235, 59, 0.4)", width: "32px", height: "32px", 
+                  borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+                  color: "#ffeb3b", transition: "all 0.3s ease",
+                  boxShadow: "0 0 10px rgba(255, 235, 59, 0.1) inset"
+                }}
+                onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 15px rgba(255, 235, 59, 0.4) inset, 0 0 15px rgba(255, 235, 59, 0.4)"; e.currentTarget.style.borderColor = "#ffeb3b" }}
+                onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 0 10px rgba(255, 235, 59, 0.1) inset"; e.currentTarget.style.borderColor = "rgba(255, 235, 59, 0.4)" }}
+             >
+                ☼
+             </button>
+          </li>
         </ul>
 
         {/* Mobile hamburger */}
@@ -171,6 +191,8 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      
+      {prankActive && <LightModePrank onClose={() => setPrankActive(false)} />}
     </nav>
   );
 };

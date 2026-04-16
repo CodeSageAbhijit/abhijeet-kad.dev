@@ -7,7 +7,7 @@ import Experience from "./Experience";
 import Works from "./Works";
 import Contact from "./Contact";
 import CanvasLoader from "./Loader";
-
+import HireMeButton from "./HireMeButton";
 
 export {
   Hero,
@@ -18,6 +18,7 @@ export {
   Works,
   Contact,
   CanvasLoader,
+  HireMeButton,
   EarthCanvas, 
   BallCanvas, 
   ComputersCanvas, 

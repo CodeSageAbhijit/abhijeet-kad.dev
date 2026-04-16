@@ -17,13 +17,29 @@ const FILTERS = ["all", "web", "mobile", "desktop"];
 
 /* ── Browser frame with auto-slider ── */
 const BrowserFrame = ({ images, name }) => {
+  const scrollRef = React.useRef(null);
   const [idx, setIdx] = React.useState(0);
+  const [isHovered, setIsHovered] = React.useState(false);
 
   React.useEffect(() => {
-    if (images.length <= 1) return;
-    const t = setInterval(() => setIdx(i => (i + 1) % images.length), 3000);
+    if (images.length <= 1 || isHovered) return;
+    const t = setInterval(() => {
+      setIdx((prev) => {
+        const next = (prev + 1) % images.length;
+        if (scrollRef.current) {
+          scrollRef.current.scrollTo({ left: scrollRef.current.clientWidth * next, behavior: "smooth" });
+        }
+        return next;
+      });
+    }, 3000);
     return () => clearInterval(t);
-  }, []);
+  }, [images.length, isHovered]);
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const newIdx = Math.round(scrollRef.current.scrollLeft / scrollRef.current.clientWidth);
+    if (newIdx !== idx) setIdx(newIdx);
+  };
 
   return (
     <div style={{
@@ -31,7 +47,10 @@ const BrowserFrame = ({ images, name }) => {
       border: "1px solid rgba(79,195,247,0.2)",
       boxShadow: "0 0 60px rgba(79,195,247,0.06)",
       background: "#111",
-    }}>
+    }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div style={{
         background: "#1e1e1e", padding: "10px 16px",
         display: "flex", alignItems: "center", gap: 8,
@@ -54,27 +73,39 @@ const BrowserFrame = ({ images, name }) => {
         )}
       </div>
       <div style={{ position: "relative" }}>
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={idx}
-            src={images[idx]}
-            alt={`${name} screenshot ${idx + 1}`}
-            loading="lazy"
-            decoding="async"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ width: "100%", height: 300, objectFit: "cover", objectPosition: "top", display: "block" }}
-          />
-        </AnimatePresence>
+        <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
+        <div 
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="hide-scrollbar"
+          style={{ 
+            display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", 
+            scrollbarWidth: "none", msOverflowStyle: "none", scrollBehavior: "smooth",
+            height: 300, cursor: isHovered && images.length > 1 ? "grab" : "auto",
+            background: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"120\" height=\"40\" viewBox=\"0 0 120 40\"><text x=\"5\" y=\"20\" fill=\"%23333\" font-family=\"monospace\" font-size=\"10\">[loading_img...]</text></svg>') center center no-repeat"
+          }}
+        >
+          {images.map((src, i) => (
+             <div key={i} style={{ flex: "0 0 100%", width: "100%", height: "100%", scrollSnapAlign: "start" }}>
+               <img
+                 src={src}
+                 alt={`${name} screenshot ${i + 1}`}
+                 loading="lazy"
+                 decoding="async"
+                 style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
+               />
+             </div>
+          ))}
+        </div>
         {images.length > 1 && (
           <div style={{
             position: "absolute", bottom: 10, left: 0, right: 0,
             display: "flex", justifyContent: "center", gap: 6,
           }}>
             {images.map((_, i) => (
-              <button key={i} onClick={() => setIdx(i)} style={{
+              <button key={i} onClick={() => {
+                if (scrollRef.current) scrollRef.current.scrollTo({ left: scrollRef.current.clientWidth * i, behavior: "smooth" });
+              }} style={{
                 width: i === idx ? 20 : 6, height: 6, borderRadius: 3,
                 border: "none", padding: 0, cursor: "pointer",
                 background: i === idx ? "#4fc3f7" : "rgba(255,255,255,0.4)",
@@ -90,36 +121,68 @@ const BrowserFrame = ({ images, name }) => {
 
 /* ── Mobile mockup — display pre-rendered PNG directly ── */
 const PhoneFrame = ({ images, name }) => {
+  const scrollRef = React.useRef(null);
   const [idx, setIdx] = React.useState(0);
+  const [isHovered, setIsHovered] = React.useState(false);
 
   React.useEffect(() => {
-    if (images.length <= 1) return;
-    const t = setInterval(() => setIdx(i => (i + 1) % images.length), 3000);
+    if (images.length <= 1 || isHovered) return;
+    const t = setInterval(() => {
+      setIdx((prev) => {
+        const next = (prev + 1) % images.length;
+        if (scrollRef.current) {
+          scrollRef.current.scrollTo({ left: scrollRef.current.clientWidth * next, behavior: "smooth" });
+        }
+        return next;
+      });
+    }, 3000);
     return () => clearInterval(t);
-  }, []);
+  }, [images.length, isHovered]);
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const newIdx = Math.round(scrollRef.current.scrollLeft / scrollRef.current.clientWidth);
+    if (newIdx !== idx) setIdx(newIdx);
+  };
 
   return (
-    <div>
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div style={{ position: "relative", textAlign: "center" }}>
-        <AnimatePresence mode="wait">
-          <motion.img
-            key={idx}
-            src={images[idx]}
-            alt={`${name} ${idx + 1}`}
-            loading="lazy"
-            decoding="async"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            style={{ width: "100%", maxWidth: 480, display: "inline-block" }}
-          />
-        </AnimatePresence>
+        <style>{`.hide-scrollbar::-webkit-scrollbar { display: none; }`}</style>
+        <div 
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="hide-scrollbar"
+          style={{ 
+            display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", 
+            scrollbarWidth: "none", msOverflowStyle: "none", scrollBehavior: "smooth",
+            minHeight: 400, cursor: isHovered && images.length > 1 ? "grab" : "auto",
+            alignItems: "center",
+            background: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"120\" height=\"40\" viewBox=\"0 0 120 40\"><text x=\"5\" y=\"20\" fill=\"%23333\" font-family=\"monospace\" font-size=\"10\">[loading_img...]</text></svg>') center center no-repeat"
+          }}
+        >
+          {images.map((src, i) => (
+             <div key={i} style={{ flex: "0 0 100%", width: "100%", display: "flex", justifyContent: "center", scrollSnapAlign: "center" }}>
+               <img
+                 src={src}
+                 alt={`${name} ${i + 1}`}
+                 loading="lazy"
+                 decoding="async"
+                 style={{ width: "100%", maxWidth: 480, display: "block" }}
+               />
+             </div>
+          ))}
+        </div>
       </div>
       {images.length > 1 && (
         <div style={{ display: "flex", justifyContent: "center", gap: 6, marginTop: 12 }}>
           {images.map((_, i) => (
-            <button key={i} onClick={() => setIdx(i)} style={{
+            <button key={i} onClick={() => {
+              if (scrollRef.current) scrollRef.current.scrollTo({ left: scrollRef.current.clientWidth * i, behavior: "smooth" });
+            }} style={{
               width: i === idx ? 20 : 6, height: 6, borderRadius: 3,
               border: "none", padding: 0, cursor: "pointer",
               background: i === idx ? "#9eff00" : "rgba(255,255,255,0.2)",

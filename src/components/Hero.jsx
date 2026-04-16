@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { styles } from "../styles";
 import TerminalWidget from "./TerminalWidget";
+import HireMeButton from "./HireMeButton";
 
 const ROLES = [
   "Full Stack Developer",
@@ -103,7 +104,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex-1 flex flex-col justify-center"
+          className="flex-1 flex flex-col justify-center items-start"
           style={{ maxWidth: 580 }}
         >
           {/* Tag line */}
@@ -212,6 +213,8 @@ const Hero = () => {
               </span>
             ))}
           </div>
+
+          <HireMeButton />
         </motion.div>
 
         {/* ── RIGHT: Terminal ── */}
