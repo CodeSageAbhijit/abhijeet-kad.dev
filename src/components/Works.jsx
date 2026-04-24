@@ -353,7 +353,9 @@ const Works = () => {
               </div>
 
               {/* Device mockup */}
-              <DeviceFrame project={current} />
+              <div className={current.type === "mobile" ? "cyber-border cyber-card-hover rounded-lg overflow-hidden" : ""}>
+                <DeviceFrame project={current} />
+              </div>
 
               {/* Info */}
               <div style={{ marginTop: 24 }}>
@@ -366,6 +368,7 @@ const Works = () => {
                   <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                   <button
                     onClick={() => window.open(current.source_code_link, "_blank")}
+                    className="cyber-btn"
                     style={{
                       display: "flex", alignItems: "center", gap: 8,
                       fontFamily: "'Share Tech Mono', monospace",
@@ -374,8 +377,6 @@ const Works = () => {
                       padding: "7px 16px", cursor: "pointer", borderRadius: 4,
                       flexShrink: 0, transition: "all 0.2s",
                     }}
-                    onMouseEnter={e => e.currentTarget.style.background = `${cfg.color}22`}
-                    onMouseLeave={e => e.currentTarget.style.background = `${cfg.color}0d`}
                   >
                     <img src={github} alt="github" style={{ width: 14, height: 14, filter: "invert(1) opacity(0.7)" }} />
                     // source
@@ -385,6 +386,8 @@ const Works = () => {
                   {current.type === "web" && current.live_link && (
                     <button
                       onClick={() => window.open(current.live_link, "_blank")}
+                      className="cyber-btn glitch-reveal"
+                      data-text="// live"
                       style={{
                         display: "flex", alignItems: "center", gap: 8,
                         fontFamily: "'Share Tech Mono', monospace",
@@ -393,8 +396,6 @@ const Works = () => {
                         padding: "7px 16px", cursor: "pointer", borderRadius: 4,
                         flexShrink: 0, transition: "all 0.2s",
                       }}
-                      onMouseEnter={e => e.currentTarget.style.background = "rgba(40,200,64,0.18)"}
-                      onMouseLeave={e => e.currentTarget.style.background = "rgba(40,200,64,0.07)"}
                     >
                       <span style={{
                         width: 8, height: 8, borderRadius: "50%",
