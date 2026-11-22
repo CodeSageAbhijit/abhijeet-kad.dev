@@ -1,10 +1,12 @@
 import {
-  ACESFilmicToneMapping, AmbientLight, CanvasTexture, DirectionalLight, MeshBasicMaterial,
-  MeshStandardMaterial, Raycaster, Scene, Vector2, Vector3, WebGLRenderer, sRGBEncoding, Float32BufferAttribute,
+  ACESFilmicToneMapping, AmbientLight, Box3, CanvasTexture, DirectionalLight, Float32BufferAttribute,
+  Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, Raycaster, Scene,
+  ShadowMaterial, Vector2, Vector3, VSMShadowMap, WebGLRenderer, sRGBEncoding,
 } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 import { createComputerCamera, getKeycap } from "./portfolioComputerLayout";
+import { prepareComputer } from "./portfolioComputerRig";
 import { drawComputerScreen, initialScreen, openScreenControl, SCREEN_HEIGHT, SCREEN_WIDTH } from "./portfolioComputerScreen";
 
 const modelURL = `${import.meta.env.BASE_URL}the_pc/the_pc.gltf`;
@@ -41,6 +43,9 @@ export function mountPortfolioComputer(container, handlers) {
   renderer.outputEncoding = sRGBEncoding;
   renderer.toneMapping = ACESFilmicToneMapping;
   renderer.toneMappingExposure = 0.92;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = VSMShadowMap;
+  renderer.shadowMap.autoUpdate = false;
   renderer.setClearColor(0x000000, 0);
   const canvas = renderer.domElement;
   canvas.setAttribute("aria-hidden", "true");
@@ -56,9 +61,11 @@ export function mountPortfolioComputer(container, handlers) {
   const caps = new Map();
   const byAction = new Map();
   const originalMaterials = new Set();
-  let computer;
+  let rig;
   let imported;
   let screen;
+  let power;
+  let powerDepth;
   let display;
   let view;
   let frame = 0;
@@ -104,12 +111,13 @@ export function mountPortfolioComputer(container, handlers) {
     const area = canvas.getBoundingClientRect();
     pointer.set((event.clientX - area.left) / area.width * 2 - 1, -(event.clientY - area.top) / area.height * 2 + 1);
     raycaster.setFromCamera(pointer, view.camera);
-    const hit = raycaster.intersectObject(computer, true)[0];
+    const hit = raycaster.intersectObject(rig, true)[0];
     let object = hit?.object;
     if (object === screen) {
       return { screen: true, x: hit.uv.x * SCREEN_WIDTH, y: (1 - hit.uv.y) * SCREEN_HEIGHT };
     }
-    while (object && object !== computer) {
+    while (object && object !== rig) {
+      if (object === power) return { power: true };
       if (caps.has(object)) return caps.get(object);
       object = object.parent;
     }
@@ -134,14 +142,23 @@ export function mountPortfolioComputer(container, handlers) {
     const hit = hitTest(event);
     pointerStart = { hit, x: event.clientX, y: event.clientY };
     if (hit && (hit.screen || event.pointerType === "mouse")) event.preventDefault();
-    if (hit && !hit.screen) press(hit);
+    if (hit?.power && !reducedMotion.matches) {
+      power.position.z = powerDepth - 0.075;
+      invalidate();
+    } else if (hit && !hit.screen && !hit.power) {
+      press(hit);
+    }
   }
 
   function pointerUp(event) {
     if (!event.isPrimary || event.button !== 0) return;
     const start = pointerStart;
-    pointerStart = null;
+    pointerCancel();
     if (!start?.hit || Math.hypot(event.clientX - start.x, event.clientY - start.y) > 10) return;
+    if (start.hit.power) {
+      handlers.onPower();
+      return;
+    }
     if (!start.hit.screen) {
       handlers.onKey(start.hit.key);
       return;
@@ -150,6 +167,10 @@ export function mountPortfolioComputer(container, handlers) {
   }
 
   function pointerCancel() {
+    if (pointerStart?.hit?.power && power.position.z !== powerDepth) {
+      power.position.z = powerDepth;
+      invalidate();
+    }
     pointerStart = null;
   }
 
@@ -174,11 +195,11 @@ export function mountPortfolioComputer(container, handlers) {
         release(imported);
         return;
       }
-      imported.updateMatrixWorld(true);
-      computer = imported.getObjectByName("computer");
-      screen = computer?.getObjectByName("screen");
-      const keyboard = computer?.getObjectByName("keyboard");
-      if (!screen?.geometry || !keyboard) throw new Error("The PC model is missing its screen or keyboard");
+      const prepared = prepareComputer(imported);
+      ({ rig, screen, power } = prepared);
+      const { computer } = prepared;
+      powerDepth = power.position.z;
+      scene.add(rig);
 
       const caseMaterial = new MeshStandardMaterial({ color: "#dfd6d0", roughness: 0.47 });
       const keyMaterial = new MeshStandardMaterial({ color: "#e7e0da", roughness: 0.53 });
@@ -190,6 +211,8 @@ export function mountPortfolioComputer(container, handlers) {
 
       computer.traverse((object) => {
         if (!object.isMesh || object === screen) return;
+        object.castShadow = true;
+        object.receiveShadow = true;
         originalMaterials.add(object.material);
         const parent = object.parent;
         const keycap = getKeycap(object);
@@ -199,6 +222,7 @@ export function mountPortfolioComputer(container, handlers) {
           caps.set(cap, entry);
           if (key && !byAction.has(key)) byAction.set(key, entry);
           object.material = legendMaterial;
+          object.castShadow = false;
         } else if (/^Cap(?:_|$)/.test(parent.name) || parent.parent?.name === "spacebar") {
           const legend = parent.children.find((child) => child.geometry?.userData.parameters?.type === "TextGeometry");
           const text = legend?.geometry.userData.parameters.text;
@@ -208,18 +232,32 @@ export function mountPortfolioComputer(container, handlers) {
         }
       });
 
-      const keyLight = new DirectionalLight("#fff6ef", 1.85);
-      keyLight.position.set(-5, 13, 10);
-      const pinkLight = new DirectionalLight("#ff9da8", 1.36);
-      pinkLight.position.set(-8, 1, 12);
-      const fill = new DirectionalLight("#d4ccdf", 0.78);
+      const keyLight = new DirectionalLight("#fff6ef", 1.68);
+      const bounds = new Box3().setFromObject(rig);
+      keyLight.target.position.copy(bounds.getCenter(new Vector3()));
+      keyLight.position.copy(keyLight.target.position).add(new Vector3(-6, 21, 9));
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.set(768, 768);
+      keyLight.shadow.radius = 5.5;
+      keyLight.shadow.blurSamples = 12;
+      Object.assign(keyLight.shadow.camera, { left: -13, right: 13, bottom: -12, top: 12, far: 43 });
+      keyLight.shadow.bias = -0.0003;
+      keyLight.shadow.normalBias = 0.035;
+      keyLight.shadow.camera.updateProjectionMatrix();
+      const pinkLight = new DirectionalLight("#ff9da8", 1.16);
+      pinkLight.position.set(-8, 3, 11);
+      const fill = new DirectionalLight("#d4ccdf", 0.9);
       fill.position.set(7, 5, -10);
-      scene.add(new AmbientLight("#f8eff0", 0.48), keyLight, pinkLight, fill);
-      scene.attach(computer);
+      const ground = new Mesh(new PlaneGeometry(36, 34), new ShadowMaterial({ opacity: 0.39 }));
+      ground.position.set(keyLight.target.position.x, bounds.min.y - 0.035, keyLight.target.position.z);
+      ground.rotation.x = -Math.PI / 2;
+      ground.receiveShadow = true;
+      scene.add(new AmbientLight("#f8eff0", 0.62), keyLight, keyLight.target, pinkLight, fill, ground);
       scene.updateMatrixWorld(true);
-      view = createComputerCamera(computer);
-      display.draw(displayState);
+      view = createComputerCamera(rig);
+      display?.draw(displayState);
       resize();
+      renderer.shadowMap.needsUpdate = true;
       renderer.render(scene, view.camera);
       handlers.onReady();
     } catch (error) {
@@ -272,6 +310,7 @@ export function mountPortfolioComputer(container, handlers) {
       release(imported);
       originalMaterials.forEach((material) => material.dispose());
       display?.texture.dispose();
+      scene.traverse((object) => object.shadow?.dispose());
       renderer.dispose();
       renderer.forceContextLoss();
       canvas.remove();

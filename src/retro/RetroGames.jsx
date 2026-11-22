@@ -159,3 +159,73 @@ export function CircuitGrid() {
     </div>
   );
 }
+
+const packetMaps = [
+  ["S..#.*", ".#...#", ".*.#..", "#..#.*", "......", ".##..E"],
+  ["S.#.*.", "..#.#.", "#...#.", ".*#...", "...#*.", "#....E"],
+  ["S..#*.", ".#...#", "..*#..", "#..#..", ".*.#..", "...#.E"],
+];
+const packetArrows = { ArrowUp: -6, ArrowRight: 1, ArrowDown: 6, ArrowLeft: -1 };
+
+function packetRound(level) {
+  const board = packetMaps[level].join("");
+  return { position: 0, collected: [], moves: 0, board };
+}
+
+export function PacketRun() {
+  const [level, setLevel] = useState(0);
+  const [round, setRound] = useState(() => packetRound(0));
+  const won = round.board[round.position] === "E" && round.collected.length === 3;
+
+  function reset(nextLevel) {
+    setLevel(nextLevel);
+    setRound(packetRound(nextLevel));
+  }
+
+  function step(next) {
+    setRound((current) => {
+      const { position, board, collected, moves } = current;
+      if (board[position] === "E" && collected.length === 3) return current;
+      const distance = Math.abs(position % 6 - next % 6) + Math.abs(Math.floor(position / 6) - Math.floor(next / 6));
+      if (distance !== 1 || next < 0 || next >= board.length || board[next] === "#") return current;
+      return {
+        ...current,
+        position: next,
+        moves: moves + 1,
+        collected: board[next] === "*" && !collected.includes(next) ? [...collected, next] : collected,
+      };
+    });
+  }
+
+  return (
+    <div className="retro-game" onKeyDown={(event) => {
+      const move = packetArrows[event.key];
+      if (!move) return;
+      event.preventDefault();
+      step(round.position + move);
+    }}>
+      <p>Collect the three packets and reach the exit. Use the arrow keys or tap an adjacent square.</p>
+      <div className="retro-game-stats" role="status">
+        {won ? `Route complete in ${round.moves} moves!` : `Route ${level + 1} · ${round.collected.length} / 3 packets · ${round.moves} moves`}
+      </div>
+      <div className="retro-game-grid retro-packet" aria-label="Packet Run board">
+        {Array.from(round.board).map((cell, index) => {
+          const player = index === round.position;
+          const packet = cell === "*" && !round.collected.includes(index);
+          const tile = player ? "Your position" : packet ? "Packet" : cell === "E" ? "Exit" : cell === "#" ? "Wall" : "Open";
+          return (
+            <button type="button" key={index} className={`retro-packet-cell ${cell === "#" ? "is-wall" : ""} ${player ? "is-player" : ""}`}
+              aria-label={`${tile}, row ${Math.floor(index / 6) + 1}, column ${index % 6 + 1}`}
+              aria-disabled={cell === "#" || won} onClick={() => step(index)}>
+              {player ? "●" : packet ? "◆" : cell === "E" ? "↗" : ""}
+            </button>
+          );
+        })}
+      </div>
+      <div className="retro-game-actions">
+        <button type="button" className="retro-game-button" onClick={() => reset(level)}>Reset route</button>
+        {won && <button type="button" className="retro-game-button" onClick={() => reset((level + 1) % packetMaps.length)}>Next route</button>}
+      </div>
+    </div>
+  );
+}

@@ -13,11 +13,7 @@ const ExperienceCardMobile = ({ experience, index }) => {
     >
       <div className="flex items-start gap-4 mb-4">
         <div style={{ background: experience.iconBg }} className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-accent/50">
-          <img
-            src={experience.icon}
-            alt={experience.company_name}
-            className='w-full h-full object-cover rounded-full'
-          />
+          <img src={experience.icon} alt="" className="w-full h-full object-cover rounded-full" />
         </div>
         <div>
           <h3 className='text-white text-[18px] font-bold leading-tight'>{experience.title}</h3>

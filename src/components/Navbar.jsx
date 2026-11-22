@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { styles } from "../styles";
@@ -18,6 +18,7 @@ const Navbar = () => {
   const [toggle, setToggle] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [prankActive, setPrankActive] = useState(false);
+  const closePrank = useCallback(() => setPrankActive(false), []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -134,7 +135,7 @@ const Navbar = () => {
                 style={{
                   background: "transparent", border: "1px solid rgba(255, 235, 59, 0.4)", width: "32px", height: "32px", 
                   borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
-                  color: "#ffeb3b", transition: "all 0.3s ease",
+                  color: "#ffeb3b", transition: "box-shadow 160ms ease, border-color 160ms ease",
                   boxShadow: "0 0 10px rgba(255, 235, 59, 0.1) inset"
                 }}
                 onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 0 15px rgba(255, 235, 59, 0.4) inset, 0 0 15px rgba(255, 235, 59, 0.4)"; e.currentTarget.style.borderColor = "#ffeb3b" }}
@@ -154,7 +155,7 @@ const Navbar = () => {
             style={{
               background: "transparent", border: "1px solid rgba(255, 235, 59, 0.4)", width: "32px", height: "32px", 
               borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
-              color: "#ffeb3b", transition: "all 0.3s ease",
+              color: "#ffeb3b", transition: "box-shadow 160ms ease, border-color 160ms ease",
               boxShadow: "0 0 10px rgba(255, 235, 59, 0.1) inset"
             }}
           >
@@ -206,7 +207,7 @@ const Navbar = () => {
         </div>
       </div>
       
-      {prankActive && <LightModePrank onClose={() => setPrankActive(false)} />}
+      {prankActive && <LightModePrank onClose={closePrank} />}
     </nav>
   );
 };

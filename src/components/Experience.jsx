@@ -24,26 +24,22 @@ const ExperienceCard = ({ experience }) => {
       date={experience.date}
       iconStyle={{ background: experience.iconBg }}
       icon={
-        <img
-          src={experience.icon}
-          alt={experience.company_name}
-          className='w-full h-full object-cover rounded-full'
-        />
+        <img src={experience.icon} alt="" className="w-full h-full object-cover rounded-full" />
       }
     >
       <div>
         <h3 className='text-white text-[24px] font-bold'>{experience.title}</h3>
-        {experience.subtitle && (
-          <p style={{ margin: "4px 0 0", fontFamily: "'Share Tech Mono', monospace", fontSize: 13, color: "rgb(var(--accent-rgb) / 0.75)", letterSpacing: 1 }}>
-            {experience.subtitle}
-          </p>
-        )}
         <p
           className='text-secondary text-[16px] font-semibold'
           style={{ margin: 0 }}
         >
           {experience.company_name}
         </p>
+        {experience.subtitle && (
+          <p className="font-mono text-[13px] text-accent/75" style={{ margin: "4px 0 0" }}>
+            {experience.subtitle}
+          </p>
+        )}
       </div>
 
       <ul className='mt-5 list-disc ml-5 space-y-2'>

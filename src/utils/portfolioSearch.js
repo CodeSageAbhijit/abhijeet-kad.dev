@@ -26,12 +26,12 @@ const entries = [
     project: true,
     keywords: [description, ...tags.map(({ name: tag }) => tag)],
   })),
-  ...experiences.map(({ title, company_name, points }, index) => ({
+  ...experiences.map(({ title, company_name, subtitle, points }, index) => ({
     id: `experience-${index}`,
     title,
     detail: company_name,
     href: "#work",
-    keywords: points,
+    keywords: [subtitle, ...points],
   })),
   ...technologies.map(({ name }) => ({
     id: `technology-${name}`,

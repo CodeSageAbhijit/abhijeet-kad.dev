@@ -1,40 +1,8 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import { lazy, Suspense, useState, useEffect } from "react";
-import useIsMobile from "./hooks/useIsMobile";
-import BootSequence from "./components/BootSequence";
-import AppPC from "./AppPC";
-import AppMobile from "./AppMobile";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { lazy, Suspense, useState } from "react";
 
-const RetroDesktop = lazy(() => import("./retro/RetroDesktop"));
-
-function Portfolio({ isBooting, onBootComplete }) {
-  const isMobile = useIsMobile();
-  const { hash } = useLocation();
-
-  useEffect(() => {
-    if (!isBooting) return;
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.removeProperty("overflow");
-      document.documentElement.style.removeProperty("overflow");
-    };
-  }, [isBooting]);
-
-  useEffect(() => {
-    if (isBooting || hash !== "#search") return;
-    const frame = requestAnimationFrame(() => document.getElementById("search")?.scrollIntoView({ behavior: "instant" }));
-    return () => cancelAnimationFrame(frame);
-  }, [hash, isBooting]);
-
-  return (
-    <>
-      {isBooting && <BootSequence onComplete={onBootComplete} />}
-      {isMobile ? <AppMobile isBooting={isBooting} /> : <AppPC isBooting={isBooting} />}
-    </>
-  );
-}
+const Portfolio = lazy(() => import("./Portfolio"));
+const RetroStation = lazy(() => import("./retro/RetroStation"));
 
 export default function App() {
   const [hasBooted, setHasBooted] = useState(false);
@@ -43,10 +11,14 @@ export default function App() {
       <Routes>
         <Route path="/retro" element={
           <Suspense fallback={<div className="fixed inset-0 grid place-items-center bg-primary text-white" role="status">Starting the desktop…</div>}>
-            <RetroDesktop />
+            <RetroStation />
           </Suspense>
         } />
-        <Route path="*" element={<Portfolio isBooting={!hasBooted} onBootComplete={() => setHasBooted(true)} />} />
+        <Route path="*" element={
+          <Suspense fallback={null}>
+            <Portfolio isBooting={!hasBooted} onBootComplete={() => setHasBooted(true)} />
+          </Suspense>
+        } />
       </Routes>
     </BrowserRouter>
   );

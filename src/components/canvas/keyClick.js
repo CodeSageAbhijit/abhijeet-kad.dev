@@ -5,8 +5,10 @@ export function preloadKeyClicks() {
   recording ??= fetch(`${import.meta.env.BASE_URL}the_pc/model-m-taps.wav`).then((response) => {
     if (!response.ok) throw new Error("Could not load the keyboard recording");
     return response.arrayBuffer();
+  }).catch((error) => {
+    recording = undefined;
+    throw error;
   });
-  recording.catch(() => { recording = undefined; });
   return recording;
 }
 

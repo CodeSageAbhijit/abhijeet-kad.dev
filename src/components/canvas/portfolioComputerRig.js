@@ -1,5 +1,5 @@
 import {
-  BoxGeometry, CylinderGeometry, ExtrudeGeometry, Group, Mesh, MeshBasicMaterial,
+  Box3, BoxGeometry, CylinderGeometry, ExtrudeGeometry, Group, Mesh, MeshBasicMaterial,
   MeshStandardMaterial, Shape, TorusGeometry,
 } from "three";
 
@@ -25,7 +25,7 @@ function roundedPanel(width, height, depth, radius) {
 function createTower() {
   const tower = new Group();
   tower.name = "Tower";
-  tower.position.set(-5.7, -4.99, -4.95);
+  tower.position.set(-5.7, 0, -4.95);
   tower.rotation.y = 0.22;
   const shell = new MeshStandardMaterial({ color: "#ded4ca", roughness: 0.53 });
   const face = new MeshStandardMaterial({ color: "#f0e3d5", roughness: 0.49 });
@@ -90,6 +90,7 @@ export function prepareComputer(assetScene) {
   const rig = new Group();
   rig.attach(computer);
   const { tower, power } = createTower();
+  tower.position.y = new Box3().setFromObject(computer).min.y;
   rig.add(tower);
   rig.updateMatrixWorld(true);
   return { rig, computer, screen, keyboard, power };

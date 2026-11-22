@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { requestDesktopFullscreen } from "../retro/fullscreen";
+import { unlockStartupSound } from "../retro/startupSound";
 import { searchPortfolio } from "../utils/portfolioSearch";
 import ComputersCanvas from "./canvas/Computers";
 import { createKeyClick } from "./canvas/keyClick";
@@ -50,6 +52,12 @@ export default function PortfolioSearch({ isBooting }) {
 
   function changeSelection(step) {
     setSelected((current) => Math.max(0, Math.min(matches.length - 1, current + step)));
+  }
+
+  function bootDesktop() {
+    if (sound) unlockStartupSound();
+    requestDesktopFullscreen();
+    navigate("/retro/", { state: { boot: true, sound } });
   }
 
   function playClick(key) {
@@ -118,6 +126,8 @@ export default function PortfolioSearch({ isBooting }) {
         onFocus={focusSearch}
         onResult={openResult}
         onPage={(direction) => changeSelection(direction * PAGE_SIZE)}
+        onPower={bootDesktop}
+        onFullscreen={bootDesktop}
         sound={sound}
         onSoundToggle={() => setSound(!sound)}
         isBooting={isBooting}

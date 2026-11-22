@@ -1,149 +1,1406 @@
-.retro-desktop, .retro-boot, .retro-loading {
+/* ============================================================
+   WINDOWS XP LUNA THEME — PIXEL-PERFECT ORIGINAL RECREATION
+   Reference: Microsoft Windows XP Service Pack 2 / Service Pack 3
+   System Font: Tahoma, 8pt (11px)
+   ============================================================ */
+
+/* ── Monitor / Station shell ─────────────────────────────── */
+.retro-station {
   position: fixed;
   inset: 0;
-  z-index: 60;
   overflow: hidden;
-  color: #f1f7ed;
-  font: 400 15px/1.45 Tahoma, "Trebuchet MS", system-ui, sans-serif;
-  background-color: #142023;
-  color-scheme: dark;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 63% 44%, #363342, transparent 67%),
+    linear-gradient(140deg, #191725, #121924 68%, #0d1119);
 }
-.retro-desktop, .retro-boot { outline: none; }
-.retro-desktop * { scroll-behavior: auto; }
-.retro-desktop {
+.retro-station-image {
+  position: absolute;
+  z-index: 1;
+  max-width: none;
+  pointer-events: none;
+  clip-path: polygon(
+    2.7% 15.6%, 3.1% 14.6%, 5.6% 13.7%, 94.4% 13.7%, 95.7% 14.7%,
+    96.75% 16.2%, 96.8% 18%, 93.5% 92.4%, 93.05% 94.2%, 91.9% 95.1%,
+    90.3% 95.45%, 7.25% 94.7%, 6.45% 94.25%, 5.85% 92.9%, 5.5% 89%
+  );
+}
+.retro-glass {
+  position: absolute;
+  z-index: 2;
+  transform-origin: top left;
+  container-type: inline-size;
+  overflow: hidden;
+  isolation: isolate;
+  background: #080d12;
+  color: #000;
+  outline: none;
+  font: 400 11px/1.3 Tahoma, "Segoe UI", Verdana, sans-serif;
+  box-shadow: 0 0 0 1px #07090b, inset 0 0 16px #02050b;
+}
+.retro-glass *, .retro-glass { color-scheme: light; scroll-behavior: auto; box-sizing: border-box; }
+.retro-glass :focus-visible { outline: 1px dotted #000; outline-offset: -1px; }
+.retro-glass-scanlines::after {
+  position: absolute;
+  z-index: 99;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(7, 16, 30, 0.18) 0 1px, transparent 1px 4px);
+}
+
+/* ── Boot screen (DOS / XP Loader) ───────────────────────── */
+.retro-boot, .retro-off, .retro-welcome, .retro-shutdown-screen {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
-  background-image: linear-gradient(180deg, #122b3926, transparent 25%, transparent 67%, #13220b25), url("/retro/wallpaper.webp");
-  background-position: center;
-  background-size: cover;
 }
-.retro-topbar {
-  z-index: 15;
-  min-height: 51px;
-  padding: 6px clamp(10px, 2.4vw, 30px);
-  padding-top: max(6px, env(safe-area-inset-top));
-  border-bottom: 1px solid #dbefde38;
-  background: linear-gradient(180deg, #33474ce8, #202e37ed);
+.retro-boot {
+  display: grid;
+  place-items: center;
+  background: #000;
+  color: #fff;
+}
+.retro-boot-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+.retro-boot-progress {
+  width: 140px;
+  height: 14px;
+  border: 1px solid #5070A0;
+  border-radius: 4px;
+  background: #000;
+  padding: 1px;
+  overflow: hidden;
+}
+.retro-boot-progress span {
+  display: flex;
+  gap: 3px;
+  animation: xp-progress-run 1.2s linear infinite;
+}
+.retro-boot-progress i {
+  display: block;
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(180deg, #90D0F8 0%, #3080E8 50%, #1050C8 100%);
+  border-radius: 1px;
+}
+@keyframes xp-progress-run {
+  from { transform: translateX(-40px); }
+  to { transform: translateX(140px); }
+}
+.retro-boot-skip {
+  position: absolute;
+  bottom: 20px;
+  color: #7090B0;
+  font-size: 11px;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ── Windows XP Logon Screen (Reference Image 2) ─────────── */
+.retro-signin, .retro-welcome, .retro-shutdown-screen {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 25%, rgba(255,255,255,0.45) 0%, transparent 45%),
+    linear-gradient(180deg, #5A7EDC 0%, #4668BE 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.retro-logon-band {
+  background: #00138C;
+  width: 100%;
+}
+.retro-logon-top {
+  height: 60px;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+.retro-logon-bottom {
+  min-height: 80px;
+  border-top: 2px solid #E05020; /* XP authentic thin orange highlight stripe */
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+}
+.retro-signin-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1px 1.2fr;
+  align-items: center;
+  padding: 0 40px;
+  gap: 30px;
+}
+.retro-signin-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 16px;
+}
+.retro-signin-prompt {
+  font: 400 15px/1.3 Tahoma, sans-serif;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+  margin: 0;
+}
+.retro-signin-divider {
+  width: 1px;
+  height: 75%;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.45) 20%, rgba(255,255,255,0.45) 80%, transparent);
+}
+.retro-signin-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.retro-user-tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  width: fit-content;
+}
+.retro-user-tile:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
+}
+.retro-user-avatar-frame {
+  border: 2px solid #FFFFFF;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+  overflow: hidden;
+  display: flex;
+}
+.retro-user-name {
+  font: 700 16px Tahoma, sans-serif;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+}
+.retro-signin-footer-content {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10.5px;
+  color: #C0D8F8;
+}
+.retro-signin-footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.retro-signin-disclaimer {
+  margin: 0;
+  line-height: 1.35;
+  color: #A0C0E8;
+}
+.retro-logon-turnoff {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #fff;
+  font: 400 12px Tahoma, sans-serif;
+  cursor: pointer;
+  padding: 0;
+}
+.retro-logon-turnoff:hover {
+  text-decoration: underline;
+}
+.retro-signin-footer-right p {
+  margin: 0;
+  line-height: 1.4;
+  text-align: right;
+  color: #B0C8E8;
+}
+
+/* ── Welcome Screen ──────────────────────────────────────── */
+.retro-welcome {
+  justify-content: space-between;
+  align-items: center;
+}
+.retro-welcome-message {
+  margin: auto;
+  font: italic 700 48px/1 "Times New Roman", serif;
+  color: #fff;
+  text-shadow: 1px 2px 4px rgba(0,0,0,0.5);
+  animation: xp-fade-in 0.8s ease-out both;
+}
+
+/* ── Shutdown Screen (Reference Image 4) ─────────────────── */
+.retro-shutdown-screen {
+  justify-content: space-between;
+}
+.retro-shutdown-center {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.retro-shutdown-text {
+  font: 400 16px Tahoma, sans-serif;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+  margin: 0;
+}
+
+/* ── Desktop View (Reference Image 1 & 3) ────────────────── */
+.retro-desktop {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #3A6EA5 url("/retro/wallpaper.webp") center / cover no-repeat;
+  outline: none;
+}
+.retro-workspace {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Desktop Shortcuts (Vertical Stack on Left) ──────────── */
+.retro-shortcuts {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  max-height: calc(100% - 10px);
+  gap: 6px 12px;
+}
+.retro-shortcuts button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 72px;
+  min-height: 64px;
+  padding: 4px 2px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+}
+.retro-shortcuts button:hover {
+  background: rgba(49, 106, 197, 0.4);
+  border-color: rgba(166, 200, 240, 0.7);
+}
+.retro-shortcuts button:focus-visible {
+  outline: 1px dotted #fff;
+}
+.retro-shortcut-icon-frame {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3px;
+}
+.retro-shortcuts button span {
+  font: 400 11px/1.2 Tahoma, sans-serif;
+  text-shadow: 1px 1px 1px #000, 0 0 3px #000;
+  word-break: break-word;
+  max-width: 70px;
+}
+
+/* ── Windows XP Luna Window Chrome ───────────────────────── */
+.retro-window {
+  --width: min(var(--window-width), 100% - 10px);
+  --top: clamp(2px, var(--window-y), 100% - 60px);
+  position: absolute;
+  inset: var(--top) auto auto clamp(4px, var(--window-x), 100% - var(--width) - 4px);
+  display: flex;
+  flex-direction: column;
+  width: var(--width);
+  height: min(var(--window-height), 100% - var(--top) - 4px);
+  border: 3px solid #0054E3;
+  border-top-color: #0054E3;
+  border-left-color: #0054E3;
+  border-radius: 8px 8px 0 0;
+  background: #ECE9D8;
+  color: #000;
+  box-shadow:
+    inset 1px 1px 0 rgba(255,255,255,0.6),
+    inset -1px -1px 0 rgba(0,0,0,0.2),
+    2px 3px 10px rgba(0,0,0,0.45);
+  overflow: hidden;
+}
+.retro-window-maximized {
+  inset: 0 !important;
+  width: 100% !important;
+  height: calc(100% - 30px) !important;
+  border-radius: 0 !important;
+}
+
+/* ── Window Title Bar (Luna Blue 15-stop gradient) ────────── */
+.retro-window-titlebar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  box-shadow: 0 6px 18px #1117213b;
+  height: 29px;
+  min-height: 29px;
+  padding: 0 4px 0 6px;
+  background: linear-gradient(
+    180deg,
+    #0A3192 0%,
+    #0050E0 4%,
+    #0059E3 8%,
+    #1465E9 15%,
+    #3E82F4 23%,
+    #6FA0F8 29%,
+    #3C82F4 35%,
+    #2778F2 42%,
+    #2778F2 50%,
+    #1468E9 56%,
+    #0050E0 62%,
+    #0046C8 70%,
+    #0040B8 78%,
+    #0040BC 88%,
+    #0A3A9E 100%
+  );
+  border-radius: 5px 5px 0 0;
+  border-top: 1px solid #74A4F4;
+  border-left: 1px solid #74A4F4;
+  border-bottom: 1px solid #0A246A;
+  user-select: none;
+  cursor: default;
 }
-.retro-topbar h1 { font-size: 0.94rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.retro-topbar h1 span { font-size: 1.2rem; color: #bce1a7; }
-.retro-topbar-actions, .retro-boot-actions { display: flex; flex-wrap: wrap; gap: 7px; }
-.retro-toolbar-button {
+.retro-window-titlebar h2 {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  font: 700 11.5px Tahoma, sans-serif;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.retro-window-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.retro-window-controls button {
+  width: 21px;
+  height: 21px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 10px Marlett, "Segoe UI Symbol", Tahoma, sans-serif;
+  border: 1px solid #7A96DF;
+  border-top-color: #D8E4F8;
+  background: linear-gradient(180deg, #F8F8F8 0%, #E4E0D4 50%, #D8D4C8 100%);
+  color: #000;
+  cursor: pointer;
+  padding: 0;
+}
+.retro-window-controls button:hover {
+  background: linear-gradient(180deg, #FFF8E8 0%, #F0D898 50%, #E8C870 100%);
+}
+.retro-window-controls button:last-child {
+  background: linear-gradient(180deg, #F06040 0%, #D84020 50%, #C03010 100%);
+  border-color: #8B2500;
+  border-top-color: #FFA080;
+  color: #FFFFFF;
+}
+.retro-window-controls button:last-child:hover {
+  background: linear-gradient(180deg, #FF7050 0%, #E84830 50%, #D02818 100%);
+}
+
+/* ── Windows XP Taskbar (Exact 30px Luna Blue) ───────────── */
+.retro-taskbar {
+  position: relative;
+  z-index: 50;
+  height: 30px;
+  min-height: 30px;
+  max-height: 30px;
+  display: flex;
+  align-items: stretch;
+  background: linear-gradient(
+    180deg,
+    #1F68D4 0%,
+    #3A80DC 8%,
+    #3C82DC 15%,
+    #2878D8 25%,
+    #1C6CCC 42%,
+    #1868C8 58%,
+    #1460C0 70%,
+    #0E58B4 85%,
+    #0A4CA4 100%
+  );
+  border-top: 1px solid #74A4F4;
+  color: #fff;
+  padding: 0;
+  user-select: none;
+}
+
+/* ── Start Button (Green Pill) ────────────────────────────── */
+.retro-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.retro-menu summary {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 14px 0 6px;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(
+    180deg,
+    #5AAD2C 0%,
+    #78C840 8%,
+    #80D040 20%,
+    #68B830 50%,
+    #4A9820 70%,
+    #3C8014 85%,
+    #307010 100%
+  );
+  border: 1px solid #205C0A;
+  border-top-color: #A0E040;
+  border-right-color: #205C0A;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.4),
+    2px 0 4px rgba(0,0,0,0.3);
+  color: #FFFFFF;
+  font: italic 700 13px Tahoma, sans-serif;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
+  cursor: pointer;
+  list-style: none;
+}
+.retro-menu summary::-webkit-details-marker { display: none; }
+.retro-menu summary:hover {
+  background: linear-gradient(
+    180deg,
+    #70C038 0%,
+    #90D858 10%,
+    #98E060 22%,
+    #80C840 52%,
+    #5AAA28 72%,
+    #4C9018 88%,
+    #3C7C10 100%
+  );
+}
+.retro-menu[open] summary {
+  background: linear-gradient(180deg, #307010 0%, #4A9820 50%, #307010 100%);
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
+}
+.retro-start-text {
+  letter-spacing: 0.3px;
+}
+
+/* ── Start Menu Panel (Image 3 Two-Tone Replicant) ────────── */
+.retro-menu-panel {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  width: 380px;
+  background: #FFFFFF;
+  border: 1px solid #0054E3;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+}
+.retro-menu-user-banner {
+  background: linear-gradient(180deg, #1458B8 0%, #1C60C0 35%, #1050A8 100%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #0A246A;
+}
+.retro-menu-avatar-wrap {
+  border: 2px solid #FFFFFF;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  overflow: hidden;
+  display: flex;
+}
+.retro-menu-username {
+  font: 700 14px Tahoma, sans-serif;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+}
+.retro-menu-columns {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  min-height: 350px;
+}
+.retro-menu-left-col {
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 4px;
+  border-right: 1px solid #95BDEE;
+}
+.retro-menu-right-col {
+  background: #D3E5FA;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 4px;
+}
+.retro-menu-item-prominent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  text-align: left;
+  cursor: pointer;
+}
+.retro-menu-item-prominent:hover, .retro-menu-item:hover, .retro-menu-right-item:hover {
+  background: #316AC5;
+  color: #FFFFFF;
+}
+.retro-menu-item-prominent:hover small, .retro-menu-item-prominent:hover strong {
+  color: #FFFFFF;
+}
+.retro-menu-item-prominent strong {
+  display: block;
+  font: 700 11px Tahoma, sans-serif;
+  color: #000;
+}
+.retro-menu-item-prominent small {
+  display: block;
+  font: 400 9.5px Tahoma, sans-serif;
+  color: #606060;
+}
+.retro-menu-item, .retro-menu-right-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font: 400 11px Tahoma, sans-serif;
+  color: #000;
+  text-align: left;
+  cursor: pointer;
+}
+.retro-menu-right-item.is-bold {
+  font-weight: 700;
+}
+.retro-menu-sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: #C0C8D8;
+}
+.retro-menu-all-programs {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px;
+  background: #E8F0F8;
+  border: 1px solid #B0C8E0;
+  border-radius: 3px;
+  font: 700 11px Tahoma, sans-serif;
+  cursor: pointer;
+}
+.retro-all-programs-arrow {
+  color: #208030;
+  font-size: 9px;
+}
+.retro-sys-bullet {
+  width: 18px;
+  text-align: center;
+  font-weight: bold;
+  color: #0054E3;
+}
+.retro-menu-footer {
+  background: linear-gradient(180deg, #3A74C4 0%, #1F54A4 100%);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 6px 12px;
+  border-top: 1px solid #74A4F4;
+}
+.retro-menu-footer-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 1px solid transparent;
+  color: #fff;
+  font: 400 11px Tahoma, sans-serif;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+.retro-menu-footer-btn:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* ── Quick Launch Bar ────────────────────────────────────── */
+.retro-quick-launch {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 4px;
+}
+.retro-ql-gripper {
+  color: #88B8F8;
+  font-size: 13px;
+  padding: 0 1px;
+}
+.retro-ql-btn {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0;
+}
+.retro-ql-btn:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.4);
+}
+
+/* ── Taskbar Tabs (Running Windows) ───────────────────────── */
+.retro-tasks {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 0 4px;
+}
+.retro-task-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  min-width: 90px;
+  max-width: 160px;
+  padding: 0 6px;
+  background: linear-gradient(180deg, #3A74C4 0%, #2E68B8 50%, #245CA8 100%);
+  border: 1px solid #1A4E94;
+  border-top-color: #6090D4;
+  border-radius: 3px;
+  color: #FFFFFF;
+  font: 700 11px Tahoma, sans-serif;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.retro-task-tab span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.retro-task-tab:hover {
+  background: linear-gradient(180deg, #4A84D4 0%, #3878C8 50%, #2C6CB8 100%);
+}
+.retro-task-tab.is-active {
+  background: linear-gradient(180deg, #1A4E98 0%, #1C5298 40%, #1E5A9E 100%);
+  border-color: #1A3A74;
+  border-top-color: #3060A0;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.35);
+}
+
+/* ── System Tray (Notification Area on Right) ─────────────── */
+.retro-system-tray {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(180deg, #0C4CA4 0%, #0E52A8 30%, #0A4A9C 100%);
+  border-left: 1px solid #0A3A7C;
+  border-radius: 8px 0 0 0;
+  padding: 0 8px 0 6px;
+}
+.retro-tray-chevron {
+  background: none;
+  border: none;
+  color: #70A0F0;
+  font-size: 8px;
+  cursor: pointer;
+  padding: 2px;
+}
+.retro-tray-icon {
+  font-size: 13px;
+  cursor: default;
+}
+.retro-clock {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font: 400 11px Tahoma, sans-serif;
+  padding: 0 4px;
+  cursor: pointer;
+}
+
+/* ── Internet Explorer Window (Reference Image 1) ────────── */
+.retro-ie-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ECE9D8;
+  height: 100%;
+}
+.retro-ie-menubar {
+  display: flex;
+  gap: 12px;
+  padding: 3px 8px;
+  border-bottom: 1px solid #D0CCC0;
+  background: #ECE9D8;
+  font: 400 11px Tahoma, sans-serif;
+}
+.retro-ie-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 6px;
+  background: linear-gradient(180deg, #F8F6EE 0%, #ECE8DC 100%);
+  border-bottom: 1px solid #B0A898;
+}
+.retro-ie-btn-circle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 2px 8px;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #A0E860 0%, #60B820 60%, #308008 100%);
+  border: 1px solid #206008;
+  color: #fff;
+  font: 700 11px Tahoma, sans-serif;
+  cursor: pointer;
+}
+.retro-ie-arrow-icon { font-size: 10px; }
+.retro-ie-tool-sep {
+  width: 1px;
+  height: 20px;
+  background: #B0A898;
+  margin: 0 4px;
+}
+.retro-ie-tool-btn {
+  height: 24px;
+  padding: 2px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font: 400 11px Tahoma, sans-serif;
+  cursor: pointer;
+}
+.retro-ie-tool-btn:hover {
+  background: #E8F0F8;
+  border-color: #A0C0E0;
+}
+.retro-ie-icon-stop { color: #E03010; font-weight: bold; }
+.retro-ie-icon-refresh { color: #208030; font-size: 13px; font-weight: bold; }
+.retro-ie-icon-home { color: #D08010; font-size: 13px; }
+.retro-ie-icon-search { color: #2050A0; font-size: 11px; }
+.retro-ie-icon-fav { color: #F0A000; font-size: 12px; }
+
+/* Address Bar */
+.retro-ie-addressbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: #ECE9D8;
+  border-bottom: 1px solid #B0A898;
+  font: 400 11px Tahoma, sans-serif;
+}
+.retro-ie-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #FFFFFF;
+  border: 1px solid #7F9DB9;
+  padding: 1px 4px;
+  height: 22px;
+}
+.retro-ie-input-wrap input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font: 400 11px Tahoma, sans-serif;
+}
+.retro-ie-address-dropdown-arrow {
+  color: #606060;
+  font-size: 8px;
+  cursor: pointer;
+}
+.retro-ie-go-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  background: linear-gradient(180deg, #F8F6EE 0%, #ECE8DC 100%);
+  border: 1px solid #7F9DB9;
+  border-radius: 2px;
+  font: 400 11px Tahoma, sans-serif;
+  cursor: pointer;
+}
+.retro-ie-go-arrow { color: #208020; font-weight: bold; }
+.retro-ie-links-label { color: #606060; font-size: 11px; margin-left: 4px; }
+
+/* Classic 2010 Google Page (Image 1 replica) */
+.retro-ie-content-area {
+  flex: 1;
+  overflow: auto;
+  background: #FFFFFF;
+}
+/* Status Bar */
+.retro-ie-statusbar, .retro-explorer-statusbar, .retro-notepad-statusbar {
+  height: 22px;
+  background: #ECE9D8;
+  border-top: 1px solid #B0A898;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  font: 400 11px Tahoma, sans-serif;
+  color: #000;
+}
+.retro-ie-status-zone {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ── My Computer Window (Reference Image 3) ──────────────── */
+.retro-explorer-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #ECE9D8;
+  height: 100%;
+}
+.retro-explorer-menubar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 8px;
+  background: #ECE9D8;
+  border-bottom: 1px solid #D0CCC0;
+}
+.retro-explorer-menus {
+  display: flex;
+  gap: 12px;
+  font: 400 11px Tahoma, sans-serif;
+}
+.retro-explorer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 6px;
+  background: linear-gradient(180deg, #F8F6EE 0%, #ECE8DC 100%);
+  border-bottom: 1px solid #B0A898;
+}
+.retro-explorer-tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 6px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font: 400 11px Tahoma, sans-serif;
+  cursor: pointer;
+}
+.retro-explorer-tool-btn:hover:not(:disabled) {
+  background: #E8F0F8;
+  border-color: #A0C0E0;
+}
+.retro-explorer-tool-btn:disabled { opacity: 0.5; }
+.retro-tool-back { color: #208020; font-size: 11px; }
+
+/* Address Bar */
+.retro-explorer-addressbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  background: #ECE9D8;
+  border-bottom: 1px solid #B0A898;
+  font: 400 11px Tahoma, sans-serif;
+}
+.retro-explorer-address-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid #7F9DB9;
+  height: 22px;
+  padding: 0 6px;
+  font-size: 11px;
+}
+.retro-explorer-go-btn {
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid #7F9DB9;
+  background: #ECE9D8;
+  font: 400 11px Tahoma, sans-serif;
+  cursor: pointer;
+}
+
+/* Two-pane layout */
+.retro-explorer-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  overflow: hidden;
+  background: #FFFFFF;
+}
+
+/* Left Pane: XP Blue Accordion */
+.retro-explorer-tasks-pane {
+  background: linear-gradient(180deg, #748AFF 0%, #4057D3 100%);
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+.retro-task-card {
+  background: #D3E5FA;
+  border: 1px solid #FFFFFF;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.retro-task-card-header {
+  background: linear-gradient(180deg, #215DC6 0%, #204CB0 100%);
+  color: #FFFFFF;
+  font: 700 11px Tahoma, sans-serif;
+  padding: 4px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.retro-task-arrow { font-size: 8px; }
+.retro-task-card-body {
+  list-style: none;
+  margin: 0;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.retro-task-card-body li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.retro-task-card-body button {
+  background: none;
+  border: none;
+  color: #215DC6;
+  font: 400 11px Tahoma, sans-serif;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+}
+.retro-task-card-body button:hover { text-decoration: underline; }
+.retro-task-details {
+  padding: 8px;
+  font-size: 11px;
+  color: #000;
+}
+
+/* Right Pane: Files and Drives categories */
+.retro-explorer-contents {
+  padding: 12px 16px;
+  overflow-y: auto;
+  background: #FFFFFF;
+}
+.retro-category-heading {
+  font: 700 12px Tahoma, sans-serif;
+  color: #000;
+  border-bottom: 1px solid #7090C0;
+  padding-bottom: 2px;
+  margin: 0 0 10px 0;
+}
+.retro-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.retro-item-tile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: left;
+}
+.retro-item-tile:hover {
+  background: #E8F0F8;
+  border-color: #A0C0E0;
+}
+.retro-item-tile strong {
+  display: block;
+  font: 700 11px Tahoma, sans-serif;
+  color: #000;
+}
+.retro-item-tile small {
+  display: block;
+  font: 400 10px Tahoma, sans-serif;
+  color: #606060;
+}
+
+/* ── Untitled - Notepad (Reference Image 3) ──────────────── */
+.retro-notepad-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  height: 100%;
+}
+.retro-notepad-menubar {
+  display: flex;
+  gap: 12px;
+  padding: 3px 8px;
+  background: #ECE9D8;
+  border-bottom: 1px solid #D0CCC0;
+  font: 400 11px Tahoma, sans-serif;
+}
+.retro-notepad-textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 8px;
+  font: 400 12px/1.4 "Lucida Console", "Courier New", monospace;
+  color: #000;
+  background: #FFFFFF;
+}
+
+/* ── Winamp 2.x Player (Reference Image 1) ───────────────── */
+.retro-native-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 35px;
-  padding: 4px 10px;
-  border: 1px solid #bfd5d555;
-  border-radius: 5px;
-  background: linear-gradient(180deg, #f9fff71c, #15222e1f);
-  font-size: 0.81rem;
-  color: #f1f8f0;
+  gap: 4px;
+  height: 23px;
+  padding: 0 10px;
+  background: linear-gradient(180deg, #F8F6EE 0%, #ECE8DC 60%, #DDD8CC 100%);
+  border: 1px solid #9BAABB;
+  border-top-color: #D4D0C8;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  color: #000;
+  font: 400 11px Tahoma, sans-serif;
   cursor: pointer;
-  text-decoration: none;
 }
-.retro-toolbar-button:hover { background: #d6ebdf32; }
-.retro-workspace { flex: 1; position: relative; min-height: 0; overflow: hidden; }
-.retro-shortcuts { display: grid; gap: 17px; width: min-content; padding: clamp(14px, 3vw, 30px); }
-.retro-shortcuts button {
-  display: grid;
-  justify-items: center;
-  gap: 7px;
-  min-width: 92px;
-  padding: 9px 7px;
-  border: 1px solid transparent;
-  border-radius: 9px;
-  color: #fff;
-  font-size: 0.79rem;
-  font-weight: 700;
-  text-shadow: 0 1px 3px #000, 0 0 7px #021019;
+.retro-native-button:hover {
+  background: linear-gradient(180deg, #FFF8E8 0%, #F0D898 50%, #E8C870 100%);
+  border-color: #C88C20;
 }
-.retro-shortcuts button:hover { border-color: #e9fff3b3; background: #1c455962; }
-.retro-app-icon {
-  display: grid;
-  place-items: center;
-  width: 53px;
-  height: 53px;
-  border-radius: 13px;
-  border: 1px solid #ffffff80;
-  color: #f4fff4;
-  box-shadow: inset 0 2px 2px #fff5, 0 6px 12px #08282381;
-  font: 700 31px/1 "Trebuchet MS", system-ui, sans-serif;
-  text-shadow: 0 2px 8px #0f2637a1;
+.retro-native-button:active {
+  background: linear-gradient(180deg, #D8C880 0%, #E8D898 100%);
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
 }
-.retro-icon-circuit { background: linear-gradient(146deg, #8bd68f, #2a863d 55%, #144f42); }
-.retro-icon-memory { background: linear-gradient(146deg, #b6a4df, #8069b6 54%, #4a3d82); }
 
-.retro-window {
+/* Scrollbars */
+.retro-glass ::-webkit-scrollbar { width: 16px; height: 16px; }
+.retro-glass ::-webkit-scrollbar-track {
+  background: repeating-linear-gradient(45deg, #F0ECE0 0 2px, #E4E0D4 2px 4px);
+  border: 1px solid #999;
+}
+.retro-glass ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #D8D4C8 0%, #C8C4B8 50%, #B8B4A8 100%);
+  border: 1px solid #888;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.retro-glass ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #E0D8C8 0%, #D0C8B8 50%, #C0B8A8 100%);
+}
+.retro-glass ::selection { background: #316AC5; color: #fff; }
+
+@keyframes xp-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Paint to the curved glass edge and inset the desktop controls only. */
+.retro-glass-content {
   position: absolute;
-  inset: var(--window-y) auto auto clamp(0px, var(--window-x), calc(100% - min(490px, 100%)));
-  width: min(490px, 100%);
-  max-height: calc(100% - var(--window-y));
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #d7eadcbd;
-  border-radius: 11px;
-  background: #e9eee4;
-  color: #142429;
-  box-shadow: 0 18px 55px #0c242c83, 0 0 0 1px #283e4880;
+  inset: 0;
+  container-type: size;
   overflow: hidden;
+  background: #080d12;
 }
-.retro-window[hidden] { display: none; }
-.retro-window-maximized { inset: 6px; width: auto; max-height: none; }
-.retro-window-titlebar {
-  flex: none;
+.retro-glass-content--desktop {
+  --crt-side-gutter: 5.5cqi;
+  --crt-top-gutter: 2.3cqh;
+  --crt-bottom-gutter: 5.4cqh;
+}
+.retro-desktop .retro-workspace {
+  margin: var(--crt-top-gutter) var(--crt-side-gutter) 0;
+  /* isolation: isolate; */
+}
+/* Cartoon cameos are paused.
+.retro-cameo {
+  position: absolute;
+  right: 5px;
+  bottom: 6px;
+  z-index: 100;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: flex-end;
   gap: 6px;
-  min-height: 41px;
-  padding: 5px 7px 5px 11px;
-  background: linear-gradient(180deg, #688488, #334c54 70%, #283f49);
-  color: #fff;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
+  width: min(380px, 86%);
+  pointer-events: none;
 }
-.retro-window-titlebar h2 { font-size: 0.95rem; font-weight: 700; display: flex; gap: 8px; align-items: center; }
-.retro-window-titlebar h2 span { color: #c1e9af; }
-.retro-window-controls { display: flex; gap: 3px; }
-.retro-window-controls button {
-  width: 33px;
-  height: 31px;
-  border: 1px solid #e4f4e47d;
-  border-radius: 4px;
-  background: #e9fff51a;
-  font-size: 1.15rem;
-  line-height: 1;
-}
-.retro-window-controls button:hover { background: #f2fff53b; }
-.retro-window-controls button:last-child:hover { background: #934d58; }
-
-.retro-game { padding: clamp(12px, 2.6vw, 24px); overflow: auto; }
-.retro-game p { font-size: 0.91rem; }
-.retro-game-stats { min-height: 25px; margin: 8px 0 9px; color: #304747; font-size: 0.84rem; font-weight: 700; }
-.retro-game-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; max-width: 307px; margin: 0 auto 14px; }
-.retro-game-grid button { aspect-ratio: 1.12; min-width: 0; border-radius: 6px; display: grid; place-items: center; }
-.retro-card { background: linear-gradient(150deg, #7587a3, #38465d); border: 1px solid #2c394f; color: #e8eaff; box-shadow: inset 0 1px 2px #fff7; font-size: clamp(18px, 5vw, 30px); }
-.retro-card.is-face-up { background: #eee6f5; color: #64428e; border-color: #ad9bc2; }
-.retro-card.is-matched { background: #dbead2; color: #2c683a; border-color: #a8bb9c; }
-.retro-wire {
+.retro-cameo-bubble {
   position: relative;
-  isolation: isolate;
-  border: 1px solid #b9c6bd;
-  background: linear-gradient(145deg, #f9faf2, #d8e1d6);
-  --wire-color: #788b90;
+  width: min(222px, 100%);
+  min-width: 0;
+  margin-bottom: 10px;
+  border: 1px solid #7b7154;
+  border-radius: 7px;
+  background: linear-gradient(#fffcec, #fff5cc);
+  color: #231a10;
+  box-shadow: 1px 2px 5px #15162b66;
 }
-.retro-wire:hover { background: #f4f9ec; }
-.retro-wire.is-powered { --wire-color: #437b40; }
-.retro-wire.is-socket { background: #d9e4d5; }
-.wire-center { position: absolute; z-index: 1; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: 15%; aspect-ratio: 1; border-radius: 50%; background: var(--wire-color); }
-.is-socket .wire-center { display: grid; place-items: center; width: 40%; font-size: clamp(12px, 3vw, 22px); color: white; }
+.retro-cameo-bubble::after {
+  content: "";
+  position: absolute;
+  top: 44%;
+  right: -6px;
+  width: 10px;
+  height: 10px;
+  rotate: 45deg;
+  border-top: 1px solid #7b7154;
+  border-right: 1px solid #7b7154;
+  border-radius: 0 2px 0 0;
+  background: #fff8d9;
+}
+.retro-cameo-heading {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 3px 1px 8px;
+  font: 700 11px Tahoma, sans-serif;
+}
+.retro-cameo-heading strong { margin-right: auto; }
+.retro-cameo-heading button {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #3d3526;
+  font-size: 12px;
+  pointer-events: auto;
+}
+.retro-cameo-heading button:hover,
+.retro-cameo-heading button:focus-visible {
+  border-color: #97834d;
+  background: #fffef4;
+}
+.retro-cameo-bubble p {
+  margin: 0;
+  padding: 0 8px 7px;
+  font: 500 clamp(11px, 2.8cqi, 14px)/1.45 "Noto Sans Devanagari", Devanagari Sangam MN, Mangal, sans-serif;
+  overflow-wrap: anywhere;
+}
+.retro-cameo-art {
+  position: relative;
+  flex: 0 0 clamp(55px, 18cqi, 152px);
+  aspect-ratio: 1;
+}
+.retro-cameo-art img,
+.retro-cameo-art video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.retro-cameo-art video { opacity: 0; }
+.retro-cameo-art video.is-ready { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .retro-cameo { animation: retro-cameo-appear 180ms ease-out both; }
+  .retro-cameo-art img { animation: retro-cameo-hop 720ms ease-out both; }
+}
+@keyframes retro-cameo-appear {
+  from { opacity: 0; translate: 0 6px; }
+}
+@keyframes retro-cameo-hop {
+  0% { transform: translateY(8%) scale(1.04, 0.96); }
+  44% { transform: translateY(-5%) rotate(-4deg); }
+  70% { transform: translateY(2%) rotate(2deg); }
+  100% { transform: none; }
+}
+*/
+.retro-window[hidden] { display: none; }
+.retro-window.retro-window-maximized { inset: 0; width: 100%; height: 100% !important; }
+.retro-window-controls { flex: none; }
+.retro-window-controls button { font-family: Tahoma, sans-serif; }
+.retro-taskbar {
+  flex: none;
+  height: calc(30px + var(--crt-bottom-gutter));
+  min-height: 0;
+  max-height: none;
+  padding: 0 var(--crt-side-gutter) var(--crt-bottom-gutter);
+}
+.retro-tasks { min-width: 0; }
+.retro-task-tab { flex: 0 0 auto; }
+.retro-menu-panel {
+  width: min(346px, calc(100cqi - 2 * var(--crt-side-gutter)));
+  max-height: calc(100cqh - var(--crt-top-gutter) - var(--crt-bottom-gutter) - 31px);
+  overflow: auto;
+}
+.retro-menu-user-banner, .retro-menu-footer { flex: none; }
+.retro-menu-columns { flex: 0 0 auto; }
+.retro-monitor-shadow {
+  position: absolute;
+  height: 24px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: #05060bcc;
+  filter: blur(12px);
+  pointer-events: none;
+}
+.retro-monitor-led {
+  position: absolute;
+  z-index: 2;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: #88deb1;
+  box-shadow: 0 0 6px #7df2ae;
+  pointer-events: none;
+}
+.retro-monitor-power {
+  position: absolute;
+  z-index: 3;
+  translate: -50% -50%;
+  border-radius: 50%;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.retro-monitor-power:hover { background: radial-gradient(circle, #fff7d645, transparent 65%); }
+.retro-monitor-power:focus-visible { outline: 2px solid #537851; outline-offset: 1px; }
+.retro-monitor-osd {
+  position: absolute;
+  z-index: 100;
+  left: 50%;
+  bottom: 15%;
+  translate: -50% 0;
+  padding: 5px 9px;
+  color: #c0ffd0;
+  border: 1px solid #8ddfa3;
+  background: #071a10eb;
+  text-transform: capitalize;
+  pointer-events: none;
+}
+.retro-off { align-items: center; justify-content: center; gap: 18px; color: #dbeaf5; }
+.retro-off-links { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.retro-off-links > * { text-decoration: underline; }
+.retro-logon-bottom { min-height: 39px; }
+.retro-signin-main { gap: 12px; padding-inline: clamp(8px, 4cqi, 34px); }
+.retro-signin-footer-content { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; color: #fff; }
+.retro-signin-footer-content a { text-decoration: underline; }
+
+.retro-ie-window, .retro-ie-content-area, .retro-explorer-window { min-height: 0; }
+.retro-ie-toolbar, .retro-ie-addressbar, .retro-ie-statusbar, .retro-explorer-statusbar { flex: none; }
+.retro-ie-input-wrap, .retro-ie-input-wrap input { min-width: 0; }
+.retro-ie-btn-circle:disabled { opacity: .45; cursor: default; }
+.retro-ie-favorites { position: relative; z-index: 1; }
+.retro-ie-favorites summary { list-style: none; }
+.retro-ie-favorites summary::-webkit-details-marker { display: none; }
+.retro-ie-favorites > div {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  min-width: max-content;
+  display: grid;
+  padding: 3px;
+  border: 1px solid #7f9db9;
+  background: #fcfaf2;
+  box-shadow: 1px 3px 8px #0004;
+}
+.retro-ie-favorites button, .retro-portfolio-subnav button { padding: 4px 7px; text-align: left; }
+.retro-ie-favorites button:hover, .retro-portfolio-subnav button:hover,
+.retro-portfolio-subnav .is-active { background: #deebfa; }
+.retro-ie-error { padding: 4px 7px; color: #9a3030; }
+.retro-portfolio-subnav { display: flex; gap: 2px; flex-wrap: wrap; padding: 4px; border-bottom: 1px solid #c9d5e3; background: #eff3f7; }
+.retro-web-content { padding: clamp(8px, 3cqi, 20px); color: #182e52; }
+.retro-web-content h3 { font-size: clamp(18px, 5cqi, 32px); font-weight: 700; }
+.retro-web-content h4 { margin-top: 9px; font-size: 13px; font-weight: 700; }
+.retro-site-hero { padding: clamp(8px, 3cqi, 17px); background: linear-gradient(120deg, #214060, #4d7698); color: #fff; }
+.retro-web-links, .retro-project-links, .retro-tags { display: flex; flex-wrap: wrap; gap: 5px 10px; margin-block: 5px; }
+.retro-web-links > *, .retro-project-links a, .retro-profile-repositories a { color: #164b8e; text-decoration: underline; }
+.retro-project, .retro-profile-repositories li { padding-block: 8px; border-bottom: 1px solid #dae3eb; }
+.retro-project-type, .retro-tags { color: #40556a; }
+.retro-project-folder { padding: 8px; }
+
+.retro-settings, .retro-game-list, .retro-game { min-height: 0; padding: 8px; overflow: auto; }
+.retro-settings fieldset { display: grid; gap: 6px; margin: 0 0 8px; padding: 6px; border: 1px solid #b3becb; }
+.retro-settings label, .retro-game-list button { display: flex; align-items: center; gap: 6px; }
+.retro-settings a, .retro-picture-controls a { text-decoration: underline; color: #164b8e; }
+.retro-game-list { display: grid; align-content: start; gap: 4px; }
+.retro-calendar, .retro-pictures { display: flex; flex: 1; min-height: 0; flex-direction: column; }
+.retro-calendar-bar, .retro-picture-controls { display: flex; align-items: center; gap: 5px; padding: 5px; }
+.retro-calendar-bar { justify-content: space-between; }
+.retro-calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); flex: 1; align-content: start; text-align: center; overflow: auto; background: #fff; }
+.retro-calendar-grid > * { padding: 4px; border: 1px solid #e0e3e7; }
+.retro-calendar-grid [aria-current="date"] { background: #d2e9fa; font-weight: 700; }
+.retro-pictures select { min-width: 0; max-width: 75%; background: #fff; border: 1px solid #7f9db9; }
+.retro-picture { flex: 1; min-height: 0; display: grid; place-items: center; overflow: hidden; background: #e4ebf2; }
+.retro-picture img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.retro-picture-controls { flex-wrap: wrap; }
+.retro-game-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; width: min(100%, 224px); margin: 5px auto; }
+.retro-game-grid button { aspect-ratio: 1; min-width: 0; border: 1px solid #a4b0c1; background: #f2f4fa; }
+.retro-memory button.is-face-up { background: #ded8f4; }
+.retro-memory button.is-matched { background: #c9e9d5; }
+.retro-circuit button { position: relative; }
+.retro-wire { --wire-color: #7188a7; }
+.retro-wire.is-powered { --wire-color: #27895a; }
+.wire-center { position: absolute; z-index: 1; inset: 41%; background: var(--wire-color); border-radius: 50%; }
+.is-socket .wire-center { inset: 26%; color: white; }
 .wire-arm { position: absolute; display: block; background: var(--wire-color); }
 .wire-up, .wire-down { left: 43%; width: 14%; height: 50%; }
 .wire-left, .wire-right { top: 43%; width: 50%; height: 14%; }
@@ -151,94 +1408,23 @@
 .wire-down { bottom: 0; }
 .wire-left { left: 0; }
 .wire-right { right: 0; }
-.retro-game-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.retro-game-button {
-  min-height: 35px;
-  padding: 5px 11px;
-  border: 1px solid #8c9c9c;
-  border-radius: 5px;
-  background: linear-gradient(180deg, #fff, #d6e1d6);
-  color: #21352e;
-  font-size: 0.82rem;
-  font-weight: 650;
-}
-.retro-game-button:hover { background: #eef9e5; }
+.retro-packet { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.retro-packet-cell.is-wall { background: #4c5971; }
+.retro-packet-cell.is-player { background: #31649d; color: #fff; }
+.retro-game-button { padding: 3px 5px; border: 1px solid #a4b0c1; background: #f5f5f5; }
 
-.retro-dock {
-  z-index: 16;
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  align-self: center;
-  width: min(calc(100% - 24px), 560px);
-  min-height: 51px;
-  margin: 0 0 max(10px, env(safe-area-inset-bottom));
-  padding: 5px 8px;
-  border: 1px solid #d7eadc88;
-  border-radius: 11px;
-  background: linear-gradient(180deg, #405c60ed, #253741f5);
-  box-shadow: 0 6px 22px #051b2690, inset 0 1px 0 #fff4;
-  backdrop-filter: blur(12px);
-}
-.retro-launcher { position: relative; }
-.retro-launcher summary, .retro-tasks button {
-  display: inline-flex;
-  align-items: center;
-  min-height: 36px;
-  padding: 4px 9px;
-  border: 1px solid #c5e1d96b;
-  border-radius: 6px;
-  background: #e6fff320;
-  color: #f1f7f1;
-  font-size: 0.82rem;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.retro-launcher summary { background: linear-gradient(180deg, #8eb775, #3c7251); font-weight: 700; list-style: none; }
-.retro-launcher summary::-webkit-details-marker { display: none; }
-.retro-tasks { flex: 1; display: flex; gap: 5px; overflow-x: auto; }
-.retro-tasks button[aria-pressed="true"] { border-color: #ddffd9; background: #a3b09c57; }
-.retro-clock { margin-left: auto; padding: 0 4px; font-size: 0.79rem; white-space: nowrap; }
-.retro-launcher-menu {
-  position: absolute;
-  left: -2px;
-  bottom: calc(100% + 12px);
-  width: 201px;
-  padding: 5px;
-  border: 1px solid #acc9bc;
-  border-radius: 8px;
-  background: #233a40;
-  box-shadow: 0 9px 28px #13343b97;
-}
-.retro-launcher-menu button { display: flex; gap: 10px; align-items: center; width: 100%; min-height: 39px; text-align: left; border-radius: 4px; padding: 4px 7px; font-size: 0.85rem; }
-.retro-launcher-menu button:hover { background: #557269; }
-.retro-launcher-menu span { width: 16px; text-align: center; color: #c6edbf; }
-.retro-desktop :focus-visible, .retro-boot :focus-visible { outline: 2px solid #ffe8ac; outline-offset: 2px; }
-.retro-game :focus-visible { outline-color: #425f86; }
+@media (any-pointer: fine) {
+  .retro-station, .pinball-screen, .retro-station .retro-window-titlebar,
+  :is(.retro-station, .pinball-screen) button:disabled {
+    cursor: url("/retro/arrow-cursor.png") 1 1, default;
+  }
 
-.retro-boot, .retro-loading { display: grid; place-items: center; background: radial-gradient(ellipse at 50% 46%, #1c342c, #0e171c 55%, #060a0d); }
-.retro-boot-banner { width: min(82vw, 340px); text-align: center; }
-.retro-boot-mark { display: flex; justify-content: center; align-items: center; gap: 8px; height: 75px; margin-bottom: 15px; }
-.retro-boot-mark i { display: block; width: 27px; height: 48px; border-radius: 7px; background: linear-gradient(180deg, #d1ebac, #61a377); transform: skewY(-15deg); box-shadow: 0 0 22px #adea8b6c; animation: meadow-post 850ms both; }
-.retro-boot-mark i:nth-child(2) { height: 60px; animation-delay: 180ms; }
-.retro-boot-mark i:nth-child(3) { height: 70px; animation-delay: 360ms; }
-.retro-boot-banner h1 { font-size: clamp(1.65rem, 5vw, 2.4rem); font-weight: 630; letter-spacing: 0.045em; }
-.retro-boot-banner p { margin-top: 3px; color: #b2cbb5; }
-.retro-boot-progress { margin: 22px auto 0; width: 190px; height: 7px; overflow: hidden; border-radius: 9px; background: #e1f2dd29; }
-.retro-boot-progress span { display: block; height: 100%; background: #b4df98; transform-origin: left; animation: meadow-progress 2.25s cubic-bezier(.25,.7,.38,1) both; }
-.retro-boot-actions { position: absolute; bottom: max(22px, env(safe-area-inset-bottom)); }
-@keyframes meadow-post { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }
-@keyframes meadow-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-
-@media (max-width: 639px) {
-  .retro-topbar h1 { gap: 4px; font-size: 0.83rem; }
-  .retro-toolbar-button { min-height: 35px; padding-inline: 6px; font-size: 0.74rem; }
-  .retro-shortcuts { grid-auto-flow: column; gap: 7px; padding: 12px 7px; }
-  .retro-window, .retro-window-maximized { inset: 2px 8px auto; width: auto; max-height: calc(100% - 6px); }
-  .retro-window-maximized { bottom: 2px; }
-  .retro-window-titlebar { cursor: default; }
+  :is(.retro-station, .pinball-screen) :is(button:not(:disabled), a, summary, select, input[type="checkbox"]) {
+    cursor: url("/retro/hand-cursor.png") 8 3, pointer;
+  }
 }
-@media (prefers-reduced-motion: reduce) {
-  .retro-boot-mark i, .retro-boot-progress span { animation: none; }
+
+.retro-signin .retro-logon-bottom {
+  padding-bottom: max(10px, 5.4cqh);
+  padding-inline: max(18px, 5.5cqi);
 }

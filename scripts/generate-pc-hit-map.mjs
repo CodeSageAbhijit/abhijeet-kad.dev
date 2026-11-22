@@ -2,6 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { Box3, Vector3 } from "three";
 import { createComputerCamera, getKeycap } from "../src/components/canvas/portfolioComputerLayout.js";
+import { prepareComputer } from "../src/components/canvas/portfolioComputerRig.js";
 
 // The poster is captured from the desktop camera at this aspect ratio.
 const aspect = 1.54;
@@ -11,9 +12,8 @@ globalThis.ProgressEvent ??= class ProgressEvent {
   constructor(type, details) { Object.assign(this, { type }, details); }
 };
 const asset = await new GLTFLoader().parseAsync(await readFile(model, "utf8"), "");
-asset.scene.updateMatrixWorld(true);
-const computer = asset.scene.getObjectByName("computer");
-const { camera, resize } = createComputerCamera(computer);
+const { rig, screen, keyboard, power } = prepareComputer(asset.scene);
+const { camera, resize } = createComputerCamera(rig);
 resize(aspect);
 
 function project(point) {
@@ -35,33 +35,35 @@ function outline(points) {
   return [...bend(sorted), ...bend(sorted.reverse())];
 }
 
-const caps = [];
 const point = new Vector3();
-computer.getObjectByName("keyboard").traverse((legend) => {
-  const cap = getKeycap(legend);
-  if (!cap) return;
+function hitArea(object, centerObject = object) {
   const vertices = [];
-  cap.object.traverse((mesh) => {
+  object.traverse((mesh) => {
     if (!mesh.isMesh) return;
     const positions = mesh.geometry.attributes.position;
     for (let i = 0; i < positions.count; i++) {
       vertices.push(project(point.fromBufferAttribute(positions, i).applyMatrix4(mesh.matrixWorld)));
     }
   });
-  caps.push({
-    key: cap.key,
-    center: project(new Box3().setFromObject(legend).getCenter(point)).slice(0, 2),
+  return {
+    center: project(new Box3().setFromObject(centerObject).getCenter(point)).slice(0, 2),
     points: outline(vertices).map((vertex) => vertex.slice(0, 2).map((value) => +value.toFixed(5))),
-  });
+  };
+}
+
+const caps = [];
+keyboard.traverse((legend) => {
+  const cap = getKeycap(legend);
+  if (cap) caps.push({ key: cap.key, ...hitArea(cap.object, legend) });
 });
 
-const screen = computer.getObjectByName("screen");
 // An inset plane leaves room for the glass curvature on the pre-rendered PC.
 const surface = [[-229, 185], [229, 185], [-229, -179]]
   .map(([x, y]) => project(screen.localToWorld(new Vector3(x, y, 329))).slice(0, 2));
 const map = {
   aspect,
   surface,
+  power: hitArea(power),
   keys: caps,
 };
 await writeFile(output, JSON.stringify(map) + "\n");

@@ -1,6 +1,13 @@
 import map from "./portfolioComputerHitMap.json";
 import { drawComputerScreen, initialScreen, openScreenControl, SCREEN_HEIGHT, SCREEN_WIDTH } from "./portfolioComputerScreen";
 
+function makeHitArea({ center, points, key }) {
+  const path = new Path2D();
+  points.forEach(([x, y], index) => index ? path.lineTo(x, y) : path.moveTo(x, y));
+  path.closePath();
+  return { key, center, path };
+}
+
 export async function mountComputerPreview(container, image, handlers, signal) {
   await image.decode();
   if (signal.aborted) return null;
@@ -13,12 +20,8 @@ export async function mountComputerPreview(container, image, handlers, signal) {
   screen.width = SCREEN_WIDTH;
   screen.height = SCREEN_HEIGHT;
   const screenContext = screen.getContext("2d");
-  const keys = map.keys.map(({ key, center, points }) => {
-    const path = new Path2D();
-    points.forEach(([x, y], index) => index ? path.lineTo(x, y) : path.moveTo(x, y));
-    path.closePath();
-    return { key, center, path };
-  });
+  const keys = map.keys.map(makeHitArea);
+  const power = makeHitArea(map.power);
   const [[left, top], [right, rise], [lowerLeft, bottom]] = map.surface;
   const horizontal = [right - left, rise - top];
   const vertical = [lowerLeft - left, bottom - top];
@@ -96,7 +99,7 @@ export async function mountComputerPreview(container, image, handlers, signal) {
     const y = (event.clientY - area.top - insetY) / height;
     const u = ((x - left) * vertical[1] - (y - top) * vertical[0]) / determinant;
     const v = ((y - top) * horizontal[0] - (x - left) * horizontal[1]) / determinant;
-    const hit = u >= 0 && u <= 1 && v >= 0 && v <= 1
+    const hit = context.isPointInPath(power.path, x, y) ? power : u >= 0 && u <= 1 && v >= 0 && v <= 1
       ? { u, v }
       : findKey(x, y, event.pointerType === "touch");
     if (!hit) return;
@@ -110,7 +113,8 @@ export async function mountComputerPreview(container, image, handlers, signal) {
     const start = pointer;
     pointer = null;
     if (!start || Math.hypot(event.clientX - start.x, event.clientY - start.y) > 10) return;
-    if ("key" in start.hit) handlers.onKey(start.hit.key);
+    if (start.hit === power) handlers.onPower();
+    else if ("key" in start.hit) handlers.onKey(start.hit.key);
     else openScreenControl(start.hit.u * SCREEN_WIDTH, start.hit.v * SCREEN_HEIGHT, display, handlers);
   }
 

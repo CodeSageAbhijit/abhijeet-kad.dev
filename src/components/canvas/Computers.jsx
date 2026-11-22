@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { preloadKeyClicks } from "./keyClick";
 
 export default function ComputersCanvas({
-  display, keystroke, onKey, onFocus, onResult, onPage, sound, onSoundToggle, isBooting, children,
+  display, keystroke, onKey, onFocus, onResult, onPage, onPower, onFullscreen, sound, onSoundToggle, isBooting, children,
 }) {
   const stage = useRef(null);
   const poster = useRef(null);
   const scene = useRef(null);
-  const latest = useRef({ display, onKey, onFocus, onResult, onPage });
+  const latest = useRef(null);
   const [nearby, setNearby] = useState(false);
   const [requested, setRequested] = useState(false);
   const [status, setStatus] = useState("preview");
-  latest.current = { display, onKey, onFocus, onResult, onPage };
+  latest.current = { display, onKey, onFocus, onResult, onPage, onPower };
   const automatic = !window.matchMedia("(prefers-reduced-motion: reduce)").matches && !navigator.connection?.saveData;
   const enabled = !isBooting && (requested || (automatic && nearby));
 
@@ -32,11 +33,13 @@ export default function ComputersCanvas({
     let usingPreview = false;
     let timeout;
     setStatus("loading");
+    preloadKeyClicks().catch(() => {});
     const controls = {
       onKey: (key) => latest.current.onKey(key),
       onFocus: () => latest.current.onFocus(),
       onResult: (index) => latest.current.onResult(index),
       onPage: (direction) => latest.current.onPage(direction),
+      onPower: () => latest.current.onPower(),
     };
 
     async function startPreview(error) {
@@ -99,7 +102,7 @@ export default function ComputersCanvas({
         <img
           ref={poster}
           src={`${import.meta.env.BASE_URL}the_pc/preview.webp`}
-          alt="Retro desktop computer and keyboard"
+          alt="Retro CRT monitor, tower, and keyboard"
           className="pc-poster"
           loading="lazy"
           decoding="async"
@@ -108,16 +111,21 @@ export default function ComputersCanvas({
       </div>
       <div className="pc-controls">
         <span id="pc-instructions" role="status">
-          {status === "ready" ? "Tap the search bar to type, or click the keys" : status === "fallback" ? "Interactive preview · Tap the screen or keys" : status === "loading" ? "Starting the PC…" : status === "error" ? "The PC preview couldn’t load" : "Retro PC preview"}
+          {interactive ? "Do not press the CPU button! I repeat, Don't press it." : status === "loading" ? "Loading the PC controls…" : status === "error" ? "The PC preview couldn’t load" : "Retro PC preview"}
         </span>
-        {interactive && (
-          <button type="button" className="pc-button" aria-label="Key click sounds" aria-pressed={sound} onClick={onSoundToggle}>
-            Sound {sound ? "on" : "off"}
-          </button>
-        )}
-        {status === "preview" && (
-          <button type="button" className="pc-button" disabled={isBooting} onClick={() => setRequested(true)}>Start PC</button>
-        )}
+        <div className="pc-control-actions">
+          {/* {interactive && (
+            <button type="button" className="pc-button" aria-label="Key click sounds" aria-pressed={sound} onClick={onSoundToggle}>
+              Sound {sound ? "on" : "off"}
+            </button>
+          )}
+          {status === "preview" && (
+            <button type="button" className="pc-button" disabled={isBooting} onClick={() => setRequested(true)}>Activate controls</button>
+          )}
+          <button type="button" className="pc-button pc-button-fullscreen" onClick={onFullscreen}>
+            <span aria-hidden="true">⛶</span> Full screen */}
+          {/* </button> */}
+        </div>
       </div>
     </div>
   );

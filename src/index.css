@@ -491,3 +491,9 @@ body { font-family: "Rajdhani", "Poppins", sans-serif; background: var(--page); 
 .pulse-glow {
   animation: cyber-neon-flicker 2s infinite alternate;
 }
+
+/* A small hourglass stays inside the OS cursor layer during loading. */
+.classic-busy,
+.classic-busy * {
+  cursor: url("/retro/busy-cursor.png") 10 11, wait !important;
+}
