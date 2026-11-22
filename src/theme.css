@@ -1,0 +1,35 @@
+:root {
+  --accent-rgb: 129 182 255;
+  --accent-alt-rgb: 164 154 255;
+  --page-rgb: 8 14 25;
+  --panel: #111b2d;
+  --panel-raised: #19263c;
+  --term-bg: #000;
+  --section-portfolio-rgb: 204 161 234;
+  --section-career-rgb: 218 170 195;
+  --section-contact-rgb: 244 221 207;
+  --glitch-warm: rgb(var(--section-contact-rgb));
+  --glitch-cool: rgb(var(--section-portfolio-rgb));
+}
+
+:root, [data-tone] {
+  --accent: rgb(var(--accent-rgb));
+  --accent-alt: rgb(var(--accent-alt-rgb));
+  --accent-soft: color-mix(in srgb, var(--accent) 62%, white);
+  --page: rgb(var(--page-rgb));
+}
+
+[data-tone] {
+  --panel: color-mix(in srgb, #10141d 92%, var(--accent));
+  --panel-raised: color-mix(in srgb, #10141d 83%, var(--accent));
+}
+
+[data-tone="portfolio"] { --accent-rgb: var(--section-portfolio-rgb); }
+[data-tone="career"] { --accent-rgb: var(--section-career-rgb); }
+[data-tone="tools"] { --accent-rgb: 187 199 215; }
+[data-tone="contact"] { --accent-rgb: var(--section-contact-rgb); }
+
+.bg-hero-pattern {
+  background-color: var(--page);
+  background-blend-mode: luminosity;
+}

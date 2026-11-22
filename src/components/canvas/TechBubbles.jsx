@@ -92,7 +92,7 @@ const SphereBubble = ({ scale, logoTexture, isActive, seed }) => {
           metalness={0.42}
           clearcoat={1}
           clearcoatRoughness={0.08}
-          emissive='#123321'
+          emissive='#253044'
           emissiveIntensity={0.22}
         />
         <Decal
@@ -152,17 +152,17 @@ const TechBubblesScene = ({ icons, isActive }) => {
     <>
       <ambientLight intensity={0.65} />
       <hemisphereLight
-        args={['#a8ffd8', '#050808', 0.52]}
+        args={['#e0e9f9', '#080b10', 0.52]}
       />
       <spotLight
         position={[20, 18, 20]}
         penumbra={1}
         angle={0.22}
-        color='#d8fff0'
+        color='#edf2fa'
         castShadow
         shadow-mapSize={[1024, 1024]}
       />
-      <directionalLight position={[0, 7, -4]} intensity={1.35} color='#8fffc0' />
+      <directionalLight position={[0, 7, -4]} intensity={1.35} color='#dcebfa' />
 
       <Physics gravity={[0, 0, 0]}>
         <Pointer isActive={isActive} />

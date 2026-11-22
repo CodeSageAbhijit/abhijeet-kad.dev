@@ -7,18 +7,17 @@ import HireMeButton from "./HireMeButton";
 const ROLES = [
   "Full Stack Developer",
   "React & Node.js Engineer",
-  "Penetration Tester",
+  "System Design",
   "3D Web Experiences Dev",
   "Problem Solver",
 ];
 
-// roles that should display in red gradient (security-related)
-const RED_ROLES = ["Penetration Tester"];
+const HIGHLIGHTED_ROLES = ["System Design"];
 
 const STATS = [
   { val: "10+",  label: "Projects Built" },
-  { val: "eJPTv2", label: "Certified" },
-  { val: "150+", label: "LeetCode Solved" },
+  { val: "Systems", label: "Design", href: "#projects" },
+  { val: "150+", label: "LeetCode Solved", href: "https://leetcode.com/u/AbhijitKad/", external: true },
   { val: "∞",   label: "Bugs Squashed" },
 ];
 
@@ -50,20 +49,20 @@ const useTypewriter = (words, speed = 90, pause = 1800) => {
     return () => clearTimeout(timer);
   }, [sub, del, index, words, speed, pause]);
 
-  // return both text and whether current word is a red-role
+  // return both text and whether the current role uses the secondary accent
   const currentWord = words[index % words.length];
-  return { text, isRed: RED_ROLES.includes(currentWord) };
+  return { text, highlighted: HIGHLIGHTED_ROLES.includes(currentWord) };
 };
 
 const Hero = () => {
-  const { text: role, isRed: roleIsRed } = useTypewriter(ROLES);
+  const { text: role, highlighted: highlightedRole } = useTypewriter(ROLES);
 
   return (
     <section className="relative w-full h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center">
-      {/* Deep radial glow — green left, red right accent */}
+      {/* Palette glow */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
-        background: "radial-gradient(ellipse 60% 50% at 35% 55%, rgba(158,255,0,0.06) 0%, transparent 65%), radial-gradient(ellipse 40% 40% at 75% 45%, rgba(230,48,48,0.05) 0%, transparent 60%)",
+        background: "radial-gradient(ellipse 60% 50% at 35% 55%, rgb(var(--accent-rgb) / 0.06) 0%, transparent 65%), radial-gradient(ellipse 40% 40% at 75% 45%, rgb(var(--accent-alt-rgb) / 0.05) 0%, transparent 60%)",
       }} />
 
       {/* Top status bar */}
@@ -75,12 +74,12 @@ const Hero = () => {
         <div style={{
           height: 1,
           flex: 1,
-          background: "linear-gradient(to right, transparent, rgba(158,255,0,0.25))",
+          background: "linear-gradient(to right, transparent, rgb(var(--accent-rgb) / 0.25))",
         }} />
         <div style={{
           display: "flex", alignItems: "center", gap: 8,
           fontFamily: "'Share Tech Mono', monospace",
-          fontSize: 11, color: "rgba(158,255,0,0.6)",
+          fontSize: 11, color: "rgb(var(--accent-rgb) / 0.6)",
           letterSpacing: 3,
         }}>
           <span className="status-dot" />
@@ -88,7 +87,7 @@ const Hero = () => {
         </div>
         <div style={{
           height: 1, flex: 1,
-          background: "linear-gradient(to left, transparent, rgba(158,255,0,0.25))",
+          background: "linear-gradient(to left, transparent, rgb(var(--accent-rgb) / 0.25))",
         }} />
       </div>
 
@@ -110,18 +109,18 @@ const Hero = () => {
           {/* Tag line */}
           <div style={{
             fontFamily: "'Share Tech Mono', monospace",
-            fontSize: 11, color: "rgba(158,255,0,0.55)",
+            fontSize: 11, color: "rgb(var(--accent-rgb) / 0.55)",
             letterSpacing: 4, marginBottom: 6,
             display: "flex", alignItems: "center", gap: 8,
           }}>
-            <span style={{ color: "#9eff00" }}>❯</span>
+            <span style={{ color: "var(--accent)" }}>❯</span>
             <span>root@portfolio:~#</span>
             <span className="cursor-blink" style={{ width: 7, height: "1em" }} />
           </div>
 
           {/* Glitch Name */}
           <div
-            className="glitch flicker"
+            className="glitch"
             data-text="Abhijeet Kad"
             style={{
               fontFamily: "'Bebas Neue', sans-serif",
@@ -130,7 +129,7 @@ const Hero = () => {
               letterSpacing: 6,
               lineHeight: 1,
               marginBottom: 16,
-              textShadow: "0 0 40px rgba(158,255,0,0.15)",
+              textShadow: "0 0 40px rgb(var(--accent-rgb) / 0.15)",
             }}
           >
             Abhijeet Kad
@@ -145,53 +144,53 @@ const Hero = () => {
             minHeight: 24,
             display: "flex", alignItems: "center", gap: 6,
           }}>
-            <span style={{ color: roleIsRed ? "rgba(230,48,48,0.5)" : "rgba(158,255,0,0.4)" }}>//</span>
+            <span style={{ color: highlightedRole ? "rgb(var(--accent-alt-rgb) / 0.5)" : "rgb(var(--accent-rgb) / 0.4)" }}>//</span>
             <span style={{
-              color: roleIsRed ? "#e63030" : "#9eff00",
-              textShadow: roleIsRed ? "0 0 14px rgba(230,48,48,0.45)" : "0 0 10px rgba(158,255,0,0.3)",
+              color: highlightedRole ? "var(--accent-alt)" : "var(--accent)",
+              textShadow: highlightedRole ? "0 0 14px rgb(var(--accent-alt-rgb) / 0.45)" : "0 0 10px rgb(var(--accent-rgb) / 0.3)",
               transition: "color 0.4s, text-shadow 0.4s",
             }}>{role}</span>
             <span className="cursor-blink" style={{
               width: 9, height: "1.2em",
-              background: roleIsRed ? "#e63030" : "#9eff00",
-              boxShadow: roleIsRed ? "0 0 6px #e63030" : "0 0 6px #9eff00",
+              background: highlightedRole ? "var(--accent-alt)" : "var(--accent)",
+              boxShadow: highlightedRole ? "0 0 6px var(--accent-alt)" : "0 0 6px var(--accent)",
             }} />
           </div>
 
           {/* Stats row */}
           <div style={{ display: "flex", gap: 12, flexWrap: "nowrap", marginBottom: 32, overflowX: "auto" }}>
-            {STATS.map(({ val, label }) => {
-              const isRedStat = val === "eJPTv2";
-              const isLeet = val === "150+";
+            {STATS.map(({ val, label, href, external }) => {
+              const isDesignStat = href === "#projects";
+              const isLeet = external;
+              const Stat = href ? "a" : "div";
               return (
-                <div key={label} style={{
+                <Stat key={label} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} style={{
                   display: "flex", flexDirection: "column",
                   padding: "10px 14px",
                   flexShrink: 0,
-                  background: isRedStat ? "rgba(230,48,48,0.05)" : isLeet ? "rgba(248,161,0,0.05)" : "rgba(158,255,0,0.04)",
-                  border: isRedStat ? "1px solid rgba(230,48,48,0.22)" : isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgba(158,255,0,0.18)",
-                  borderTop: isRedStat ? "2px solid rgba(230,48,48,0.65)" : isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgba(158,255,0,0.5)",
-                  cursor: (isLeet || isRedStat) ? "pointer" : "default",
+                  background: isDesignStat ? "rgb(var(--accent-alt-rgb) / 0.05)" : isLeet ? "rgba(248,161,0,0.05)" : "rgb(var(--accent-rgb) / 0.04)",
+                  border: isDesignStat ? "1px solid rgb(var(--accent-alt-rgb) / 0.22)" : isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgb(var(--accent-rgb) / 0.18)",
+                  borderTop: isDesignStat ? "2px solid rgb(var(--accent-alt-rgb) / 0.65)" : isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgb(var(--accent-rgb) / 0.5)",
+                  cursor: href ? "pointer" : "default",
                   textDecoration: "none",
                 }}
-                  onClick={isRedStat ? () => window.open("https://certs.ine.com/2f9a7d9f-48a7-451f-b2d2-17f45c5e2566#acc.hUf9P1VK", "_blank") : isLeet ? () => window.open("https://leetcode.com/u/AbhijitKad/", "_blank") : undefined}
-                  title={isRedStat ? "View eJPTv2 Certificate" : isLeet ? "View LeetCode profile" : undefined}
+                  title={isDesignStat ? "Explore project architecture" : isLeet ? "View LeetCode profile" : undefined}
                 >
                   <span style={{
                     fontFamily: "'Bebas Neue', sans-serif",
                     fontSize: 28, lineHeight: 1,
-                    background: isRedStat ? "linear-gradient(to top, #e63030, #ff7070)" : isLeet ? "linear-gradient(to top, #f8a100, #ffd166)" : "none",
-                    WebkitBackgroundClip: (isRedStat || isLeet) ? "text" : "unset",
-                    WebkitTextFillColor: (isRedStat || isLeet) ? "transparent" : "#9eff00",
-                    color: (isRedStat || isLeet) ? undefined : "#9eff00",
-                    textShadow: (isRedStat || isLeet) ? "none" : "0 0 12px rgba(158,255,0,0.4)",
+                    background: isDesignStat ? "linear-gradient(to top, var(--accent-alt), var(--accent-soft))" : isLeet ? "linear-gradient(to top, #f8a100, #ffd166)" : "none",
+                    WebkitBackgroundClip: (isDesignStat || isLeet) ? "text" : "unset",
+                    WebkitTextFillColor: (isDesignStat || isLeet) ? "transparent" : "var(--accent)",
+                    color: (isDesignStat || isLeet) ? undefined : "var(--accent)",
+                    textShadow: (isDesignStat || isLeet) ? "none" : "0 0 12px rgb(var(--accent-rgb) / 0.4)",
                   }}>{val}</span>
                   <span style={{
                     fontFamily: "'Share Tech Mono', monospace",
-                    fontSize: 10, color: isRedStat ? "rgba(230,48,48,0.5)" : "rgba(158,255,0,0.45)",
+                    fontSize: 10, color: isDesignStat ? "rgb(var(--accent-alt-rgb) / 0.5)" : "rgb(var(--accent-rgb) / 0.45)",
                     letterSpacing: 2, marginTop: 3, textTransform: "uppercase",
                   }}>{label}</span>
-                </div>
+                </Stat>
               );
             })}
           </div>
@@ -199,7 +198,7 @@ const Hero = () => {
           {/* Contact mini-row */}
           <div style={{
             fontFamily: "'Share Tech Mono', monospace",
-            fontSize: 12, color: "rgba(158,255,0,0.45)",
+            fontSize: 12, color: "rgb(var(--accent-rgb) / 0.45)",
             display: "flex", flexWrap: "wrap", gap: "6px 20px",
           }}>
             {[
@@ -208,7 +207,7 @@ const Hero = () => {
               { icon: "⌥", val: "+91 9137292367" },
             ].map(({ icon, val }) => (
               <span key={val} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                <span style={{ color: "#9eff00" }}>{icon}</span>
+                <span style={{ color: "var(--accent)" }}>{icon}</span>
                 {val}
               </span>
             ))}
@@ -231,30 +230,30 @@ const Hero = () => {
 
       {/* Bottom scroll cue */}
       <div className="absolute xs:bottom-10 bottom-20 w-full flex justify-center items-center" style={{ zIndex: 10 }}>
-        <a href="#about">
+        <a href="#search" aria-label="Scroll to portfolio search">
           <div className="w-[32px] h-[58px] rounded-3xl flex justify-center items-start pt-2"
             style={{
-              border: "2px solid rgba(158,255,0,0.4)",
-              boxShadow: "0 0 14px rgba(158,255,0,0.15)",
+              border: "2px solid rgb(var(--accent-rgb) / 0.4)",
+              boxShadow: "0 0 14px rgb(var(--accent-rgb) / 0.15)",
             }}>
             <motion.div
               animate={{ y: [0, 20, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, repeatType: "loop" }}
               style={{
                 width: 10, height: 10, borderRadius: "50%",
-                background: "#9eff00",
-                boxShadow: "0 0 10px #9eff00",
+                background: "var(--accent)",
+                boxShadow: "0 0 10px var(--accent)",
               }}
             />
           </div>
         </a>
       </div>
 
-      {/* Bottom glow line — tri-color */}
+      {/* Bottom glow line — palette accents */}
       <div style={{
         position: "absolute", bottom: 0, left: 0, right: 0, height: 2,
-        background: "linear-gradient(90deg, transparent 5%, #e63030 25%, #9eff00 50%, #e63030 75%, transparent 95%)",
-        boxShadow: "0 0 16px rgba(158,255,0,0.5), 0 0 32px rgba(230,48,48,0.3)",
+        background: "linear-gradient(90deg, transparent 5%, var(--accent-alt) 25%, var(--accent) 50%, var(--accent-alt) 75%, transparent 95%)",
+        boxShadow: "0 0 16px rgb(var(--accent-rgb) / 0.5), 0 0 32px rgb(var(--accent-alt-rgb) / 0.3)",
         zIndex: 10,
       }} />
     </section>

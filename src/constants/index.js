@@ -39,6 +39,10 @@ import {
 
 export const navLinks = [
   {
+    id: "search",
+    title: "Search",
+  },
+  {
     id: "about",
     title: "About",
   },
@@ -56,6 +60,8 @@ export const navLinks = [
   },
 ];
 
+export const designFocus = ["API design", "Data modeling", "Real-time systems"];
+
 const services = [
   {
     title: "Full Stack Developer",
@@ -70,7 +76,7 @@ const services = [
     icon: backend,
   },
   {
-    title: "Penetration Tester",
+    title: "System Design",
     icon: creator,
   },
 ];
@@ -135,7 +141,7 @@ const experiences = [
     title: "Developer Intern",
     company_name: "Innovation and Robotics Lab, BVCOE",
     icon: irlLogo,
-    iconBg: "#0d1b0d",
+    iconBg: "var(--panel-raised)",
     date: "Jan 2023 – Jan 2025",
     points: [
       "Selected as Developer Intern at the Robotics Society of BVCOE — joined from 2nd year of engineering.",
@@ -155,11 +161,9 @@ const experiences = [
     iconBg: "#1a1a2e",
     date: "May 2025 – Aug 2025",
     points: [
-      "Developed a secure digital payments mobile application (GPay-like) using Flutter integrating live financial APIs.",
-      "Implemented HTTPS encryption, token-based authentication, and secure session handling to protect financial transactions and user credentials.",
-      "Applied secure coding practices including input validation, error handling, and protection against OWASP Mobile Top 10 vulnerabilities.",
-      "Ensured safe handling of sensitive financial data and compliance with fintech security best practices.",
-      "Gained deep exposure to mobile security architecture — bridging cybersecurity thinking with full-stack mobile development.",
+      "Built a Flutter payments application that integrated live financial APIs.",
+      "Implemented token-based authentication and session handling for the mobile API client.",
+      "Added input validation and error handling to the payment flows.",
     ],
   },
 ];

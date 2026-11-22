@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import { styles } from "../styles";
 import { projects } from "../constants";
 import { textVariant } from "../utils/motion";
+import { projectAnchor, projectFromHash } from "../utils/portfolioSearch";
 
 const TYPE_CONFIG = {
   web: { icon: "🌐", label: "Web App", color: "#4fc3f7" },
-  mobile: { icon: "📱", label: "Mobile App", color: "#9eff00" },
+  mobile: { icon: "📱", label: "Mobile App", color: "var(--accent)" },
   desktop: { icon: "💻", label: "Desktop App", color: "#ffb700" },
 };
 
@@ -33,7 +35,7 @@ const SimpleImageCard = ({ images, name, type }) => {
       onMouseLeave={() => setIsHovered(false)}
       className="w-full rounded-t-lg overflow-hidden bg-[#0a0a0a]"
       style={{
-        borderBottom: "1px solid rgba(158,255,0,0.1)",
+        borderBottom: "1px solid rgb(var(--accent-rgb) / 0.1)",
       }}
     >
       {/* Image container */}
@@ -69,10 +71,10 @@ const SimpleImageCard = ({ images, name, type }) => {
             fontFamily: "'Share Tech Mono', monospace",
             fontSize: 10, 
             background: "rgba(0,0,0,0.6)",
-            color: "#9eff00",
+            color: "var(--accent)",
             padding: "3px 8px",
             borderRadius: 3,
-            border: "1px solid rgba(158,255,0,0.2)",
+            border: "1px solid rgb(var(--accent-rgb) / 0.2)",
           }}>
             {idx + 1}/{images.length}
           </div>
@@ -84,7 +86,7 @@ const SimpleImageCard = ({ images, name, type }) => {
         <div style={{
           display: "flex", justifyContent: "center", gap: 4, padding: "8px 0",
           background: "rgba(0,0,0,0.4)",
-          borderTop: "1px solid rgba(158,255,0,0.1)",
+          borderTop: "1px solid rgb(var(--accent-rgb) / 0.1)",
         }}>
           {images.map((_, i) => (
             <button
@@ -97,7 +99,7 @@ const SimpleImageCard = ({ images, name, type }) => {
                 border: "none",
                 padding: 0,
                 cursor: "pointer",
-                background: i === idx ? "#9eff00" : "rgba(255,255,255,0.2)",
+                background: i === idx ? "var(--accent)" : "rgba(255,255,255,0.2)",
                 transition: "all 0.3s",
               }}
             />
@@ -110,19 +112,22 @@ const SimpleImageCard = ({ images, name, type }) => {
 
 const ProjectCard = ({ project, index }) => {
   const images = project.images || [project.image];
-  const cfg = TYPE_CONFIG[project.type] || { icon: "💻", label: "Project", color: "#9eff00" };
+  const cfg = TYPE_CONFIG[project.type] || { icon: "💻", label: "Project", color: "var(--accent)" };
 
   return (
     <motion.div
+      id={projectAnchor(project.name)}
+      data-project-anchor
+      tabIndex={-1}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true, amount: 0.2 }}
       style={{
         borderRadius: 12,
-        border: "1px solid rgba(158,255,0,0.15)",
+        border: "1px solid rgb(var(--accent-rgb) / 0.15)",
         background: "rgba(0,0,0,0.5)",
-        boxShadow: "0 0 20px rgba(158,255,0,0.05)",
+        boxShadow: "0 0 20px rgb(var(--accent-rgb) / 0.05)",
         overflow: "hidden",
       }}
     >
@@ -178,10 +183,10 @@ const ProjectCard = ({ project, index }) => {
                 fontFamily: "'Share Tech Mono', monospace",
                 fontSize: 10,
                 padding: "3px 8px",
-                background: "rgba(158,255,0,0.05)",
-                border: "1px solid rgba(158,255,0,0.15)",
+                background: "rgb(var(--accent-rgb) / 0.05)",
+                border: "1px solid rgb(var(--accent-rgb) / 0.15)",
                 borderRadius: 3,
-                color: "rgba(158,255,0,0.8)",
+                color: "rgb(var(--accent-rgb) / 0.8)",
                 letterSpacing: 0.5,
               }}
             >
@@ -192,7 +197,7 @@ const ProjectCard = ({ project, index }) => {
             <span style={{
               fontFamily: "'Share Tech Mono', monospace",
               fontSize: 10,
-              color: "rgba(158,255,0,0.5)",
+              color: "rgb(var(--accent-rgb) / 0.5)",
             }}>
               +{project.tags.length - 4}
             </span>
@@ -213,20 +218,20 @@ const ProjectCard = ({ project, index }) => {
                 textAlign: "center",
                 fontFamily: "'Share Tech Mono', monospace",
                 fontSize: 11,
-                color: "#9eff00",
-                border: "1px solid rgba(158,255,0,0.4)",
+                color: "var(--accent)",
+                border: "1px solid rgb(var(--accent-rgb) / 0.4)",
                 borderRadius: 4,
-                background: "rgba(158,255,0,0.03)",
+                background: "rgb(var(--accent-rgb) / 0.03)",
                 cursor: "pointer",
                 transition: "all 0.2s",
                 textDecoration: "none",
               }}
               onMouseEnter={(e) => {
-                e.target.style.background = "rgba(158,255,0,0.1)";
-                e.target.style.boxShadow = "0 0 12px rgba(158,255,0,0.2)";
+                e.target.style.background = "rgb(var(--accent-rgb) / 0.1)";
+                e.target.style.boxShadow = "0 0 12px rgb(var(--accent-rgb) / 0.2)";
               }}
               onMouseLeave={(e) => {
-                e.target.style.background = "rgba(158,255,0,0.03)";
+                e.target.style.background = "rgb(var(--accent-rgb) / 0.03)";
                 e.target.style.boxShadow = "none";
               }}
             >
@@ -303,15 +308,32 @@ const ProjectCard = ({ project, index }) => {
   );
 };
 
-const WorksMobile = () => {
+const WorksMobile = ({ isBooting }) => {
   const [filter, setFilter] = useState("all");
+  const [pendingProject, setPendingProject] = useState(null);
+  const { hash, key } = useLocation();
+
+  useEffect(() => {
+    const project = projectFromHash(hash);
+    if (isBooting || !project) return;
+    setFilter("all");
+    setPendingProject(projectAnchor(project.name));
+  }, [hash, key, isBooting]);
+
+  useEffect(() => {
+    if (!pendingProject || filter !== "all") return;
+    const card = document.getElementById(pendingProject);
+    card?.scrollIntoView();
+    card?.focus({ preventScroll: true });
+    setPendingProject(null);
+  }, [filter, pendingProject]);
 
   const filtered = filter === "all" ? projects : projects.filter(p => p.type === filter);
 
   const handleFilter = (f) => setFilter(f);
 
   return (
-    <div className="w-full px-6 py-10">
+    <div id="projects" className="w-full px-6 py-10" data-tone="portfolio" data-project-anchor>
       <motion.div variants={textVariant()}>
         <p className={`${styles.sectionSubText}`}>// My work</p>
         <h2 className={`${styles.sectionHeadText}`}>Projects.</h2>
@@ -330,7 +352,7 @@ const WorksMobile = () => {
       >
         {FILTERS.map(f => {
           const isActive = filter === f;
-          const c = f === "all" ? "#9eff00" : (TYPE_CONFIG[f]?.color || "#9eff00");
+          const c = f === "all" ? "var(--accent)" : (TYPE_CONFIG[f]?.color || "var(--accent)");
           return (
             <button
               key={f}
@@ -341,7 +363,7 @@ const WorksMobile = () => {
                 letterSpacing: 1,
                 padding: "6px 12px",
                 border: isActive ? `1px solid ${c}` : "1px solid rgba(255,255,255,0.1)",
-                background: isActive ? `${c}18` : "transparent",
+                background: isActive ? `color-mix(in srgb, ${c} 9%, transparent)` : "transparent",
                 color: isActive ? c : "rgba(255,255,255,0.3)",
                 cursor: "pointer",
                 transition: "all 0.2s",
@@ -366,7 +388,7 @@ const WorksMobile = () => {
           textAlign: "center",
           fontFamily: "'Share Tech Mono', monospace",
           fontSize: 10,
-          color: "rgba(158,255,0,0.3)",
+          color: "rgb(var(--accent-rgb) / 0.3)",
           letterSpacing: 2,
           marginTop: 12,
           textTransform: "uppercase",

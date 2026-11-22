@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "react-router-dom";
+import TerminalTitleBar from "./TerminalTitleBar";
 
 import { styles } from "../styles";
 import { github } from "../assets";
 import { SectionWrapper } from "../hoc";
 import { projects } from "../constants";
 import { textVariant } from "../utils/motion";
+import { projectFromHash } from "../utils/portfolioSearch";
 
 const TYPE_CONFIG = {
   web:    { icon: "🌐", label: "Web App",    color: "#4fc3f7" },
-  mobile: { icon: "📱", label: "Mobile App", color: "#9eff00" },
+  mobile: { icon: "📱", label: "Mobile App", color: "var(--accent)" },
   desktop:{ icon: "💻", label: "Desktop App", color: "#ffb700" },
 };
 
@@ -58,7 +61,7 @@ const BrowserFrame = ({ images, name }) => {
       }}>
         <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ff5f57", display: "inline-block" }} />
         <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#febc2e", display: "inline-block" }} />
-        <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#28c840", display: "inline-block" }} />
+        <span style={{ width: 11, height: 11, borderRadius: "50%", background: "var(--accent)", display: "inline-block" }} />
         <div style={{
           flex: 1, background: "#111", borderRadius: 4,
           padding: "3px 12px", marginLeft: 8,
@@ -185,7 +188,7 @@ const PhoneFrame = ({ images, name }) => {
             }} style={{
               width: i === idx ? 20 : 6, height: 6, borderRadius: 3,
               border: "none", padding: 0, cursor: "pointer",
-              background: i === idx ? "#9eff00" : "rgba(255,255,255,0.2)",
+              background: i === idx ? "var(--accent)" : "rgba(255,255,255,0.2)",
               transition: "all 0.3s",
             }} />
           ))}
@@ -197,27 +200,8 @@ const PhoneFrame = ({ images, name }) => {
 
 /* ── Terminal frame for system projects ── */
 const TerminalFrame = ({ image, name }) => (
-  <div style={{
-    borderRadius: 10, overflow: "hidden",
-    border: "1px solid rgba(248,161,0,0.25)",
-    boxShadow: "0 0 60px rgba(248,161,0,0.06)",
-    background: "#0d0d0d",
-  }}>
-    <div style={{
-      background: "#1a1a1a", padding: "10px 16px",
-      display: "flex", alignItems: "center", gap: 8,
-      borderBottom: "1px solid #2a2a2a",
-    }}>
-      <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#ff5f57", display: "inline-block" }} />
-      <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#febc2e", display: "inline-block" }} />
-      <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#28c840", display: "inline-block" }} />
-      <span style={{
-        flex: 1, textAlign: "center",
-        fontFamily: "'Share Tech Mono', monospace", fontSize: 11, color: "#888", letterSpacing: 2,
-      }}>
-        {name.toLowerCase().replace(/[^a-z0-9]+/g, "-")} — bash
-      </span>
-    </div>
+  <div className="term-window">
+    <TerminalTitleBar title={`${name} — bash`} />
     <img src={image} alt={name} loading="lazy" decoding="async" style={{ width: "100%", height: 300, objectFit: "cover", objectPosition: "top", display: "block" }} />
   </div>
 );
@@ -228,9 +212,20 @@ const DeviceFrame = ({ project }) => {
   return <BrowserFrame images={images} name={project.name} />;
 };
 
-const Works = () => {
+const Works = ({ isBooting }) => {
   const [filter, setFilter] = useState("all");
   const [active, setActive] = useState(0);
+  const { hash, key } = useLocation();
+  const heading = React.useRef(null);
+
+  React.useEffect(() => {
+    const project = projectFromHash(hash);
+    if (isBooting || !project) return;
+    setFilter("all");
+    setActive(projects.indexOf(project));
+    document.getElementById("projects")?.scrollIntoView();
+    heading.current?.focus({ preventScroll: true });
+  }, [hash, key, isBooting]);
 
   const filtered = filter === "all" ? projects : projects.filter(p => p.type === filter);
   const safeActive = Math.min(active, Math.max(0, filtered.length - 1));
@@ -240,26 +235,26 @@ const Works = () => {
 
   if (!current) return null;
 
-  const cfg = TYPE_CONFIG[current.type] || { icon: "💻", label: "Project", color: "#9eff00" };
+  const cfg = TYPE_CONFIG[current.type] || { icon: "💻", label: "Project", color: "var(--accent)" };
 
   return (
     <>
       <motion.div variants={textVariant()}>
         <p className={`${styles.sectionSubText}`}>// My work</p>
-        <h2 className={`${styles.sectionHeadText}`}>Projects.</h2>
+        <h2 ref={heading} tabIndex={-1} className={styles.sectionHeadText}>Projects.</h2>
       </motion.div>
 
       {/* Filter pills */}
       <div style={{ display: "flex", gap: 10, marginTop: 24, flexWrap: "wrap", alignItems: "center" }}>
         {FILTERS.map(f => {
           const isActive = filter === f;
-          const c = f === "all" ? "#9eff00" : (TYPE_CONFIG[f]?.color || "#9eff00");
+          const c = f === "all" ? "var(--accent)" : (TYPE_CONFIG[f]?.color || "var(--accent)");
           return (
             <button key={f} onClick={() => handleFilter(f)} style={{
               fontFamily: "'Share Tech Mono', monospace",
               fontSize: 11, letterSpacing: 2, padding: "5px 16px",
               border: isActive ? `1px solid ${c}` : "1px solid rgba(255,255,255,0.1)",
-              background: isActive ? `${c}18` : "transparent",
+              background: isActive ? `color-mix(in srgb, ${c} 9%, transparent)` : "transparent",
               color: isActive ? c : "rgba(255,255,255,0.3)",
               cursor: "pointer", transition: "all 0.2s",
               textTransform: "uppercase", borderRadius: 4,
@@ -271,7 +266,7 @@ const Works = () => {
         <span style={{
           marginLeft: "auto",
           fontFamily: "'Share Tech Mono', monospace",
-          fontSize: 10, color: "rgba(158,255,0,0.3)", letterSpacing: 2,
+          fontSize: 10, color: "rgb(var(--accent-rgb) / 0.3)", letterSpacing: 2,
         }}>
           [{filtered.length} project{filtered.length !== 1 ? "s" : ""}]
         </span>
@@ -284,17 +279,17 @@ const Works = () => {
         <div style={{
           display: "flex", flexDirection: "column", gap: 4,
           width: 270, flexShrink: 0,
-          borderLeft: "1px solid rgba(158,255,0,0.08)",
+          borderLeft: "1px solid rgb(var(--accent-rgb) / 0.08)",
         }}>
           <div style={{
             fontFamily: "'Share Tech Mono', monospace",
-            fontSize: 10, color: "rgba(158,255,0,0.3)",
+            fontSize: 10, color: "rgb(var(--accent-rgb) / 0.3)",
             letterSpacing: 3, padding: "0 0 12px 16px",
             textTransform: "uppercase",
           }}>select project</div>
 
           {filtered.map((proj, i) => {
-            const pcfg = TYPE_CONFIG[proj.type] || { icon: "💻", color: "#9eff00" };
+            const pcfg = TYPE_CONFIG[proj.type] || { icon: "💻", color: "var(--accent)" };
             const isSelected = i === safeActive;
             return (
               <motion.div
@@ -304,7 +299,7 @@ const Works = () => {
                 style={{
                   padding: "12px 16px",
                   borderLeft: isSelected ? `2px solid ${pcfg.color}` : "2px solid transparent",
-                  background: isSelected ? `${pcfg.color}0d` : "transparent",
+                  background: isSelected ? `color-mix(in srgb, ${pcfg.color} 5%, transparent)` : "transparent",
                   cursor: "pointer", transition: "background 0.2s",
                 }}
               >
@@ -320,7 +315,7 @@ const Works = () => {
                   {proj.tags.slice(0, 3).map(tag => (
                     <span key={tag.name} style={{
                       fontFamily: "'Share Tech Mono', monospace", fontSize: 9, letterSpacing: 1,
-                      color: isSelected ? `${pcfg.color}88` : "rgba(255,255,255,0.18)",
+                      color: isSelected ? `color-mix(in srgb, ${pcfg.color} 53%, transparent)` : "rgba(255,255,255,0.18)",
                     }}>#{tag.name}</span>
                   ))}
                 </div>
@@ -344,12 +339,12 @@ const Works = () => {
                 <span style={{
                   fontFamily: "'Share Tech Mono', monospace",
                   fontSize: 10, letterSpacing: 3,
-                  color: cfg.color, border: `1px solid ${cfg.color}55`,
+                  color: cfg.color, border: `1px solid color-mix(in srgb, ${cfg.color} 33%, transparent)`,
                   padding: "3px 10px", textTransform: "uppercase", borderRadius: 3,
                 }}>
                   {cfg.icon} {cfg.label}
                 </span>
-                <div style={{ flex: 1, height: 1, background: `${cfg.color}18` }} />
+                <div style={{ flex: 1, height: 1, background: `color-mix(in srgb, ${cfg.color} 9%, transparent)` }} />
               </div>
 
               {/* Device mockup */}
@@ -373,7 +368,7 @@ const Works = () => {
                       display: "flex", alignItems: "center", gap: 8,
                       fontFamily: "'Share Tech Mono', monospace",
                       fontSize: 11, letterSpacing: 2, color: cfg.color,
-                      background: `${cfg.color}0d`, border: `1px solid ${cfg.color}44`,
+                      background: `color-mix(in srgb, ${cfg.color} 5%, transparent)`, border: `1px solid color-mix(in srgb, ${cfg.color} 27%, transparent)`,
                       padding: "7px 16px", cursor: "pointer", borderRadius: 4,
                       flexShrink: 0, transition: "all 0.2s",
                     }}
@@ -391,15 +386,15 @@ const Works = () => {
                       style={{
                         display: "flex", alignItems: "center", gap: 8,
                         fontFamily: "'Share Tech Mono', monospace",
-                        fontSize: 11, letterSpacing: 2, color: "#28c840",
-                        background: "rgba(40,200,64,0.07)", border: "1px solid rgba(40,200,64,0.35)",
+                        fontSize: 11, letterSpacing: 2, color: "var(--accent)",
+                        background: "rgb(var(--accent-rgb) / 0.07)", border: "1px solid rgb(var(--accent-rgb) / 0.35)",
                         padding: "7px 16px", cursor: "pointer", borderRadius: 4,
                         flexShrink: 0, transition: "all 0.2s",
                       }}
                     >
                       <span style={{
                         width: 8, height: 8, borderRadius: "50%",
-                        background: "#28c840",
+                        background: "var(--accent)",
                         display: "inline-block",
                         animation: "pulse-dot 1.4s ease-in-out infinite",
                       }} />
@@ -433,13 +428,13 @@ const Works = () => {
                       style={{
                         display: "flex", alignItems: "center", gap: 8,
                         fontFamily: "'Share Tech Mono', monospace",
-                        fontSize: 11, letterSpacing: 2, color: "#9eff00",
-                        background: "rgba(158,255,0,0.07)", border: "1px solid rgba(158,255,0,0.35)",
+                        fontSize: 11, letterSpacing: 2, color: "var(--accent)",
+                        background: "rgb(var(--accent-rgb) / 0.07)", border: "1px solid rgb(var(--accent-rgb) / 0.35)",
                         padding: "7px 16px", cursor: "pointer", borderRadius: 4,
                         flexShrink: 0, transition: "all 0.2s",
                       }}
-                      onMouseEnter={e => e.currentTarget.style.background = "rgba(158,255,0,0.18)"}
-                      onMouseLeave={e => e.currentTarget.style.background = "rgba(158,255,0,0.07)"}
+                      onMouseEnter={e => e.currentTarget.style.background = "rgb(var(--accent-rgb) / 0.18)"}
+                      onMouseLeave={e => e.currentTarget.style.background = "rgb(var(--accent-rgb) / 0.07)"}
                     >
                       ↓ // download .apk
                     </button>
@@ -476,7 +471,7 @@ const Works = () => {
                   </div>
                 </div>
 
-                <div style={{ height: 1, background: `${cfg.color}18`, margin: "14px 0" }} />
+                <div style={{ height: 1, background: `color-mix(in srgb, ${cfg.color} 9%, transparent)`, margin: "14px 0" }} />
 
                 <p style={{
                   fontFamily: "'Rajdhani', sans-serif",
@@ -488,8 +483,8 @@ const Works = () => {
                     <span key={tag.name} style={{
                       fontFamily: "'Share Tech Mono', monospace",
                       fontSize: 11, padding: "4px 12px",
-                      border: `1px solid ${cfg.color}33`,
-                      color: `${cfg.color}cc`, letterSpacing: 1, borderRadius: 3,
+                      border: `1px solid color-mix(in srgb, ${cfg.color} 20%, transparent)`,
+                      color: `color-mix(in srgb, ${cfg.color} 80%, transparent)`, letterSpacing: 1, borderRadius: 3,
                     }}>#{tag.name}</span>
                   ))}
                 </div>
@@ -502,5 +497,5 @@ const Works = () => {
   );
 };
 
-export default SectionWrapper(Works, "projects");
+export default SectionWrapper(Works, "projects", "portfolio");
 

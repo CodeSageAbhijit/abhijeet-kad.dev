@@ -1,41 +1,22 @@
 import React from "react";
 import { motion } from "framer-motion";
+import TerminalTitleBar from "./TerminalTitleBar";
 import { styles } from "../styles";
-import { services } from "../constants";
+import { designFocus, services } from "../constants";
 import { SectionWrapper } from "../hoc";
 import { fadeIn, textVariant } from "../utils/motion";
 
 /* ── Syntax-highlighted JSON bio Mobile Version ── */
 const BioTerminalMobile = () => {
-  const S = { fontFamily: "'Share Tech Mono', monospace", fontSize: "11px", lineHeight: "1.6" };
-  const K = { color: "#c8ffa0" };          
+  const S = { fontSize: "11px", lineHeight: "1.6" };
+  const K = { color: "var(--accent-soft)" };
   const V = { color: "#ffe08a" };          
   const N = { color: "#79c0ff" };          
-  const C = { color: "rgba(158,255,0,0.4)" }; 
+  const C = { color: "#a0a0a0" };
 
   return (
-    <div style={{
-      background: "#050f08",
-      border: "1px solid rgba(158,255,0,0.25)",
-      boxShadow: "0 0 15px rgba(158,255,0,0.06)",
-      padding: "0",
-      width: "100%",
-      position: "relative",
-    }}>
-      {/* title bar */}
-      <div style={{
-        background: "rgba(158,255,0,0.07)",
-        borderBottom: "1px solid rgba(158,255,0,0.15)",
-        padding: "6px 10px",
-        display: "flex",
-        alignItems: "center",
-        gap: "6px",
-      }}>
-        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#e63030", display: "inline-block" }} />
-        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#f0a500", display: "inline-block" }} />
-        <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#9eff00", display: "inline-block" }} />
-        <span style={{ ...S, fontSize: "10px", color: "rgba(158,255,0,0.45)", marginLeft: 6 }}>~/portfolio/about.json</span>
-      </div>
+    <div className="term-window">
+      <TerminalTitleBar title="~/portfolio/about.json" />
 
       {/* code body */}
       <div style={{ padding: "12px 14px", ...S, overflowX: "auto", whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
@@ -54,8 +35,8 @@ const BioTerminalMobile = () => {
           <span style={C}>],</span>
         </div>
         <div style={{ paddingLeft: "12px" }}>
-          <span style={K}>"certifications"</span><span style={C}>: [</span>
-          <span style={{ ...V, color: "#ff7070", fontWeight: 700 }}>"eJPTv2"</span>
+          <span style={K}>"design_focus"</span><span style={C}>: [</span>
+          <span style={V}>{designFocus.map((area) => JSON.stringify(area)).join(", ")}</span>
           <span style={C}>],</span>
         </div>
         <div style={{ paddingLeft: "12px" }}>
@@ -87,15 +68,15 @@ const ServiceCardMobile = ({ index, title, icon }) => (
       alignItems: "center", 
       gap: "20px", 
       padding: "20px",
-      background: "rgba(158,255,0,0.02)",
-      border: "1px solid rgba(158,255,0,0.15)",
+      background: "rgb(var(--accent-rgb) / 0.02)",
+      border: "1px solid rgb(var(--accent-rgb) / 0.15)",
       borderRadius: "4px"
     }}
   >
     <div style={{
       width: 48, height: 48,
-      background: "rgba(158,255,0,0.07)",
-      border: "1px solid rgba(158,255,0,0.25)",
+      background: "rgb(var(--accent-rgb) / 0.07)",
+      border: "1px solid rgb(var(--accent-rgb) / 0.25)",
       display: "flex", alignItems: "center", justifyContent: "center",
       flexShrink: 0
     }}>
@@ -134,4 +115,4 @@ const AboutMobile = () => {
   );
 };
 
-export default SectionWrapper(AboutMobile, "about");
+export default SectionWrapper(AboutMobile, "about", "portfolio");

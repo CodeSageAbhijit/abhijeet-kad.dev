@@ -48,7 +48,7 @@ This is my personal 3D developer portfolio, showcasing my skills, experience, an
 
 ## 🔋 Features <a name="features"></a>
 
-- **3D Hero Section** — Features an interactive 3D desktop model as the landing visual.
+- **Interactive portfolio search** — Find projects, experience, and skills from the CRT screen below the hero. Type with the clickable 3D keyboard or tap the CRT search bar to use your own keyboard.
 - **Experience & Work Sections** — Animated with Framer Motion for an engaging user experience.
 - **3D Skills Section** — Showcases technologies using 3D geometries via Three.js and React Three Fiber.
 - **Projects & Testimonials** — Animated cards using Framer Motion.

@@ -32,11 +32,11 @@ const Navbar = () => {
       className={`${styles.paddingX} w-full flex items-center py-4 fixed top-0 z-20`}
       style={{
         background: scrolled
-          ? "rgba(5,12,10,0.92)"
+          ? "rgb(var(--page-rgb) / 0.92)"
           : "transparent",
         backdropFilter: scrolled ? "blur(12px)" : "none",
         borderBottom: scrolled
-          ? "1px solid rgba(158,255,0,0.2)"
+          ? "1px solid rgb(var(--accent-rgb) / 0.2)"
           : "none",
         transition: "background 0.3s, border 0.3s",
       }}
@@ -45,8 +45,8 @@ const Navbar = () => {
       {scrolled && (
         <div style={{
           position: "absolute", top: 0, left: 0, right: 0, height: 1,
-          background: "linear-gradient(90deg, transparent 5%, #9eff00 50%, transparent 95%)",
-          boxShadow: "0 0 8px #9eff00",
+          background: "linear-gradient(90deg, transparent 5%, var(--accent) 50%, transparent 95%)",
+          boxShadow: "0 0 8px var(--accent)",
         }} />
       )}
 
@@ -61,8 +61,8 @@ const Navbar = () => {
           <span style={{
             fontFamily: "'Share Tech Mono', monospace",
             fontSize: "20px",
-            color: "#9eff00",
-            textShadow: "0 0 10px #9eff00",
+            color: "var(--accent)",
+            textShadow: "0 0 10px var(--accent)",
             letterSpacing: "0",
             userSelect: "none",
           }}>{"root@"}</span>
@@ -75,14 +75,14 @@ const Navbar = () => {
           <span style={{
             fontFamily: "'Share Tech Mono', monospace",
             fontSize: "11px",
-            color: "rgba(158,255,0,0.5)",
+            color: "rgb(var(--accent-rgb) / 0.5)",
             letterSpacing: "2px",
             display: "none",
           }} className="sm:inline-block">:~$</span>
         </Link>
 
         {/* Desktop Nav */}
-        <ul className='list-none hidden sm:flex flex-row gap-8 items-center'>
+        <ul className='list-none hidden md:flex flex-row gap-4 lg:gap-8 items-center'>
           {navLinks.map((nav) => (
             <li
               key={nav.id}
@@ -93,27 +93,27 @@ const Navbar = () => {
                 href={`#${nav.id}`}
                 style={{
                   ...NAV_STYLE,
-                  color: active === nav.title ? "#9eff00" : "rgba(200,255,160,0.7)",
-                  textShadow: active === nav.title ? "0 0 8px #9eff00" : "none",
+                  color: active === nav.title ? "var(--accent)" : "rgb(var(--accent-rgb) / 0.7)",
+                  textShadow: active === nav.title ? "0 0 8px var(--accent)" : "none",
                   transition: "color 0.2s, text-shadow 0.2s",
                   paddingBottom: "4px",
                 }}
-                onMouseEnter={e => { e.target.style.color = "#9eff00"; e.target.style.textShadow = "0 0 8px #9eff00"; }}
+                onMouseEnter={e => { e.target.style.color = "var(--accent)"; e.target.style.textShadow = "0 0 8px var(--accent)"; }}
                 onMouseLeave={e => {
                   if (active !== nav.title) {
-                    e.target.style.color = "rgba(200,255,160,0.7)";
+                    e.target.style.color = "rgb(var(--accent-rgb) / 0.7)";
                     e.target.style.textShadow = "none";
                   }
                 }}
               >
-                <span style={{ color: "rgba(158,255,0,0.45)", marginRight: "3px" }}>#</span>
+                <span style={{ color: "rgb(var(--accent-rgb) / 0.45)", marginRight: "3px" }}>#</span>
                 {nav.title}
               </a>
               {active === nav.title && (
                 <div style={{
                   position: "absolute", bottom: -4, left: 0, right: 0, height: 1,
-                  background: "#9eff00",
-                  boxShadow: "0 0 6px #9eff00",
+                  background: "var(--accent)",
+                  boxShadow: "0 0 6px var(--accent)",
                 }} />
               )}
             </li>
@@ -121,7 +121,7 @@ const Navbar = () => {
           {/* Status dot */}
           <li style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <span className="status-dot" />
-            <span style={{ ...NAV_STYLE, fontSize: "10px", color: "rgba(158,255,0,0.5)" }}>
+            <span style={{ ...NAV_STYLE, fontSize: "10px", color: "rgb(var(--accent-rgb) / 0.5)" }}>
               ONLINE
             </span>
           </li>
@@ -146,7 +146,7 @@ const Navbar = () => {
         </ul>
 
         {/* Mobile hamburger & Prank (Right side) */}
-        <div className='flex sm:hidden flex-1 justify-end items-center gap-4'>
+        <div className='flex md:hidden flex-1 justify-end items-center gap-4'>
           {/* Light Mode Prank Toggle for Mobile */}
           <button
             onClick={() => setPrankActive(true)}
@@ -172,15 +172,15 @@ const Navbar = () => {
           {toggle && (
             <div style={{
               position: "absolute", top: "64px", right: "16px",
-              background: "rgba(5,12,10,0.97)",
-              border: "1px solid rgba(158,255,0,0.3)",
-              boxShadow: "0 0 20px rgba(158,255,0,0.15)",
+              background: "rgb(var(--page-rgb) / 0.97)",
+              border: "1px solid rgb(var(--accent-rgb) / 0.3)",
+              boxShadow: "0 0 20px rgb(var(--accent-rgb) / 0.15)",
               padding: "20px 28px",
               minWidth: "180px",
               zIndex: 10,
             }}>
               {/* top accent */}
-              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "#9eff00", boxShadow: "0 0 6px #9eff00" }} />
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, background: "var(--accent)", boxShadow: "0 0 6px var(--accent)" }} />
               <ul className='list-none flex flex-col gap-5'>
                 {navLinks.map((nav) => (
                   <li
@@ -191,11 +191,11 @@ const Navbar = () => {
                       href={`#${nav.id}`}
                       style={{
                         ...NAV_STYLE,
-                        color: active === nav.title ? "#9eff00" : "rgba(200,255,160,0.8)",
-                        textShadow: active === nav.title ? "0 0 8px #9eff00" : "none",
+                        color: active === nav.title ? "var(--accent)" : "rgb(var(--accent-rgb) / 0.8)",
+                        textShadow: active === nav.title ? "0 0 8px var(--accent)" : "none",
                       }}
                     >
-                      <span style={{ color: "rgba(158,255,0,0.4)", marginRight: "4px" }}>#</span>
+                      <span style={{ color: "rgb(var(--accent-rgb) / 0.4)", marginRight: "4px" }}>#</span>
                       {nav.title}
                     </a>
                   </li>

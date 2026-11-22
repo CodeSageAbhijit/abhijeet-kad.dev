@@ -13,8 +13,6 @@
     "@react-three/drei": "^9.56.24",
     "@react-three/fiber": "^8.11.1",
     "@react-three/rapier": "^1.5.0",
-    "@splinetool/react-spline": "^4.1.0",
-    "@splinetool/runtime": "^1.12.67",
     "framer-motion": "^9.0.7",
     "maath": "^0.5.2",
     "react": "^18.2.0",

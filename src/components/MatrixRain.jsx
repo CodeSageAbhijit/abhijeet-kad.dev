@@ -20,7 +20,7 @@ export default function MatrixRain({ opacity = 0.07, style = {} }) {
     const drops     = Array(cols).fill(1);
 
     function draw() {
-      ctx.fillStyle = "rgba(5,12,10,0.05)";
+      ctx.fillStyle = "rgba(8,14,25,0.05)";
       ctx.fillRect(0, 0, W, H);
 
       ctx.font = `${fontSize}px "Share Tech Mono", monospace`;
@@ -30,12 +30,12 @@ export default function MatrixRain({ opacity = 0.07, style = {} }) {
 
         // Head char brighter
         if (drops[i] * fontSize < H) {
-          ctx.fillStyle = "#e0ffe0";
+          ctx.fillStyle = "#e7effa";
           ctx.fillText(char, i * fontSize, drops[i] * fontSize);
         }
 
         // Trail
-        ctx.fillStyle = "#9eff00";
+        ctx.fillStyle = "#81b6ff";
         ctx.fillText(
           CHARS[Math.floor(Math.random() * CHARS.length)],
           i * fontSize,

@@ -1,0 +1,4 @@
+Key-click samples excerpted from “Typing - Model M 1986.ogg,” a 1986 IBM Model M recording by Raymangold22.
+Source: https://commons.wikimedia.org/wiki/File:Typing_-_Model_M_1986.ogg
+License: CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/)
+Changes: trimmed, level-matched, and encoded as a mono WAV sprite.

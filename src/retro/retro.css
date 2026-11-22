@@ -1,0 +1,244 @@
+.retro-desktop, .retro-boot, .retro-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  color: #f1f7ed;
+  font: 400 15px/1.45 Tahoma, "Trebuchet MS", system-ui, sans-serif;
+  background-color: #142023;
+  color-scheme: dark;
+}
+.retro-desktop, .retro-boot { outline: none; }
+.retro-desktop * { scroll-behavior: auto; }
+.retro-desktop {
+  display: flex;
+  flex-direction: column;
+  background-image: linear-gradient(180deg, #122b3926, transparent 25%, transparent 67%, #13220b25), url("/retro/wallpaper.webp");
+  background-position: center;
+  background-size: cover;
+}
+.retro-topbar {
+  z-index: 15;
+  min-height: 51px;
+  padding: 6px clamp(10px, 2.4vw, 30px);
+  padding-top: max(6px, env(safe-area-inset-top));
+  border-bottom: 1px solid #dbefde38;
+  background: linear-gradient(180deg, #33474ce8, #202e37ed);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-shadow: 0 6px 18px #1117213b;
+}
+.retro-topbar h1 { font-size: 0.94rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.retro-topbar h1 span { font-size: 1.2rem; color: #bce1a7; }
+.retro-topbar-actions, .retro-boot-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.retro-toolbar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 35px;
+  padding: 4px 10px;
+  border: 1px solid #bfd5d555;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #f9fff71c, #15222e1f);
+  font-size: 0.81rem;
+  color: #f1f8f0;
+  cursor: pointer;
+  text-decoration: none;
+}
+.retro-toolbar-button:hover { background: #d6ebdf32; }
+.retro-workspace { flex: 1; position: relative; min-height: 0; overflow: hidden; }
+.retro-shortcuts { display: grid; gap: 17px; width: min-content; padding: clamp(14px, 3vw, 30px); }
+.retro-shortcuts button {
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  min-width: 92px;
+  padding: 9px 7px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: #fff;
+  font-size: 0.79rem;
+  font-weight: 700;
+  text-shadow: 0 1px 3px #000, 0 0 7px #021019;
+}
+.retro-shortcuts button:hover { border-color: #e9fff3b3; background: #1c455962; }
+.retro-app-icon {
+  display: grid;
+  place-items: center;
+  width: 53px;
+  height: 53px;
+  border-radius: 13px;
+  border: 1px solid #ffffff80;
+  color: #f4fff4;
+  box-shadow: inset 0 2px 2px #fff5, 0 6px 12px #08282381;
+  font: 700 31px/1 "Trebuchet MS", system-ui, sans-serif;
+  text-shadow: 0 2px 8px #0f2637a1;
+}
+.retro-icon-circuit { background: linear-gradient(146deg, #8bd68f, #2a863d 55%, #144f42); }
+.retro-icon-memory { background: linear-gradient(146deg, #b6a4df, #8069b6 54%, #4a3d82); }
+
+.retro-window {
+  position: absolute;
+  inset: var(--window-y) auto auto clamp(0px, var(--window-x), calc(100% - min(490px, 100%)));
+  width: min(490px, 100%);
+  max-height: calc(100% - var(--window-y));
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d7eadcbd;
+  border-radius: 11px;
+  background: #e9eee4;
+  color: #142429;
+  box-shadow: 0 18px 55px #0c242c83, 0 0 0 1px #283e4880;
+  overflow: hidden;
+}
+.retro-window[hidden] { display: none; }
+.retro-window-maximized { inset: 6px; width: auto; max-height: none; }
+.retro-window-titlebar {
+  flex: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  min-height: 41px;
+  padding: 5px 7px 5px 11px;
+  background: linear-gradient(180deg, #688488, #334c54 70%, #283f49);
+  color: #fff;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.retro-window-titlebar h2 { font-size: 0.95rem; font-weight: 700; display: flex; gap: 8px; align-items: center; }
+.retro-window-titlebar h2 span { color: #c1e9af; }
+.retro-window-controls { display: flex; gap: 3px; }
+.retro-window-controls button {
+  width: 33px;
+  height: 31px;
+  border: 1px solid #e4f4e47d;
+  border-radius: 4px;
+  background: #e9fff51a;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.retro-window-controls button:hover { background: #f2fff53b; }
+.retro-window-controls button:last-child:hover { background: #934d58; }
+
+.retro-game { padding: clamp(12px, 2.6vw, 24px); overflow: auto; }
+.retro-game p { font-size: 0.91rem; }
+.retro-game-stats { min-height: 25px; margin: 8px 0 9px; color: #304747; font-size: 0.84rem; font-weight: 700; }
+.retro-game-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; max-width: 307px; margin: 0 auto 14px; }
+.retro-game-grid button { aspect-ratio: 1.12; min-width: 0; border-radius: 6px; display: grid; place-items: center; }
+.retro-card { background: linear-gradient(150deg, #7587a3, #38465d); border: 1px solid #2c394f; color: #e8eaff; box-shadow: inset 0 1px 2px #fff7; font-size: clamp(18px, 5vw, 30px); }
+.retro-card.is-face-up { background: #eee6f5; color: #64428e; border-color: #ad9bc2; }
+.retro-card.is-matched { background: #dbead2; color: #2c683a; border-color: #a8bb9c; }
+.retro-wire {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid #b9c6bd;
+  background: linear-gradient(145deg, #f9faf2, #d8e1d6);
+  --wire-color: #788b90;
+}
+.retro-wire:hover { background: #f4f9ec; }
+.retro-wire.is-powered { --wire-color: #437b40; }
+.retro-wire.is-socket { background: #d9e4d5; }
+.wire-center { position: absolute; z-index: 1; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: 15%; aspect-ratio: 1; border-radius: 50%; background: var(--wire-color); }
+.is-socket .wire-center { display: grid; place-items: center; width: 40%; font-size: clamp(12px, 3vw, 22px); color: white; }
+.wire-arm { position: absolute; display: block; background: var(--wire-color); }
+.wire-up, .wire-down { left: 43%; width: 14%; height: 50%; }
+.wire-left, .wire-right { top: 43%; width: 50%; height: 14%; }
+.wire-up { top: 0; }
+.wire-down { bottom: 0; }
+.wire-left { left: 0; }
+.wire-right { right: 0; }
+.retro-game-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.retro-game-button {
+  min-height: 35px;
+  padding: 5px 11px;
+  border: 1px solid #8c9c9c;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #fff, #d6e1d6);
+  color: #21352e;
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+.retro-game-button:hover { background: #eef9e5; }
+
+.retro-dock {
+  z-index: 16;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  align-self: center;
+  width: min(calc(100% - 24px), 560px);
+  min-height: 51px;
+  margin: 0 0 max(10px, env(safe-area-inset-bottom));
+  padding: 5px 8px;
+  border: 1px solid #d7eadc88;
+  border-radius: 11px;
+  background: linear-gradient(180deg, #405c60ed, #253741f5);
+  box-shadow: 0 6px 22px #051b2690, inset 0 1px 0 #fff4;
+  backdrop-filter: blur(12px);
+}
+.retro-launcher { position: relative; }
+.retro-launcher summary, .retro-tasks button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 4px 9px;
+  border: 1px solid #c5e1d96b;
+  border-radius: 6px;
+  background: #e6fff320;
+  color: #f1f7f1;
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.retro-launcher summary { background: linear-gradient(180deg, #8eb775, #3c7251); font-weight: 700; list-style: none; }
+.retro-launcher summary::-webkit-details-marker { display: none; }
+.retro-tasks { flex: 1; display: flex; gap: 5px; overflow-x: auto; }
+.retro-tasks button[aria-pressed="true"] { border-color: #ddffd9; background: #a3b09c57; }
+.retro-clock { margin-left: auto; padding: 0 4px; font-size: 0.79rem; white-space: nowrap; }
+.retro-launcher-menu {
+  position: absolute;
+  left: -2px;
+  bottom: calc(100% + 12px);
+  width: 201px;
+  padding: 5px;
+  border: 1px solid #acc9bc;
+  border-radius: 8px;
+  background: #233a40;
+  box-shadow: 0 9px 28px #13343b97;
+}
+.retro-launcher-menu button { display: flex; gap: 10px; align-items: center; width: 100%; min-height: 39px; text-align: left; border-radius: 4px; padding: 4px 7px; font-size: 0.85rem; }
+.retro-launcher-menu button:hover { background: #557269; }
+.retro-launcher-menu span { width: 16px; text-align: center; color: #c6edbf; }
+.retro-desktop :focus-visible, .retro-boot :focus-visible { outline: 2px solid #ffe8ac; outline-offset: 2px; }
+.retro-game :focus-visible { outline-color: #425f86; }
+
+.retro-boot, .retro-loading { display: grid; place-items: center; background: radial-gradient(ellipse at 50% 46%, #1c342c, #0e171c 55%, #060a0d); }
+.retro-boot-banner { width: min(82vw, 340px); text-align: center; }
+.retro-boot-mark { display: flex; justify-content: center; align-items: center; gap: 8px; height: 75px; margin-bottom: 15px; }
+.retro-boot-mark i { display: block; width: 27px; height: 48px; border-radius: 7px; background: linear-gradient(180deg, #d1ebac, #61a377); transform: skewY(-15deg); box-shadow: 0 0 22px #adea8b6c; animation: meadow-post 850ms both; }
+.retro-boot-mark i:nth-child(2) { height: 60px; animation-delay: 180ms; }
+.retro-boot-mark i:nth-child(3) { height: 70px; animation-delay: 360ms; }
+.retro-boot-banner h1 { font-size: clamp(1.65rem, 5vw, 2.4rem); font-weight: 630; letter-spacing: 0.045em; }
+.retro-boot-banner p { margin-top: 3px; color: #b2cbb5; }
+.retro-boot-progress { margin: 22px auto 0; width: 190px; height: 7px; overflow: hidden; border-radius: 9px; background: #e1f2dd29; }
+.retro-boot-progress span { display: block; height: 100%; background: #b4df98; transform-origin: left; animation: meadow-progress 2.25s cubic-bezier(.25,.7,.38,1) both; }
+.retro-boot-actions { position: absolute; bottom: max(22px, env(safe-area-inset-bottom)); }
+@keyframes meadow-post { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }
+@keyframes meadow-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (max-width: 639px) {
+  .retro-topbar h1 { gap: 4px; font-size: 0.83rem; }
+  .retro-toolbar-button { min-height: 35px; padding-inline: 6px; font-size: 0.74rem; }
+  .retro-shortcuts { grid-auto-flow: column; gap: 7px; padding: 12px 7px; }
+  .retro-window, .retro-window-maximized { inset: 2px 8px auto; width: auto; max-height: calc(100% - 6px); }
+  .retro-window-maximized { bottom: 2px; }
+  .retro-window-titlebar { cursor: default; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .retro-boot-mark i, .retro-boot-progress span { animation: none; }
+}

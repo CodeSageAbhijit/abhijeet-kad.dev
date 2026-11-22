@@ -1,4 +1,6 @@
 ﻿import { useState, useEffect, useRef } from "react";
+import { designFocus } from "../constants";
+import TerminalTitleBar from "./TerminalTitleBar";
 
 const SESSION = {
   boot: [
@@ -19,28 +21,26 @@ const SESSION = {
         { type: "out-dim",   text: "{" },
         { type: "out",       text: "  \"frontend\" : [\"React\", \"Next.js\", \"Three.js\", \"Tailwind\"]," },
         { type: "out",       text: "  \"backend\"  : [\"Node.js\", \"Express\", \"MongoDB\", \"REST\"]," },
-        { type: "out",       text: "  \"security\" : [\"Kali Linux\", \"Burp Suite\", \"Nmap\", \"Metasploit\"]," },
+        { type: "out",       text: `  "design_focus" : ${JSON.stringify(designFocus)},` },
         { type: "out",       text: "  \"tools\"    : [\"Git\", \"Docker\", \"Figma\", \"Postman\"]" },
         { type: "out-dim",   text: "}" },
       ],
     },
     {
-      cmd: "nmap -sV 127.0.0.1",
+      cmd: "cat ./rawtorrent-architecture.txt",
       output: [
-        { type: "out-dim",   text: "Starting Nmap 7.94 - portfolio.local" },
-        { type: "blank",     text: "" },
-        { type: "out-amber", text: "PORT      STATE  SERVICE  VERSION" },
-        { type: "out",       text: "80/tcp    open   http     React 18 + Vite" },
-        { type: "out",       text: "3000/tcp  open   node     Express 4.18" },
-        { type: "out",       text: "27017/tcp open   mongodb  MongoDB 6.0" },
-        { type: "out-cyan",  text: "443/tcp   open   https    TLS 1.3" },
+        { type: "out-amber", text: "RawTorrent architecture" },
+        { type: "out",       text: "Desktop UI     Next.js + Electron" },
+        { type: "out",       text: "Transfer logic Separate Node.js daemon" },
+        { type: "out",       text: "Live updates   WebSockets" },
+        { type: "out-cyan",  text: "Disk writes    Sequential pipeline" },
       ],
     },
     {
       cmd: "cat ./status.txt",
       output: [
         { type: "out", text: "Available for hire" },
-        { type: "out", text: "eJPTv2 Certified" },
+        { type: "out", text: "Focus: system design and backend engineering" },
         { type: "out", text: "Open to remote roles" },
       ],
     },
@@ -145,13 +145,8 @@ export default function TerminalWidget({ className = "" }) {
   };
 
   return (
-    <div className={`term-window ${className}`}>
-      <div className="term-bar">
-        <div className="term-bar-dot" style={{ background: "#ff5f57" }} />
-        <div className="term-bar-dot" style={{ background: "#ffbd2e" }} />
-        <div className="term-bar-dot" style={{ background: "#28ca41" }} />
-        <span className="term-bar-title">abhijeet@portfolio:~</span>
-      </div>
+    <div className={`term-window ${className}`} data-tone="career">
+      <TerminalTitleBar title="abhijeet@portfolio — zsh" />
       <div className="term-body" ref={bodyRef}>
         {lines.map((l, i) => renderLine(l, i))}
         {active && (

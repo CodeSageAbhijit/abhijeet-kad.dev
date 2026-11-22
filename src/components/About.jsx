@@ -1,44 +1,24 @@
 import React from "react";
 import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
+import TerminalTitleBar from "./TerminalTitleBar";
 
 import { styles } from "../styles";
-import { services } from "../constants";
+import { designFocus, services } from "../constants";
 import { SectionWrapper } from "../hoc";
 import { fadeIn, textVariant } from "../utils/motion";
 
 /* ── Syntax-highlighted JSON bio ── */
 const BioTerminal = () => {
-  const S = { fontFamily: "'Share Tech Mono', monospace", fontSize: "13px", lineHeight: "1.9" };
-  const K = { color: "#c8ffa0" };          // key
+  const S = { fontSize: "13px", lineHeight: "1.9" };
+  const K = { color: "var(--accent-soft)" };          // key
   const V = { color: "#ffe08a" };          // string value
   const N = { color: "#79c0ff" };          // number / bool
-  const C = { color: "rgba(158,255,0,0.4)" }; // comment / punctuation
-  const H = { color: "#9eff00" };          // highlight
+  const C = { color: "#a0a0a0" }; // comment / punctuation
 
   return (
-    <div style={{
-      background: "#050f08",
-      border: "1px solid rgba(158,255,0,0.25)",
-      boxShadow: "0 0 30px rgba(158,255,0,0.06)",
-      padding: "0",
-      maxWidth: "680px",
-      position: "relative",
-    }}>
-      {/* title bar */}
-      <div style={{
-        background: "rgba(158,255,0,0.07)",
-        borderBottom: "1px solid rgba(158,255,0,0.15)",
-        padding: "8px 14px",
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-      }}>
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#e63030", display: "inline-block" }} />
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#f0a500", display: "inline-block" }} />
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#9eff00", display: "inline-block" }} />
-        <span style={{ ...S, fontSize: "11px", color: "rgba(158,255,0,0.45)", marginLeft: 8 }}>~/portfolio/about.json</span>
-      </div>
+    <div className="term-window" style={{ maxWidth: 680 }}>
+      <TerminalTitleBar title="~/portfolio/about.json" />
 
       {/* code body */}
       <div style={{ padding: "18px 24px", ...S }}>
@@ -58,27 +38,17 @@ const BioTerminal = () => {
           <span style={C}>],</span>
         </div>
         <div style={{ paddingLeft: "20px" }}>
-          <span style={K}>"certifications"</span><span style={C}>: [</span>
-          <span style={{
-            ...V,
-            background: "linear-gradient(to right, #e63030, #ff7070)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            fontWeight: 700,
-          }}>"eJPTv2"</span>
+          <span style={K}>"design_focus"</span><span style={C}>: [</span>
+          <span style={V}>{designFocus.map((area) => JSON.stringify(area)).join(", ")}</span>
           <span style={C}>],</span>
         </div>
         <div style={{ paddingLeft: "20px" }}>
           <span style={K}>"philosophy"</span><span style={C}>: </span>
-          <span style={C}>&quot;</span>
-          <span style={{ ...V, color: "rgba(255,180,180,0.85)" }}>security</span>
-          <span style={{ color: "rgba(230,48,48,0.7)" }}>-first</span>
-          <span style={{ ...V, color: "rgba(200,255,160,0.7)" }}>, scalable by default</span>
-          <span style={C}>&quot;</span>
+          <span style={V}>"Define interfaces and document trade-offs"</span>
           <span style={C}>,</span>
         </div>
         <div style={{ paddingLeft: "20px" }}>
-          <span style={K}>"available"</span><span style={C}>: </span><span style={{ ...N, color: "#9eff00" }}>true</span><span style={C}>,</span>
+          <span style={K}>"available"</span><span style={C}>: </span><span style={{ ...N, color: "var(--accent)" }}>true</span><span style={C}>,</span>
         </div>
         <div style={{ paddingLeft: "20px" }}>
           <span style={K}>"leetcode"</span><span style={C}>: </span>
@@ -95,13 +65,6 @@ const BioTerminal = () => {
           <span style={K}>"contact"</span><span style={C}>: </span><span style={V}>"abhijitkad62@gmail.com"</span>
         </div>
         <div><span style={C}>{"}"}</span></div>
-        <div style={{ marginTop: "6px" }}>
-          <span style={{ fontSize: "11px" }}>
-            <span style={{ color: "rgba(158,255,0,0.35)" }}>// bridging dev &amp; </span>
-            <span style={{ color: "rgba(230,48,48,0.55)" }}>security</span>
-            <span style={{ color: "rgba(158,255,0,0.35)" }}> — let's build something powerful</span>
-          </span>
-        </div>
       </div>
     </div>
   );
@@ -117,8 +80,8 @@ const ServiceCard = ({ index, title, icon }) => (
     >
       <div style={{
         width: 56, height: 56,
-        background: "rgba(158,255,0,0.07)",
-        border: "1px solid rgba(158,255,0,0.25)",
+        background: "rgb(var(--accent-rgb) / 0.07)",
+        border: "1px solid rgb(var(--accent-rgb) / 0.25)",
         display: "flex", alignItems: "center", justifyContent: "center",
       }}>
         <img src={icon} alt={title} style={{ width: 32, height: 32, objectFit: "contain" }} />
@@ -157,4 +120,4 @@ const About = () => {
   );
 };
 
-export default SectionWrapper(About, "about");
+export default SectionWrapper(About, "about", "portfolio");

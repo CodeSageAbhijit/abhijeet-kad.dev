@@ -7,12 +7,12 @@ import HireMeButton from "./HireMeButton";
 const ROLES = [
   "Full Stack Developer",
   "React & Node.js Engineer",
-  "Penetration Tester",
+  "System Design",
   "3D Web Experiences Dev",
   "Problem Solver",
 ];
 
-const RED_ROLES = ["Penetration Tester"];
+const HIGHLIGHTED_ROLES = ["System Design"];
 
 // Show only 2 important stats for mobile
 const STATS = [
@@ -49,18 +49,18 @@ const useTypewriter = (words, speed = 90, pause = 1800) => {
   }, [sub, del, index, words, speed, pause]);
 
   const currentWord = words[index % words.length];
-  return { text, isRed: RED_ROLES.includes(currentWord) };
+  return { text, highlighted: HIGHLIGHTED_ROLES.includes(currentWord) };
 };
 
 const HeroMobile = () => {
-  const { text: role, isRed: roleIsRed } = useTypewriter(ROLES);
+  const { text: role, highlighted: highlightedRole } = useTypewriter(ROLES);
 
   return (
     <section className="relative w-full min-h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center pt-32 pb-20 px-6">
       {/* Deep radial glow */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
-        background: "radial-gradient(ellipse 60% 50% at 35% 55%, rgba(158,255,0,0.06) 0%, transparent 65%), radial-gradient(ellipse 40% 40% at 75% 45%, rgba(230,48,48,0.05) 0%, transparent 60%)",
+        background: "radial-gradient(ellipse 60% 50% at 35% 55%, rgb(var(--accent-rgb) / 0.06) 0%, transparent 65%), radial-gradient(ellipse 40% 40% at 75% 45%, rgb(var(--accent-alt-rgb) / 0.05) 0%, transparent 60%)",
       }} />
 
       {/* Status bar */}
@@ -72,12 +72,12 @@ const HeroMobile = () => {
       }}>
         <div style={{
           height: 1, flex: 1,
-          background: "linear-gradient(to right, transparent, rgba(158,255,0,0.25))",
+          background: "linear-gradient(to right, transparent, rgb(var(--accent-rgb) / 0.25))",
         }} />
         <div style={{
           display: "flex", alignItems: "center", gap: 6,
           fontFamily: "'Share Tech Mono', monospace",
-          fontSize: 9, color: "rgba(158,255,0,0.6)",
+          fontSize: 9, color: "rgb(var(--accent-rgb) / 0.6)",
           letterSpacing: 2,
         }}>
           <span className="status-dot" />
@@ -85,7 +85,7 @@ const HeroMobile = () => {
         </div>
         <div style={{
           height: 1, flex: 1,
-          background: "linear-gradient(to left, transparent, rgba(158,255,0,0.25))",
+          background: "linear-gradient(to left, transparent, rgb(var(--accent-rgb) / 0.25))",
         }} />
       </div>
 
@@ -99,18 +99,18 @@ const HeroMobile = () => {
         {/* Tag line */}
         <div style={{
           fontFamily: "'Share Tech Mono', monospace",
-          fontSize: 10, color: "rgba(158,255,0,0.55)",
+          fontSize: 10, color: "rgb(var(--accent-rgb) / 0.55)",
           letterSpacing: 3,
           display: "flex", alignItems: "center", gap: 6,
         }}>
-          <span style={{ color: "#9eff00" }}>❯</span>
+          <span style={{ color: "var(--accent)" }}>❯</span>
           <span>root@portfolio</span>
           <span className="cursor-blink" style={{ width: 5, height: "0.8em" }} />
         </div>
 
         {/* Name */}
         <div
-          className="glitch flicker text-center"
+          className="glitch text-center"
           data-text="Abhijeet Kad"
           style={{
             fontFamily: "'Bebas Neue', sans-serif",
@@ -118,7 +118,7 @@ const HeroMobile = () => {
             color: "#ffffff",
             letterSpacing: 4,
             lineHeight: 1,
-            textShadow: "0 0 40px rgba(158,255,0,0.15)",
+            textShadow: "0 0 40px rgb(var(--accent-rgb) / 0.15)",
           }}
         >
           Abhijeet Kad
@@ -134,16 +134,16 @@ const HeroMobile = () => {
           minHeight: 20,
           flexWrap: "wrap",
         }}>
-          <span style={{ color: roleIsRed ? "rgba(230,48,48,0.5)" : "rgba(158,255,0,0.4)" }}>//</span>
+          <span style={{ color: highlightedRole ? "rgb(var(--accent-alt-rgb) / 0.5)" : "rgb(var(--accent-rgb) / 0.4)" }}>//</span>
           <span style={{
-            color: roleIsRed ? "#e63030" : "#9eff00",
-            textShadow: roleIsRed ? "0 0 14px rgba(230,48,48,0.45)" : "0 0 10px rgba(158,255,0,0.3)",
+            color: highlightedRole ? "var(--accent-alt)" : "var(--accent)",
+            textShadow: highlightedRole ? "0 0 14px rgb(var(--accent-alt-rgb) / 0.45)" : "0 0 10px rgb(var(--accent-rgb) / 0.3)",
             transition: "color 0.4s, text-shadow 0.4s",
           }}>{role}</span>
           <span className="cursor-blink" style={{
             width: 7, height: "1em",
-            background: roleIsRed ? "#e63030" : "#9eff00",
-            boxShadow: roleIsRed ? "0 0 6px #e63030" : "0 0 6px #9eff00",
+            background: highlightedRole ? "var(--accent-alt)" : "var(--accent)",
+            boxShadow: highlightedRole ? "0 0 6px var(--accent-alt)" : "0 0 6px var(--accent)",
           }} />
         </div>
 
@@ -156,9 +156,9 @@ const HeroMobile = () => {
                 display: "flex", flexDirection: "column",
                 alignItems: "center",
                 padding: "10px 12px",
-                background: isLeet ? "rgba(248,161,0,0.05)" : "rgba(158,255,0,0.04)",
-                border: isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgba(158,255,0,0.18)",
-                borderTop: isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgba(158,255,0,0.5)",
+                background: isLeet ? "rgba(248,161,0,0.05)" : "rgb(var(--accent-rgb) / 0.04)",
+                border: isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgb(var(--accent-rgb) / 0.18)",
+                borderTop: isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgb(var(--accent-rgb) / 0.5)",
                 cursor: isLeet ? "pointer" : "default",
                 borderRadius: 6,
               }}
@@ -169,13 +169,13 @@ const HeroMobile = () => {
                   fontSize: 20, lineHeight: 1,
                   background: isLeet ? "linear-gradient(to top, #f8a100, #ffd166)" : "none",
                   WebkitBackgroundClip: isLeet ? "text" : "unset",
-                  WebkitTextFillColor: isLeet ? "transparent" : "#9eff00",
-                  color: isLeet ? undefined : "#9eff00",
-                  textShadow: isLeet ? "none" : "0 0 12px rgba(158,255,0,0.4)",
+                  WebkitTextFillColor: isLeet ? "transparent" : "var(--accent)",
+                  color: isLeet ? undefined : "var(--accent)",
+                  textShadow: isLeet ? "none" : "0 0 12px rgb(var(--accent-rgb) / 0.4)",
                 }}>{val}</span>
                 <span style={{
                   fontFamily: "'Share Tech Mono', monospace",
-                  fontSize: 9, color: isLeet ? "rgba(248,161,0,0.5)" : "rgba(158,255,0,0.45)",
+                  fontSize: 9, color: isLeet ? "rgba(248,161,0,0.5)" : "rgb(var(--accent-rgb) / 0.45)",
                   letterSpacing: 1, marginTop: 2, textTransform: "uppercase", textAlign: "center",
                 }}>{label}</span>
               </div>

@@ -16,11 +16,11 @@ const ExperienceCard = ({ experience }) => {
   return (
     <VerticalTimelineElement
       contentStyle={{
-        background: "#0d1a0f",
+        background: "var(--panel)",
         color: "#fff",
-        borderTop: "3px solid rgba(158,255,0,0.5)",
+        borderTop: "3px solid rgb(var(--accent-rgb) / 0.5)",
       }}
-      contentArrowStyle={{ borderRight: "7px solid #0d1a0f" }}
+      contentArrowStyle={{ borderRight: "7px solid var(--panel)" }}
       date={experience.date}
       iconStyle={{ background: experience.iconBg }}
       icon={
@@ -34,7 +34,7 @@ const ExperienceCard = ({ experience }) => {
       <div>
         <h3 className='text-white text-[24px] font-bold'>{experience.title}</h3>
         {experience.subtitle && (
-          <p style={{ margin: "4px 0 0", fontFamily: "'Share Tech Mono', monospace", fontSize: 13, color: "rgba(158,255,0,0.75)", letterSpacing: 1 }}>
+          <p style={{ margin: "4px 0 0", fontFamily: "'Share Tech Mono', monospace", fontSize: 13, color: "rgb(var(--accent-rgb) / 0.75)", letterSpacing: 1 }}>
             {experience.subtitle}
           </p>
         )}
@@ -86,4 +86,4 @@ const Experience = () => {
   );
 };
 
-export default SectionWrapper(Experience, "work");
+export default SectionWrapper(Experience, "work", "career");

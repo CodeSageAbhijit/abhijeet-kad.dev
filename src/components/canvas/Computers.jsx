@@ -1,77 +1,124 @@
-import React, { useState, useEffect, useRef } from "react";
-import Spline from "@splinetool/react-spline";
+import { useEffect, useRef, useState } from "react";
 
-// Text to auto-type on the vintage PC screen when the scene first loads
-const BOOT_TEXT = "$try this minigame for fun!";
+export default function ComputersCanvas({
+  display, keystroke, onKey, onFocus, onResult, onPage, sound, onSoundToggle, isBooting, children,
+}) {
+  const stage = useRef(null);
+  const poster = useRef(null);
+  const scene = useRef(null);
+  const latest = useRef({ display, onKey, onFocus, onResult, onPage });
+  const [nearby, setNearby] = useState(false);
+  const [requested, setRequested] = useState(false);
+  const [status, setStatus] = useState("preview");
+  latest.current = { display, onKey, onFocus, onResult, onPage };
+  const automatic = !window.matchMedia("(prefers-reduced-motion: reduce)").matches && !navigator.connection?.saveData;
+  const enabled = !isBooting && (requested || (automatic && nearby));
 
-const ComputersCanvas = () => {
-  const [loading, setLoading] = useState(true);
-  const hovered = useRef(false);
-
-  // Prevent spacebar from scrolling the page while user types into the Spline scene
   useEffect(() => {
-    const preventScroll = (e) => {
-      if (hovered.current && (e.code === "Space" || e.key === " ")) {
-        e.preventDefault();
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setNearby(true);
+        observer.disconnect();
       }
-    };
-    window.addEventListener("keydown", preventScroll, { passive: false });
-    return () => window.removeEventListener("keydown", preventScroll);
+    }, { rootMargin: "120px" });
+    observer.observe(stage.current);
+    return () => observer.disconnect();
   }, []);
 
-  const handleLoad = (splineApp) => {
-    setLoading(false);
+  useEffect(() => {
+    if (!enabled) return;
+    const abort = new AbortController();
+    let instance;
+    let usingPreview = false;
+    let timeout;
+    setStatus("loading");
+    const controls = {
+      onKey: (key) => latest.current.onKey(key),
+      onFocus: () => latest.current.onFocus(),
+      onResult: (index) => latest.current.onResult(index),
+      onPage: (direction) => latest.current.onPage(direction),
+    };
 
-    // Auto-type BOOT_TEXT onto the Spline canvas after a short delay
-    const canvas = splineApp?.canvas;
-    if (!canvas) return;
+    async function startPreview(error) {
+      if (abort.signal.aborted || usingPreview) return;
+      usingPreview = true;
+      clearTimeout(timeout);
+      instance?.dispose();
+      instance = null;
+      scene.current = null;
+      console.warn("Portfolio PC is using its interactive preview.", error);
 
-    let i = 0;
-    const delay = 800; // ms before typing starts
-    const speed = 140; // ms per character
-
-    setTimeout(() => {
-      const interval = setInterval(() => {
-        if (i >= BOOT_TEXT.length) {
-          clearInterval(interval);
+      try {
+        const { mountComputerPreview } = await import("./portfolioComputerPreview");
+        if (abort.signal.aborted) return;
+        const preview = await mountComputerPreview(stage.current, poster.current, controls, abort.signal);
+        if (!preview) return;
+        if (abort.signal.aborted) {
+          preview.dispose();
           return;
         }
-        const ch = BOOT_TEXT[i];
-        canvas.dispatchEvent(new KeyboardEvent("keydown", { key: ch, code: `Key${ch.toUpperCase()}`, bubbles: true, cancelable: true }));
-        canvas.dispatchEvent(new KeyboardEvent("keypress", { key: ch, code: `Key${ch.toUpperCase()}`, bubbles: true, cancelable: true }));
-        canvas.dispatchEvent(new KeyboardEvent("keyup",   { key: ch, code: `Key${ch.toUpperCase()}`, bubbles: true, cancelable: true }));
-        i++;
-      }, speed);
-    }, delay);
-  };
+        instance = preview;
+        scene.current = instance;
+        instance.update(latest.current.display);
+        setStatus("fallback");
+      } catch {
+        if (!abort.signal.aborted) setStatus("error");
+      }
+    }
 
+    timeout = setTimeout(() => startPreview(new Error("3D loading timed out")), 8000);
+    import("./portfolioComputerScene").then(({ mountPortfolioComputer }) => {
+      if (abort.signal.aborted || usingPreview) return;
+      instance = mountPortfolioComputer(stage.current, {
+        ...controls,
+        onReady: () => {
+          clearTimeout(timeout);
+          setStatus("ready");
+        },
+        onError: startPreview,
+      });
+      scene.current = instance;
+      instance.update(latest.current.display);
+    }).catch(startPreview);
+
+    return () => {
+      abort.abort();
+      clearTimeout(timeout);
+      instance?.dispose();
+      scene.current = null;
+    };
+  }, [enabled]);
+
+  useEffect(() => { scene.current?.update(display); }, [display]);
+  useEffect(() => { if (keystroke) scene.current?.pressKey(keystroke.key); }, [keystroke]);
+
+  const interactive = status === "ready" || status === "fallback";
   return (
-    <div
-      style={{ width: "100%", height: "100%", position: "relative" }}
-      onMouseEnter={() => { hovered.current = true; }}
-      onMouseLeave={() => { hovered.current = false; }}
-    >
-      {loading && (
-        <div style={{
-          position: "absolute", inset: 0, zIndex: 2,
-          display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center",
-          gap: 12, pointerEvents: "none",
-        }}>
-          <span className="canvas-loader" />
-          <p style={{
-            fontFamily: "'Share Tech Mono', monospace",
-            fontSize: 12, color: "rgba(158,255,0,0.6)", letterSpacing: 3,
-          }}>LOADING...</p>
-        </div>
-      )}
-      <Spline
-        scene="https://prod.spline.design/Mk4Z7Ypk8k-kvji6/scene.splinecode"
-        onLoad={handleLoad}
-        style={{ width: "100%", height: "100%" }}
-      />
+    <div className="portfolio-computer">
+      <div className={`pc-stage ${interactive ? "pc-stage-ready" : ""}`} ref={stage}>
+        <img
+          ref={poster}
+          src={`${import.meta.env.BASE_URL}the_pc/preview.webp`}
+          alt="Retro desktop computer and keyboard"
+          className="pc-poster"
+          loading="lazy"
+          decoding="async"
+        />
+        {interactive && children}
+      </div>
+      <div className="pc-controls">
+        <span id="pc-instructions" role="status">
+          {status === "ready" ? "Tap the search bar to type, or click the keys" : status === "fallback" ? "Interactive preview · Tap the screen or keys" : status === "loading" ? "Starting the PC…" : status === "error" ? "The PC preview couldn’t load" : "Retro PC preview"}
+        </span>
+        {interactive && (
+          <button type="button" className="pc-button" aria-label="Key click sounds" aria-pressed={sound} onClick={onSoundToggle}>
+            Sound {sound ? "on" : "off"}
+          </button>
+        )}
+        {status === "preview" && (
+          <button type="button" className="pc-button" disabled={isBooting} onClick={() => setRequested(true)}>Start PC</button>
+        )}
+      </div>
     </div>
   );
-};
-
-export default ComputersCanvas;
+}

@@ -4,18 +4,18 @@ import { motion, AnimatePresence } from "framer-motion";
 const bootLogs = [
   { text: "INITIALIZING PORTFOLIO KERNEL...", hex: "0x00A1" },
   { text: "ALLOCATING VRAM FOR WEBGL CONTEXT...", hex: "0x02B4" },
-  { text: "LOADING SECURE REACT MODULES: [OK]", hex: "0x03C9" },
+  { text: "LOADING REACT MODULES: [OK]", hex: "0x03C9" },
   { text: "ESTABLISHING HOST CONNECTIONS: [SUCCESS]", hex: "0x04D2" },
   { text: "FETCHING GITHUB REPOSITORIES...", hex: "0x05E5" },
   { text: "COMPILING 3D ASSETS: THREE.JS ONLINE", hex: "0x06F1" },
-  { text: "DECRYPTING DEVELOPER PROFILE...", hex: "0x08A8" },
-  { text: "BYPASSING NORMALIZATION ALGORITHMS...", hex: "0x09B3" },
-  { text: "CYBERPUNK THEME OVERRIDE: [ACTIVE]", hex: "0x0AC7" },
+  { text: "LOADING DEVELOPER PROFILE...", hex: "0x08A8" },
+  { text: "INDEXING PROJECT ARCHITECTURES...", hex: "0x09B3" },
+  { text: "TERMINAL THEME: [ACTIVE]", hex: "0x0AC7" },
   { text: "PORTFOLIO SYSTEM: ONLINE", hex: "0x0BD9" },
   { text: "LAUNCH SEQUENCE: COMPLETE.", hex: "0x0CFF" }
 ];
 
-// Random string generator for hacker decode effect
+// Random characters for the text scramble effect
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
 const generateRandomString = (length) => {
   let result = "";
@@ -136,22 +136,12 @@ const BootSequence = ({ onComplete }) => {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.5, ease: "circIn" } }}
-          className="fixed inset-0 z-[10000] bg-[#0a0004] flex flex-col justify-end p-8 sm:p-16 overflow-hidden pointer-events-auto"
+          className="fixed inset-0 z-[10000] bg-black flex flex-col justify-end p-8 sm:p-16 overflow-hidden pointer-events-auto"
           style={{ fontFamily: "'Share Tech Mono', monospace" }}
         >
-          {/* CRT Scanline Overlay */}
-          <div 
-            className="absolute inset-0 pointer-events-none opacity-30"
-            style={{
-              background: "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))",
-              backgroundSize: "100% 2px, 3px 100%",
-              zIndex: 10
-            }}
-          />
-
           {/* Terminal Logs (Will Glitch Out) */}
           <motion.div 
-            className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-start justify-end h-full text-[#ff003c]"
+            className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-start justify-end h-full text-accent"
             animate={phase === "glitch" ? { 
               x: [-10, 10, -5, 10, 0],
               y: [5, -5, 10, -10, 0],
@@ -167,10 +157,10 @@ const BootSequence = ({ onComplete }) => {
                  initial={{ opacity: 0, scale: 0.8 }}
                  animate={{ opacity: 1, scale: 1 }}
                  transition={{ duration: 1 }}
-                 className="text-[#ff003c] text-opacity-80 text-xl sm:text-3xl md:text-5xl text-center mb-8 font-bold tracking-[0.2em]"
+                 className="text-accent text-opacity-80 text-xl sm:text-3xl md:text-5xl text-center mb-8 font-bold tracking-[0.2em]"
                  style={{ 
                    fontFamily: "'Share Tech Mono', monospace",
-                   textShadow: "0 0 15px rgba(255,0,60,0.8)"
+                   textShadow: "0 0 15px rgb(var(--accent-rgb) / 0.55)"
                  }}
                >
                 <ScrambleText text="[ ABHIJEET KAD ]" /><br/>
@@ -180,7 +170,7 @@ const BootSequence = ({ onComplete }) => {
                </motion.div>
                  
                  {/* ASCII Progress Bar */}
-                 <div className="w-full max-w-2xl mt-4 opacity-90 text-sm md:text-base font-bold whitespace-pre-wrap text-center" style={{ textShadow: "0 0 8px rgba(255,0,60,0.8)" }}>
+                 <div className="w-full max-w-2xl mt-4 opacity-90 text-sm md:text-base font-bold whitespace-pre-wrap text-center" style={{ textShadow: "0 0 8px rgb(var(--accent-rgb) / 0.55)" }}>
                    {renderProgressBar()}
                  </div>
               </div>
@@ -193,7 +183,7 @@ const BootSequence = ({ onComplete }) => {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="text-xs sm:text-sm md:text-base leading-none flex items-start"
-                  style={{ textShadow: "0 0 5px rgba(255,0,60,0.7)" }}
+                  style={{ textShadow: "0 0 5px rgb(var(--accent-rgb) / 0.45)" }}
                 >
                   <span className="text-gray-500 mr-2 opacity-70">[{log.hex}]</span>
                   <span className="text-gray-500 mr-4">[{new Date().toISOString().substring(11, 23)}]</span>
@@ -214,7 +204,7 @@ const BootSequence = ({ onComplete }) => {
               <div className="animate-pulse text-xs sm:text-sm md:text-base mt-2 inline-block">
                 <span className="text-gray-500 mr-2 opacity-70">[      ]</span>
                 <span className="text-gray-500 mr-4">[{new Date().toISOString().substring(11, 23)}]</span>
-                <span className="text-[#ff003c] opacity-80" style={{ fontSize: "16px", textShadow: "0 0 10px rgba(255,0,60,0.8)" }}>█</span>
+                <span className="text-accent opacity-80" style={{ fontSize: "16px", textShadow: "0 0 10px rgb(var(--accent-rgb) / 0.55)" }}>█</span>
               </div>
             </div>
           </motion.div>
