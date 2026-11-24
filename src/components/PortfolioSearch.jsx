@@ -81,11 +81,28 @@ export default function PortfolioSearch({ isBooting }) {
       updateQuery("");
       return;
     }
+    if (key === "ArrowUp") {
+      changeSelection(-1);
+      return;
+    }
+    if (key === "ArrowDown") {
+      changeSelection(1);
+      return;
+    }
 
     const element = input.current;
     const isFocused = document.activeElement === element;
     const start = isFocused ? element.selectionStart ?? query.length : query.length;
     const end = isFocused ? element.selectionEnd ?? start : start;
+    if (key === "ArrowLeft" || key === "ArrowRight") {
+      if (!element) return;
+      const cursor = key === "ArrowLeft"
+        ? (start === end ? Math.max(0, start - 1) : start)
+        : (start === end ? Math.min(query.length, end + 1) : end);
+      focusSearch();
+      element.setSelectionRange(cursor, cursor);
+      return;
+    }
     let next;
     let cursor;
     if (key === "Backspace") {
@@ -105,7 +122,7 @@ export default function PortfolioSearch({ isBooting }) {
   function handleTyping(event) {
     if (event.ctrlKey || event.metaKey || event.altKey || event.nativeEvent.isComposing) return;
     const { key } = event;
-    if (key.length === 1 || ["Backspace", "Delete", "Enter", "Escape"].includes(key)) {
+    if (key.startsWith("Arrow") || key.length === 1 || ["Backspace", "Delete", "Enter", "Escape"].includes(key)) {
       playClick(key);
       setKeystroke({ key });
     }

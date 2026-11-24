@@ -114,17 +114,7 @@ export default function ComputersCanvas({
           {interactive ? "Do not press the CPU button! I repeat, Don't press it." : status === "loading" ? "Loading the PC controls…" : status === "error" ? "The PC preview couldn’t load" : "Retro PC preview"}
         </span>
         <div className="pc-control-actions">
-          {/* {interactive && (
-            <button type="button" className="pc-button" aria-label="Key click sounds" aria-pressed={sound} onClick={onSoundToggle}>
-              Sound {sound ? "on" : "off"}
-            </button>
-          )}
-          {status === "preview" && (
-            <button type="button" className="pc-button" disabled={isBooting} onClick={() => setRequested(true)}>Activate controls</button>
-          )}
-          <button type="button" className="pc-button pc-button-fullscreen" onClick={onFullscreen}>
-            <span aria-hidden="true">⛶</span> Full screen */}
-          {/* </button> */}
+          {status === "preview" && !automatic && <button type="button" className="pc-button" onClick={() => setRequested(true)}>Explore in 3D</button>}
         </div>
       </div>
     </div>

@@ -1,6 +1,15 @@
 import { Box3, OrthographicCamera, Vector3 } from "three";
 
-const keyAliases = { esc: "Escape", enter: "Enter", backspace: "Backspace", del: "Delete" };
+const keyAliases = {
+  esc: "Escape",
+  enter: "Enter",
+  backspace: "Backspace",
+  del: "Delete",
+  arrowup: "ArrowUp",
+  arrowdown: "ArrowDown",
+  arrowleft: "ArrowLeft",
+  arrowright: "ArrowRight",
+};
 
 export function getKeycap(legendMesh) {
   const parameters = legendMesh.geometry?.userData.parameters;

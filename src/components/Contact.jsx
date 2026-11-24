@@ -81,9 +81,9 @@ const Contact = () => {
           <div className='bg-black p-6 flex flex-col gap-5 flex-1'>
 
             {/* Intro line */}
-            <div className='text-accent text-sm'>
+            {/* <div className='text-accent text-sm'>
               <span className='text-[#888]'>Last login: Sat Mar 7 2026 on ttys000</span>
-            </div>
+            </div> */}
 
             <form ref={formRef} onSubmit={handleSubmit} className='flex flex-col gap-5'>
 

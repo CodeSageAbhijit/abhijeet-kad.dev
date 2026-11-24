@@ -1,3 +1,4 @@
+import { SpiritSlot } from "./spirits/SpiritGuestbook";
 import Navbar from "./components/Navbar";
 import ContactMobile from "./components/ContactMobile";
 import PortfolioSearch from "./components/PortfolioSearch";
@@ -21,23 +22,29 @@ const AppMobile = ({ isBooting }) => {
         pointerEvents: "none",
       }} />
 
-      <div>
+      <div className="mobile-intro relative">
         <Navbar />
         <HeroMobile />
+        {!isBooting && <SpiritSlot home="hero" />}
       </div>
       
       <PortfolioSearch isBooting={isBooting} />
+      {!isBooting && <SpiritSlot home="search" />}
       <AboutMobile />
+      {!isBooting && <SpiritSlot home="overview" />}
       <ExperienceMobile />
       
       {/* Optionally hide Tech if it's too heavy on Mobile or keep it */}
+      {!isBooting && <SpiritSlot home="work" />}
       <TechMobile />
+      {!isBooting && <SpiritSlot home="projects" />}
       <WorksMobile isBooting={isBooting} />
       
       <div className='relative z-0'>
         <ContactMobile isBooting={isBooting} />
       </div>
 
+      {!isBooting && <SpiritSlot home="contact" />}
       {/* Footer tailored for Mobile */}
       <footer style={{
         position: "relative",

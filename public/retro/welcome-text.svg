@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="76" viewBox="0 0 380 76">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="1.5" dy="2.5" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+    <linearGradient id="textFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="85%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E4E4EE"/>
+    </linearGradient>
+  </defs>
+  <text
+    x="190"
+    y="56"
+    text-anchor="middle"
+    font-family="'Franklin Gothic Medium', 'Trebuchet MS', 'Segoe UI', Tahoma, sans-serif"
+    font-size="62"
+    font-weight="900"
+    font-style="italic"
+    fill="url(#textFill)"
+    stroke="#FFFFFF"
+    stroke-width="1"
+    filter="url(#shadow)"
+    letter-spacing="0.5"
+  >welcome</text>
+</svg>

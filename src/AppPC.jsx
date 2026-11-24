@@ -1,3 +1,4 @@
+import { SpiritSlot } from "./spirits/SpiritGuestbook";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -26,11 +27,16 @@ const AppPC = ({ isBooting }) => {
         <Navbar />
         <Hero />
       </div>
+      {!isBooting && <SpiritSlot home="hero" />}
       <PortfolioSearch isBooting={isBooting} />
+      {!isBooting && <SpiritSlot home="search" />}
       <About />
+      {!isBooting && <SpiritSlot home="overview" />}
       <Experience />
       
+      {!isBooting && <SpiritSlot home="work" />}
       <Tech isBooting={isBooting} />
+      {!isBooting && <SpiritSlot home="projects" />}
       <Works isBooting={isBooting} />
       
       <div className='relative z-0'>
@@ -38,6 +44,7 @@ const AppPC = ({ isBooting }) => {
         {!isBooting && <CanvasBoundary><StarsCanvas /></CanvasBoundary>}
       </div>
 
+      {!isBooting && <SpiritSlot home="contact" />}
       {/* Footer */}
       <footer style={{
         position: "relative",

@@ -71,6 +71,38 @@ function createTower() {
   return { tower, power };
 }
 
+function createArrowGeometry(direction) {
+  const shape = new Shape();
+  shape.moveTo(0, 9.5);
+  shape.lineTo(8.5, 0);
+  shape.lineTo(3.2, 0);
+  shape.lineTo(3.2, -9.5);
+  shape.lineTo(-3.2, -9.5);
+  shape.lineTo(-3.2, 0);
+  shape.lineTo(-8.5, 0);
+  shape.closePath();
+
+  const geometry = new ExtrudeGeometry(shape, {
+    depth: 0.8,
+    bevelEnabled: false,
+  });
+
+  if (direction === "down") {
+    geometry.rotateZ(Math.PI);
+  } else if (direction === "left") {
+    geometry.rotateZ(Math.PI / 2);
+  } else if (direction === "right") {
+    geometry.rotateZ(-Math.PI / 2);
+  }
+
+  geometry.scale(1.8, 1.8, 1);
+  geometry.rotateX(-Math.PI / 2);
+  geometry.center();
+  geometry.translate(0, 34.82, 0);
+  geometry.computeVertexNormals();
+  return geometry;
+}
+
 export function prepareComputer(assetScene) {
   assetScene.updateMatrixWorld(true);
   const computer = assetScene.getObjectByName("computer");
@@ -78,6 +110,31 @@ export function prepareComputer(assetScene) {
   const screen = monitor?.getObjectByName("screen");
   const keyboard = computer?.getObjectByName("keyboard");
   if (!screen?.geometry || !keyboard) throw new Error("The PC model is missing its screen or keyboard");
+
+  const arrowKeys = [
+    { instanceName: "Master_Key_Instance_19", dir: "up", key: "ArrowUp" },
+    { instanceName: "Master_Key_Instance_21", dir: "down", key: "ArrowDown" },
+    { instanceName: "Master_Key_Instance_23", dir: "left", key: "ArrowLeft" },
+    { instanceName: "Master_Key_Instance_22", dir: "right", key: "ArrowRight" },
+  ];
+  for (const { instanceName, dir, key } of arrowKeys) {
+    const instance = keyboard.getObjectByName(instanceName);
+    if (!instance) continue;
+    const cap = instance.children[0];
+    if (!cap) continue;
+    const textMesh = cap.children.find((child) => child.geometry?.userData.parameters?.type === "TextGeometry");
+    if (!textMesh) continue;
+    textMesh.geometry = createArrowGeometry(dir);
+    textMesh.geometry.userData = {
+      parameters: {
+        type: "TextGeometry",
+        text: key,
+      },
+    };
+    textMesh.position.set(0, 0, 0);
+    textMesh.rotation.set(0, 0, 0);
+    textMesh.scale.set(1, 1, 1);
+  }
 
   const monitorFace = new Group();
   monitor.add(monitorFace);

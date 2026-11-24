@@ -94,7 +94,7 @@ const HeroMobile = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative flex flex-col items-center justify-center mt-12 gap-8"
+        className="relative flex flex-col items-center justify-center mt-20 gap-8"
       >
         {/* Tag line */}
         <div style={{

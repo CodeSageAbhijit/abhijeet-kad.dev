@@ -1,3 +1,4 @@
+import { SpiritSlot } from "../spirits/SpiritGuestbook";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Link } from "react-router-dom";
 import { designFocus, experiences, projects, technologies } from "../constants";
@@ -204,6 +205,7 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
               )}
             </>
           )}
+          <SpiritSlot home="retro" />
         </div>
       </div>
       <footer className="retro-ie-statusbar"><span>{busy ? "Opening…" : profile?.name ?? site}</span></footer>

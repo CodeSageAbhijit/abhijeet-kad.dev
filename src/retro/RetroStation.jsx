@@ -43,7 +43,10 @@ function SignIn({ onSignIn, onPowerOff }) {
       <header className="retro-logon-band retro-logon-top" />
       <div className="retro-signin-main">
         <div className="retro-signin-left">
-          <h1 className="retro-signin-prompt">Choose a user</h1>
+          <div className="retro-signin-logo-area">
+            <WindowsXPLogo width={140} />
+            <p className="retro-signin-prompt">To begin, click your user name</p>
+          </div>
         </div>
         <div className="retro-signin-divider" aria-hidden="true" />
 
@@ -64,13 +67,20 @@ function SignIn({ onSignIn, onPowerOff }) {
           </button>
         </div>
       </div>
+      <div className="retro-signin-disclaimer">
+        <p>Time passes. Memories remain.</p>
+        <p>This project is for educational and nostalgic purposes only. It is not affiliated with or endorsed by Microsoft. Windows and its assets are registered trademarks of Microsoft Corporation. WinXp.it - NoCopyRight</p>
+      </div>
 
       <footer className="retro-logon-band retro-logon-bottom">
         <div className="retro-signin-footer-content">
           <button type="button" className="retro-logon-turnoff" onClick={onPowerOff}>
-            <TurnOffComputerIcon size={18} /> <span>Shut down</span>
+            <TurnOffComputerIcon size={18} /> <span>Turn off computer</span>
           </button>
-          <Link to="/#search">Back to portfolio</Link>
+          <div className="retro-signin-footer-right">
+            <p>After you log on, you can add or change accounts.</p>
+            <p>Just go to Control Panel and click User Accounts.</p>
+          </div>
         </div>
       </footer>
     </section>
@@ -83,7 +93,12 @@ function Welcome() {
       <header className="retro-logon-band retro-logon-top" />
       <span className="retro-welcome-shine" aria-hidden="true" />
       <div className="retro-welcome-message">
-        <strong>Welcome</strong>
+        <img
+          src={`${base}retro/welcome-text.svg`}
+          alt="Welcome"
+          className="retro-welcome-text-img"
+          draggable={false}
+        />
       </div>
       <footer className="retro-logon-band retro-logon-bottom" />
     </div>
@@ -96,7 +111,7 @@ function ShuttingDown() {
       <header className="retro-logon-band retro-logon-top" />
       <div className="retro-shutdown-center">
         <WindowsXPLogo width={200} />
-        <p className="retro-shutdown-text">Shutting down...</p>
+        <p className="retro-shutdown-text">Windows is shutting down...</p>
       </div>
       <footer className="retro-logon-band retro-logon-bottom" />
     </div>
@@ -181,8 +196,8 @@ export default function RetroStation() {
     document.title = "Retro PC · Abhijeet Kad";
     const wallpaper = new Image();
     wallpaper.src = `${base}retro/wallpaper.webp`;
-    wallpaper.decode().catch(() => {});
-    preloadKeyClicks().catch(() => {});
+    wallpaper.decode().catch(() => { });
+    preloadKeyClicks().catch(() => { });
     const handleFullscreen = () => setFullscreen(Boolean(document.fullscreenElement));
     document.addEventListener("fullscreenchange", handleFullscreen);
     return () => {
@@ -273,35 +288,37 @@ export default function RetroStation() {
             }}
           >
             <div className={`retro-glass-content${phase === "desktop" ? " retro-glass-content--desktop" : ""}${busy ? " classic-busy" : ""}`}
-              style={{ filter: display.brightness === 100 && display.contrast === 100 ? undefined
-                : `brightness(${display.brightness}%) contrast(${display.contrast}%)` }}>
-            {phase === "off" ? (
-              <div className="retro-off">
-                <p>Press the power button</p>
-                <div className="retro-off-links">
-                  <button type="button" onClick={toggles.onFullscreen}>
-                    {fullscreen ? "Exit full screen" : "Full screen"}
-                  </button>
-                  <Link to="/#search">Back to portfolio</Link>
+              style={{
+                filter: display.brightness === 100 && display.contrast === 100 ? undefined
+                  : `brightness(${display.brightness}%) contrast(${display.contrast}%)`
+              }}>
+              {phase === "off" ? (
+                <div className="retro-off">
+                  <p>Press the power button</p>
+                  <div className="retro-off-links">
+                    <button type="button" onClick={toggles.onFullscreen}>
+                      {fullscreen ? "Exit full screen" : "Full screen"}
+                    </button>
+                    <Link to="/#search">Back to portfolio</Link>
+                  </div>
                 </div>
-              </div>
-            ) : phase === "starting" ? (
-              <Startup onSkip={() => setPhase("signin")} />
-            ) : phase === "signin" ? (
-              <SignIn onSignIn={signIn} onPowerOff={initiateShutDown} />
-            ) : phase === "welcome" ? (
-              <Welcome />
-            ) : phase === "shutting_down" ? (
-              <ShuttingDown />
-            ) : (
-              <RetroDesktop
-                userName={RETRO_USER}
-                toggles={toggles}
-                onType={playTyping}
-                onRestart={powerOn}
-                onPowerOff={initiateShutDown}
-              />
-            )}
+              ) : phase === "starting" ? (
+                <Startup onSkip={() => setPhase("signin")} />
+              ) : phase === "signin" ? (
+                <SignIn onSignIn={signIn} onPowerOff={initiateShutDown} />
+              ) : phase === "welcome" ? (
+                <Welcome />
+              ) : phase === "shutting_down" ? (
+                <ShuttingDown />
+              ) : (
+                <RetroDesktop
+                  userName={RETRO_USER}
+                  toggles={toggles}
+                  onType={playTyping}
+                  onRestart={powerOn}
+                  onPowerOff={initiateShutDown}
+                />
+              )}
             </div>
             {adjustment && <div className="retro-monitor-osd" role="status">
               {adjustment} {display[adjustment]}%

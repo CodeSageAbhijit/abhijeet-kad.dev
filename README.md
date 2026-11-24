@@ -111,3 +111,13 @@ You can get these credentials by signing up at [EmailJS](https://www.emailjs.com
 ## 🙏 Credits <a name="credits"></a>
 
 This portfolio is inspired by the work of [JavaScript Mastery](https://www.youtube.com/@javascriptmastery/videos). Full credit to them for the original concept and design direction.
+
+### Spirit guestbook
+
+Development, previews, and production connect directly to Supabase Cloud. Vercel serves the portfolio assets.
+
+1. In a Supabase project, apply [the guestbook migration](supabase/migrations/202611230001_spirit_guestbook.sql) followed by [optional signatures](supabase/migrations/202611240001_optional_signatures.sql) with the SQL Editor or your Supabase migration workflow.
+2. Enable **Allow anonymous sign-ins** in Supabase Authentication. Visitors receive a session without entering identifying information.
+3. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in Vercel’s environment settings for Preview and Production, then redeploy. The build also accepts `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. For development, put the same variables in `.env.local` and restart Vite. Use the project's public publishable key. The frontend calls a restricted database function and never needs a service-role key.
+
+A production build without these settings omits the guestbook. Anonymous sessions identify returning readers on the same browser. Notes, permanent home IDs, and read receipts live in Postgres. To evolve the schema, add a later timestamped migration, keep existing home IDs, and back up the database before applying changes. When retiring a home, migrate its notes to an active home in the same transaction.
