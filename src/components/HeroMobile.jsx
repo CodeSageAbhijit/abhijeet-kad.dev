@@ -52,7 +52,7 @@ const useTypewriter = (words, speed = 90, pause = 1800) => {
   return { text, highlighted: HIGHLIGHTED_ROLES.includes(currentWord) };
 };
 
-const HeroMobile = () => {
+const HeroMobile = ({ children }) => {
   const { text: role, highlighted: highlightedRole } = useTypewriter(ROLES);
 
   return (
@@ -190,7 +190,7 @@ const HeroMobile = () => {
 
         {/* Hire Me Button */}
         <div className="mt-6">
-          <HireMeButton />
+          <div className="hero-actions"><HireMeButton />{children}</div>
         </div>
       </motion.div>
     </section>

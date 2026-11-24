@@ -12,7 +12,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import "./spirits.css";
 
 const Field = createContext(null);
-const names = { hero:"Welcome",search:"Search",overview:"Overview",work:"Experience",projects:"Projects",contact:"Contact",retro:"the XP portfolio" };
+const names = { hero: "Welcome", search: "Search", overview: "Overview", work: "Experience", projects: "Projects", contact: "Contact", retro: "the XP portfolio" };
 const prompts = {
   hero: "What would you tell a friend to try here first?",
   search: "What did you discover on the retro computer?",
@@ -44,7 +44,7 @@ export function SpiritField({ children }) {
     [],
   );
   useEffect(() => {
-    if (spiritsEnabled) refresh().catch(() => {});
+    if (spiritsEnabled) refresh().catch(() => { });
     const media = matchMedia("(min-width: 768px)");
     const resize = () => setLimit(media.matches ? 2 : 1);
     resize();
@@ -58,12 +58,14 @@ export function SpiritField({ children }) {
   }, [landing]);
   const populated = Object.values(homes).some(({ total }) => total > 0) || releasedNotes.current.size > 0;
   const slots = visible.filter(id =>
-    id === active || homes[id]?.total > 0 || releasedNotes.current.has(id) || (id === "hero" && (limit === 1 || !populated))
+    id === active || id === "hero" || homes[id]?.total > 0 || releasedNotes.current.has(id)
   );
   const priority = (id) => homes[id]?.priority ?? Infinity;
   slots.sort(
     (a, b) =>
-      Number(b === active) - Number(a === active) || priority(a) - priority(b) ||
+      Number(b === active) - Number(a === active) ||
+      Number(b === "hero") - Number(a === "hero") ||
+      priority(a) - priority(b) ||
       Number(releasedNotes.current.has(b)) - Number(releasedNotes.current.has(a)),
   );
   return (
@@ -96,15 +98,15 @@ function flyToHome(trigger, home) {
   const ghost = new Image();
   ghost.src = import.meta.env.BASE_URL + "spirit-fire.webp";
   ghost.className = "spirit-flight";
-  const x=start.left+start.width/2, y=start.top+start.height/2;
-  Object.assign(ghost.style,{left:x-22+"px",top:y-32+"px"});
+  const x = start.left + start.width / 2, y = start.top + start.height / 2;
+  Object.assign(ghost.style, { left: x - 22 + "px", top: y - 32 + "px" });
   document.body.append(ghost);
-  const dx = (target ? target.left+target.width/2 : innerWidth-24)-x;
-  const dy = Math.max(0, Math.min(innerHeight,target ? target.top : 0))-y;
-  ghost.animate([{transform:"translate(0,0)"},{transform:`translate(${dx*.45}px,${dy*.45-35}px)`,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(.4)`,opacity:0}],{duration:750,easing:"ease-in-out"}).finished.finally(()=>ghost.remove());
+  const dx = (target ? target.left + target.width / 2 : innerWidth - 24) - x;
+  const dy = Math.max(0, Math.min(innerHeight, target ? target.top : 0)) - y;
+  ghost.animate([{ transform: "translate(0,0)" }, { transform: `translate(${dx * .45}px,${dy * .45 - 35}px)`, offset: .5 }, { transform: `translate(${dx}px,${dy}px) scale(.4)`, opacity: 0 }], { duration: 750, easing: "ease-in-out" }).finished.finally(() => ghost.remove());
 }
 
-export function SpiritSlot({home}) {
+export function SpiritSlot({ home }) {
   const reduced = useReducedMotion();
   const { homes, refresh, visibility, slots, active, setActive, setLanding, releasedNotes } =
     useContext(Field);
@@ -162,7 +164,7 @@ export function SpiritSlot({home}) {
           () =>
             guestbook("read", { id: note.id })
               .then(refresh)
-              .catch(() => {}),
+              .catch(() => { }),
           1000,
         );
     };
@@ -217,7 +219,16 @@ export function SpiritSlot({home}) {
   }
   function enter() {
     clearTimeout(leaveTimer.current);
-    if (!open && !saving.current) reveal();
+    if (!open && !saving.current) {
+      if (home === "hero") {
+        setAbove(trigger.current?.getBoundingClientRect().bottom > innerHeight / 2);
+        setActive(home);
+        setError("");
+        setMode("write");
+      } else {
+        reveal();
+      }
+    }
   }
   async function release(event) {
     event.preventDefault();
@@ -233,13 +244,13 @@ export function SpiritSlot({home}) {
         display_name: displayName.trim() || null,
       });
       releasedNotes.current.set(destination, { id: submission.current, body: draft.trim(), display_name: savedName });
-      flyToHome(trigger.current,destination);
+      flyToHome(trigger.current, destination);
       setLanding(destination);
       submission.current = null;
       setDraft("");
       setDisplayName("");
       close();
-      refresh().catch(() => {});
+      refresh().catch(() => { });
     } catch (cause) {
       setMode("write");
       setError(
@@ -278,20 +289,27 @@ export function SpiritSlot({home}) {
         }}
       >
         {ready && (
-          <button
-            ref={trigger}
-            className={
-              "spirit-trigger" +
-              (total && !homes[home]?.unread ? " spirit-seen" : "")
-            }
-            aria-label={`Discover a spirit near ${names[home]}`}
-            aria-expanded={open}
-            onFocus={enter}
-            onPointerEnter={(event) => {
-              if (event.pointerType === "mouse") enter();
-            }}
-            onClick={enter}
-          ><SpiritFire /></button>
+          <>
+            <button
+              ref={trigger}
+              className={
+                "spirit-trigger" +
+                (total && !homes[home]?.unread ? " spirit-seen" : "")
+              }
+              aria-label={`Discover a spirit near ${names[home]}`}
+              aria-expanded={open}
+              onFocus={enter}
+              onPointerEnter={(event) => {
+                if (event.pointerType === "mouse") enter();
+              }}
+              onClick={enter}
+            ><SpiritFire /></button>
+            {/* {!open && home === "hero" && (
+              <span className="spirit-hero-hint" aria-hidden="true">
+                leave a note
+              </span>
+            )} */}
+          </>
         )}
         <AnimatePresence>
           {ready && open && (
@@ -342,6 +360,15 @@ export function SpiritSlot({home}) {
                     >
                       Close
                     </button>
+                    {total > 0 && (
+                      <button
+                        type="button"
+                        disabled={saving.current}
+                        onClick={() => reveal()}
+                      >
+                        Read sparks
+                      </button>
+                    )}
                     <button disabled={!draft.trim() || saving.current}>
                       {saving.current ? "Releasing…" : "Release spark"}
                     </button>
@@ -357,9 +384,9 @@ export function SpiritSlot({home}) {
                     {mode === "error" ? null : mode === "loading"
                       ? "Listening…"
                       : note?.body ||
-                        (total
-                          ? "No other notes here yet."
-                          : "Leave a tip for the next explorer.")}
+                      (total
+                        ? "No other notes here yet."
+                        : "Leave a tip for the next explorer.")}
                   </p>
                   {note && <small className="spirit-signature">— {note.display_name || "Anonymous"}</small>}
                   <div className="spirit-actions">

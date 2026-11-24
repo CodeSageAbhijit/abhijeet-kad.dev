@@ -4,7 +4,7 @@ export const spiritsEnabled = Boolean(url && key);
 let clientPromise;
 let signingIn;
 
-export async function guestbook(action, payload = {}) {
+export async function authenticatedClient() {
   clientPromise ??= import("@supabase/supabase-js").then(({ createClient }) =>
     createClient(url, key),
   );
@@ -18,6 +18,11 @@ export async function guestbook(action, payload = {}) {
     const { error } = await signingIn;
     if (error) throw error;
   }
+  return client;
+}
+
+export async function guestbook(action, payload = {}) {
+  const client = await authenticatedClient();
   const { data: result, error } = await client.rpc("spirit_guestbook", {
     action,
     payload,

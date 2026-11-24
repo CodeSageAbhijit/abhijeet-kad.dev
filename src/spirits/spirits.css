@@ -106,6 +106,39 @@
     opacity:var(--shadow-strength,.55);
   }
 }
+/* ── Spirit Hero Hint ── */
+.spirit-hero-hint {
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  transform: translateY(-50%);
+  margin-right: 12px;
+  white-space: nowrap;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ddc8fb;
+  background: rgba(23, 21, 27, 0.88);
+  border: 1px solid rgba(164, 122, 252, 0.4);
+  border-radius: 4px;
+  padding: 4px 10px;
+  pointer-events: none;
+  animation: spirit-hint-float 3s ease-in-out infinite;
+  box-shadow: 0 0 14px rgba(164, 122, 252, 0.25);
+  user-select: none;
+}
+
+@keyframes spirit-hint-float {
+  0%, 100% { opacity: 0.85; transform: translateY(-50%) translateX(0); }
+  50% { opacity: 1; transform: translateY(-50%) translateX(-4px); }
+}
+
+@media (max-width: 768px) {
+  .spirit-hero-hint {
+    display: none;
+  }
+}
 .spirit-signature-field { display:block; margin:6px 0 8px; font-size:12px; color:#dfd4e9; }
 .spirit-signature-field input { display:block; width:100%; margin-top:3px; padding:5px 7px; border:1px solid #554c61; border-radius:3px; background:#211e27; color:white; font:inherit; }
 .spirit-signature { display:block; margin-top:4px; color:#c9bdd6; overflow-wrap:anywhere; }

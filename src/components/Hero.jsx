@@ -54,7 +54,7 @@ const useTypewriter = (words, speed = 90, pause = 1800) => {
   return { text, highlighted: HIGHLIGHTED_ROLES.includes(currentWord) };
 };
 
-const Hero = () => {
+const Hero = ({ children }) => {
   const { text: role, highlighted: highlightedRole } = useTypewriter(ROLES);
 
   return (
@@ -213,7 +213,7 @@ const Hero = () => {
             ))}
           </div>
 
-          <HireMeButton />
+          <div className="hero-actions"><HireMeButton />{children}</div>
         </motion.div>
 
         {/* ── RIGHT: Terminal ── */}
@@ -227,6 +227,7 @@ const Hero = () => {
           <TerminalWidget />
         </motion.div>
       </div>
+
 
       {/* Bottom scroll cue */}
       <div className="absolute xs:bottom-10 bottom-20 w-full flex justify-center items-center" style={{ zIndex: 10 }}>

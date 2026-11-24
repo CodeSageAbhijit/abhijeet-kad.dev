@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import TerminalTitleBar from "./TerminalTitleBar";
+import FanButton from "../fans/FanButton";
 import { styles } from "../styles";
 import { designFocus, services } from "../constants";
 import { SectionWrapper } from "../hoc";
@@ -102,8 +103,9 @@ const AboutMobile = () => {
         <h2 className={styles.sectionHeadText}>Overview.</h2>
       </motion.div>
 
-      <motion.div variants={fadeIn("", "", 0.1, 1)} className="mt-6">
+      <motion.div variants={fadeIn("", "", 0.1, 1)} className="mt-6 flex flex-col gap-6 items-center">
         <BioTerminalMobile />
+        <FanButton />
       </motion.div>
 
       <div className='mt-10 flex flex-col gap-4'>

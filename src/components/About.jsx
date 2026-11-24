@@ -2,6 +2,7 @@ import React from "react";
 import Tilt from "react-parallax-tilt";
 import { motion } from "framer-motion";
 import TerminalTitleBar from "./TerminalTitleBar";
+import FanButton from "../fans/FanButton";
 
 import { styles } from "../styles";
 import { designFocus, services } from "../constants";
@@ -107,8 +108,9 @@ const About = () => {
         <h2 className={styles.sectionHeadText}>Overview.</h2>
       </motion.div>
 
-      <motion.div variants={fadeIn("", "", 0.1, 1)} className="mt-6">
+      <motion.div variants={fadeIn("", "", 0.1, 1)} className="mt-6 flex flex-col lg:flex-row gap-8 lg:gap-12 items-center lg:items-start justify-start">
         <BioTerminal />
+        <FanButton />
       </motion.div>
 
       <div className='mt-16 flex flex-wrap gap-8'>
