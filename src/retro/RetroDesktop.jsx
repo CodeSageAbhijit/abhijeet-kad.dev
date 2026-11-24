@@ -7,19 +7,32 @@ import RetroCalendar from "./RetroCalendar";
 // import RetroCameo, { cartoonCameos } from "./RetroCameo";
 import RetroPictures from "./RetroPictures";
 import { loadOpenWindows, saveOpenWindows } from "./windowStorage";
-import RetroPinball from "./pinball/RetroPinball";
+import RetroMusicPlayer from "./RetroMusicPlayer";
+import RetroMinesweeper from "./RetroMinesweeper";
+import RetroGamesDirectory from "./RetroGamesDirectory";
+import RetroEmulatorApp from "./emulator/RetroEmulatorApp";
+import RetroViceCity from "./RetroViceCity";
 import { playWindowSound } from "./startupSound";
 import {
   ControlPanelIcon,
+  GamesFolderIcon,
+  GtaIcon,
+  ViceCityIcon,
   InternetExplorerIcon,
+  MarioIcon,
+  MinesweeperIcon,
   MyComputerIcon,
   NotepadIcon,
+  PacmanIcon,
   PaintIcon,
   PalmAvatar,
-  PinballIcon,
+  PokemonIcon,
+  SonicIcon,
+  TileIcon,
   TurnOffComputerIcon,
   WindowsFlagIcon,
   WindowsMediaPlayerIcon,
+  ZeldaIcon,
 } from "./RetroIcons";
 
 const applications = {
@@ -28,44 +41,125 @@ const applications = {
     shortName: "Internet Explorer",
     icon: <InternetExplorerIcon size={16} />,
     largeIcon: <InternetExplorerIcon size={32} />,
-    width: 730,
-    height: 485,
+    width: 580,
+    height: 390,
     Program: PortfolioBrowser,
   },
   files: {
     name: "Projects",
-    shortName: "Projects",
+    shortName: "My Computer",
     icon: <MyComputerIcon size={16} />,
     largeIcon: <MyComputerIcon size={32} />,
-    width: 630,
-    height: 440,
+    width: 520,
+    height: 380,
     Program: ProjectFiles,
+  },
+  music: {
+    name: "Windows Media Player 9 Series - Audio Hits",
+    shortName: "Media Player",
+    icon: <WindowsMediaPlayerIcon size={16} />,
+    largeIcon: <WindowsMediaPlayerIcon size={32} />,
+    width: 510,
+    height: 380,
+    Program: RetroMusicPlayer,
+  },
+  games: {
+    name: "Games Directory - C:\\Program Files\\Games",
+    shortName: "Games",
+    icon: <GamesFolderIcon size={16} />,
+    largeIcon: <GamesFolderIcon size={32} />,
+    width: 540,
+    height: 380,
+    Program: RetroGamesDirectory,
+  },
+  vicecity: {
+    name: "Grand Theft Auto: Vice City - PC 3D",
+    shortName: "GTA: Vice City",
+    icon: <ViceCityIcon size={16} />,
+    largeIcon: <ViceCityIcon size={32} />,
+    width: 600,
+    height: 420,
+    Program: RetroViceCity,
+  },
+  mario: {
+    name: "Super Mario Bros. - Nintendo Entertainment System",
+    shortName: "Super Mario",
+    icon: <MarioIcon size={16} />,
+    largeIcon: <MarioIcon size={32} />,
+    width: 440,
+    height: 380,
+    Program: (props) => <RetroEmulatorApp gameId="mario" {...props} />,
+  },
+  sonic: {
+    name: "Sonic the Hedgehog - Sega Genesis",
+    shortName: "Sonic",
+    icon: <SonicIcon size={16} />,
+    largeIcon: <SonicIcon size={32} />,
+    width: 440,
+    height: 380,
+    Program: (props) => <RetroEmulatorApp gameId="sonic" {...props} />,
+  },
+  pokemon: {
+    name: "Pokémon Emerald - Game Boy Advance",
+    shortName: "Pokémon Emerald",
+    icon: <PokemonIcon size={16} />,
+    largeIcon: <PokemonIcon size={32} />,
+    width: 440,
+    height: 350,
+    Program: (props) => <RetroEmulatorApp gameId="pokemon" {...props} />,
+  },
+  gta: {
+    name: "Grand Theft Auto: Chinatown Wars - Nintendo DS",
+    shortName: "GTA: Chinatown Wars",
+    icon: <GtaIcon size={16} />,
+    largeIcon: <GtaIcon size={32} />,
+    width: 330,
+    height: 385,
+    Program: (props) => <RetroEmulatorApp gameId="gta" {...props} />,
+  },
+  zelda: {
+    name: "The Legend of Zelda: A Link to the Past - Super Nintendo",
+    shortName: "Zelda: ALTTP",
+    icon: <ZeldaIcon size={16} />,
+    largeIcon: <ZeldaIcon size={32} />,
+    width: 440,
+    height: 380,
+    Program: (props) => <RetroEmulatorApp gameId="zelda" {...props} />,
+  },
+  pacman: {
+    name: "Pac-Man - Arcade / NES",
+    shortName: "Pac-Man",
+    icon: <PacmanIcon size={16} />,
+    largeIcon: <PacmanIcon size={32} />,
+    width: 440,
+    height: 380,
+    Program: (props) => <RetroEmulatorApp gameId="pacman" {...props} />,
+  },
+  minesweeper: {
+    name: "Minesweeper",
+    shortName: "Minesweeper",
+    icon: <MinesweeperIcon size={16} />,
+    largeIcon: <MinesweeperIcon size={32} />,
+    width: 290,
+    height: 350,
+    Program: RetroMinesweeper,
   },
   notes: {
     name: "Untitled - Notepad",
     shortName: "Notepad",
     icon: <NotepadIcon size={16} />,
     largeIcon: <NotepadIcon size={32} />,
-    width: 480,
-    height: 350,
+    width: 440,
+    height: 340,
     Program: Notes,
-  },
-  pinball: {
-    name: "Midnight Transit Pinball",
-    shortName: "Pinball",
-    icon: <PinballIcon size={16} />,
-    largeIcon: <PinballIcon size={32} />,
-    width: 600,
-    height: 520,
-    Program: RetroPinball,
   },
   pictures: {
     name: "Pictures",
     shortName: "Pictures",
     icon: <PaintIcon size={16} />,
     largeIcon: <PaintIcon size={32} />,
-    width: 580,
-    height: 410,
+    width: 500,
+    height: 380,
     Program: RetroPictures,
   },
   settings: {
@@ -73,7 +167,7 @@ const applications = {
     shortName: "Control Panel",
     icon: <ControlPanelIcon size={16} />,
     largeIcon: <ControlPanelIcon size={32} />,
-    width: 420,
+    width: 400,
     height: 290,
     Program: DisplaySettings,
   },
@@ -83,31 +177,36 @@ const applications = {
     icon: <MyComputerIcon size={16} />,
     largeIcon: <MyComputerIcon size={32} />,
     width: 320,
-    height: 360,
+    height: 350,
     Program: RetroCalendar,
   },
-  games: {
-    name: "Games",
-    shortName: "Games",
-    icon: <PinballIcon size={16} />,
-    largeIcon: <PinballIcon size={32} />,
-    width: 370,
-    height: 290,
-    Program: Games,
-  },
-  memory: { name: "Tile Match", shortName: "Tile Match", icon: <PinballIcon size={16} />, width: 410, height: 435, Program: TileMatch },
-  circuit: { name: "Circuit Grid", shortName: "Circuit Grid", icon: <PinballIcon size={16} />, width: 410, height: 435, Program: CircuitGrid },
-  packet: { name: "Packet Run", shortName: "Packet Run", icon: <PinballIcon size={16} />, width: 420, height: 443, Program: PacketRun },
+  memory: { name: "Tile Match", shortName: "Tile Match", icon: <TileIcon size={16} />, width: 410, height: 435, Program: TileMatch },
+  circuit: { name: "Circuit Grid", shortName: "Circuit Grid", icon: <TileIcon size={16} />, width: 410, height: 435, Program: CircuitGrid },
+  packet: { name: "Packet Run", shortName: "Packet Run", icon: <TileIcon size={16} />, width: 420, height: 443, Program: PacketRun },
 };
 
-const desktopShortcuts = ["browser", "files", "pictures", "notes", "pinball"];
-const startPrograms = ["browser", "notes", "pinball", "games"];
+const desktopShortcuts = [
+  "files",
+  "browser",
+  "music",
+  "games",
+  "vicecity",
+  "mario",
+  "sonic",
+  "pokemon",
+  "gta",
+  "zelda",
+  "pacman",
+  "minesweeper",
+  "notes",
+];
+const startPrograms = ["browser", "music", "games", "vicecity", "mario", "sonic", "pokemon", "gta", "zelda", "pacman", "minesweeper", "notes"];
 const startPlaces = ["files", "pictures", "calendar", "settings"];
 
 function Games({ onLaunch }) {
   return (
     <div className="retro-game-list">
-      {["pinball", "memory", "circuit", "packet"].map((id) => (
+      {["vicecity", "mario", "sonic", "pokemon", "gta", "zelda", "pacman", "minesweeper"].map((id) => (
         <button type="button" className="retro-native-button" key={id} onClick={() => onLaunch(id)}>
           {applications[id].icon} {applications[id].name}
         </button>
@@ -164,13 +263,16 @@ function AppWindow({ id, entry, onRaise, onMove, onMinimize, onMaximize, onClose
   function moveDrag(event) {
     if (!drag.current) return;
     const area = event.currentTarget.closest(".retro-workspace");
+    const windowEl = event.currentTarget.parentElement;
     const start = drag.current;
     const delta = start.inverse.transformPoint(new DOMPoint(event.clientX - start.x, event.clientY - start.y));
     const x = start.left + delta.x;
     const y = start.top + delta.y;
+    const maxX = Math.max(0, area.clientWidth - windowEl.offsetWidth);
+    const maxY = Math.max(0, area.clientHeight - windowEl.offsetHeight);
     onMove(
-      Math.max(2, Math.min(area.clientWidth - event.currentTarget.offsetWidth - 4, x)),
-      Math.max(2, Math.min(area.clientHeight - 78, y))
+      Math.max(0, Math.min(maxX, x)),
+      Math.max(0, Math.min(maxY, y))
     );
   }
 
@@ -284,10 +386,7 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
     desktopSnapshot.current = [];
     setWindows((current) => {
       const offset = (Object.keys(current).length % 5) * 16;
-      const position =
-        id === "pinball"
-          ? { x: 40, y: 10 }
-          : { x: 60 + offset, y: 20 + offset };
+      const position = { x: 30 + offset, y: 15 + offset };
       return {
         ...current,
         [id]: { ...position, maximized: false, ...current[id], ...options, order: top, minimized: false },

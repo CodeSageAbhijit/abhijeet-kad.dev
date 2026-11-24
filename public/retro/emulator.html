@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>EmulatorJS</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000000;
+      font-family: "Tahoma", "Segoe UI", sans-serif;
+      user-select: none;
+    }
+    #game {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+    }
+    canvas {
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+      outline: none;
+    }
+    .ejs_parent {
+      outline: none;
+    }
+    #error-display {
+      display: none;
+      color: #f87171;
+      font-size: 11px;
+      padding: 16px;
+      text-align: center;
+      background: #0f172a;
+      border: 1px solid #ef4444;
+      border-radius: 4px;
+      margin: 20px;
+      z-index: 200;
+      position: relative;
+    }
+
+    /* Windows XP Retro Start / Unlock Audio Overlay */
+    #retro-start-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.92) 0%, rgba(2, 6, 23, 0.98) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      cursor: pointer;
+      color: #ffffff;
+      text-align: center;
+      padding: 16px;
+      transition: opacity 0.25s ease-out;
+    }
+    #retro-start-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .retro-start-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: #0055ea;
+      color: #ffffff;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      margin-bottom: 8px;
+    }
+
+    .retro-start-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #f8fafc;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 14px;
+    }
+
+    .retro-start-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 40%, #0369a1 100%);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 10px 22px;
+      border-radius: 5px;
+      border: 1px solid #7dd3fc;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.45), inset 0 1px 0 rgba(255,255,255,0.4);
+      cursor: pointer;
+      animation: retroPulse 2s infinite ease-in-out;
+    }
+    .retro-start-btn:hover {
+      background: linear-gradient(180deg, #7dd3fc 0%, #0ea5e9 40%, #0284c7 100%);
+      transform: scale(1.03);
+    }
+    @keyframes retroPulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(14, 165, 233, 0.5), inset 0 1px 0 rgba(255,255,255,0.4); }
+      50% { box-shadow: 0 0 22px rgba(14, 165, 233, 0.85), inset 0 1px 0 rgba(255,255,255,0.6); }
+    }
+
+    .retro-start-hint {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .retro-start-controls {
+      margin-top: 12px;
+      font-size: 10px;
+      color: #cbd5e1;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+  <div id="error-display"></div>
+
+  <!-- Retro Start / Audio Unlock Overlay -->
+  <div id="retro-start-overlay">
+    <div class="retro-start-badge" id="overlay-system">Console Ready</div>
+    <div class="retro-start-title" id="overlay-title">Game Ready</div>
+    <div class="retro-start-btn">
+      <span>▶</span> Click to Start Game
+    </div>
+    <div class="retro-start-hint">Click inside to enable audio & controls</div>
+    <div class="retro-start-controls" id="overlay-controls">
+      ⌨ D-Pad: Arrows | A: X | B: Z | Start: Enter | Select: Shift
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const core = params.get('core') || 'nes';
+      const gameName = params.get('gameName') || 'Game';
+      let gameUrl = params.get('gameUrl') || '';
+      const biosUrl = params.get('biosUrl') || '';
+      const shader = params.get('shader') || '';
+
+      // Update overlay labels
+      const overlaySystem = document.getElementById('overlay-system');
+      const overlayTitle = document.getElementById('overlay-title');
+      const overlayControls = document.getElementById('overlay-controls');
+      if (overlayTitle) overlayTitle.innerText = gameName;
+      if (overlaySystem) {
+        const sysNames = {
+          nes: 'Nintendo Entertainment System',
+          segaMD: 'Sega Genesis / Mega Drive',
+          gba: 'Game Boy Advance',
+          nds: 'Nintendo DS (Dual Screen)',
+          snes: 'Super Nintendo'
+        };
+        overlaySystem.innerText = sysNames[core] || core.toUpperCase();
+      }
+      if (overlayControls) {
+        if (core === 'segaMD') {
+          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrow keys | <strong>A:</strong> Z | <strong>B:</strong> X | <strong>C:</strong> C<br><strong>Start:</strong> Enter | <strong>Mode:</strong> Shift | <strong>X/Y/Z:</strong> A/S/D';
+        } else if (core === 'nds') {
+          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>X:</strong> S | <strong>Y:</strong> A<br><strong>Start:</strong> Enter | <strong>Select:</strong> Shift | <strong>L/R:</strong> Q/E | <strong>Stylus:</strong> Mouse on bottom screen';
+        } else if (core === 'snes') {
+          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>X:</strong> S | <strong>Y:</strong> A<br><strong>Start:</strong> Enter | <strong>Select:</strong> Shift | <strong>L/R:</strong> Q/E';
+        } else if (core === 'gba') {
+          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>Start:</strong> Enter | <strong>Select:</strong> Shift | <strong>L/R:</strong> Q/E';
+        } else {
+          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>Start:</strong> Enter | <strong>Select:</strong> Shift';
+        }
+      }
+
+      // Ensure gameUrl is an absolute URL so fetch and XMLHttpRequest always succeed
+      if (gameUrl && !gameUrl.startsWith('http:') && !gameUrl.startsWith('https:') && !gameUrl.startsWith('blob:') && !gameUrl.startsWith('data:')) {
+        try {
+          gameUrl = new URL(gameUrl, window.location.origin).href;
+        } catch (e) {
+          console.error("Invalid gameUrl:", gameUrl, e);
+        }
+      }
+
+      window.EJS_player = '#game';
+      window.EJS_core = core;
+      window.EJS_gameName = gameName;
+      window.EJS_gameUrl = gameUrl;
+      if (biosUrl) {
+        window.EJS_biosUrl = (biosUrl.startsWith('http') || biosUrl.startsWith('blob:'))
+          ? biosUrl
+          : new URL(biosUrl, window.location.origin).href;
+      }
+      window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+      window.EJS_startOnLoaded = true;
+      window.EJS_alignStartButton = 'center';
+      window.EJS_gamepad = true;
+      window.EJS_touchControls = true;
+      if (shader) {
+        window.EJS_shader = shader;
+      }
+      window.EJS_Buttons = {
+        playPause: true,
+        restart: true,
+        mute: true,
+        settings: true,
+        fullscreen: false,
+        saveState: true,
+        loadState: true,
+        quickSave: true,
+        quickLoad: true,
+        gamepad: true,
+        volume: true,
+        cacheManager: false
+      };
+
+      /**
+       * Keycodes:
+       * 37: Left Arrow, 38: Up Arrow, 39: Right Arrow, 40: Down Arrow
+       * 13: Enter, 16: Shift, 32: Space
+       * 88: X, 90: Z, 83: S, 65: A, 81: Q, 69: E, 67: C, 68: D
+       */
+      let p0Controls = {};
+      if (core === 'segaMD') {
+        // Sega Genesis / Mega Drive (6-button controller)
+        // A=Z, B=X, C=C, X=A, Y=S, Z=D, Start=Enter, Mode=Shift
+        p0Controls = {
+          0: { value: 88, value2: 'BUTTON_1' }, // B = X (ID 0)
+          1: { value: 90, value2: 'BUTTON_2' }, // A = Z (ID 1)
+          2: { value: 16, value2: 'SELECT' },   // Mode = Shift (ID 2)
+          3: { value: 13, value2: 'START' },    // Start = Enter (ID 3)
+          4: { value: 38, value2: 'DPAD_UP' },  // Up = Arrow Up (ID 4)
+          5: { value: 40, value2: 'DPAD_DOWN' },// Down = Arrow Down (ID 5)
+          6: { value: 37, value2: 'DPAD_LEFT' },// Left = Arrow Left (ID 6)
+          7: { value: 39, value2: 'DPAD_RIGHT' },// Right = Arrow Right (ID 7)
+          8: { value: 67, value2: 'BUTTON_3' }, // C = C (ID 8)
+          9: { value: 83, value2: 'BUTTON_4' }, // Y = S (ID 9)
+          10: { value: 65, value2: 'LEFT_TOP_SHOULDER' }, // X = A (ID 10)
+          11: { value: 68, value2: 'RIGHT_TOP_SHOULDER' }, // Z = D (ID 11)
+        };
+      } else if (core === 'snes' || core === 'nds') {
+        // SNES & Nintendo DS
+        // A=X (ID 8), B=Z (ID 0), X=S (ID 9), Y=A (ID 1), L=Q (ID 10), R=E (ID 11)
+        p0Controls = {
+          0: { value: 90, value2: 'BUTTON_1' }, // B = Z
+          1: { value: 65, value2: 'BUTTON_3' }, // Y = A
+          2: { value: 16, value2: 'SELECT' },   // Select = Shift
+          3: { value: 13, value2: 'START' },    // Start = Enter
+          4: { value: 38, value2: 'DPAD_UP' },  // Up = Arrow Up
+          5: { value: 40, value2: 'DPAD_DOWN' },// Down = Arrow Down
+          6: { value: 37, value2: 'DPAD_LEFT' },// Left = Arrow Left
+          7: { value: 39, value2: 'DPAD_RIGHT' },// Right = Arrow Right
+          8: { value: 88, value2: 'BUTTON_2' }, // A = X
+          9: { value: 83, value2: 'BUTTON_4' }, // X = S
+          10: { value: 81, value2: 'LEFT_TOP_SHOULDER' }, // L = Q
+          11: { value: 69, value2: 'RIGHT_TOP_SHOULDER' }, // R = E
+        };
+      } else {
+        // NES, GBA, etc.
+        // A=X (ID 8), B=Z (ID 0), Start=Enter (ID 3), Select=Shift (ID 2), L=Q (ID 10), R=E (ID 11)
+        p0Controls = {
+          0: { value: 90, value2: 'BUTTON_1' }, // B = Z
+          1: { value: 65, value2: 'BUTTON_3' }, // Y/Alt = A
+          2: { value: 16, value2: 'SELECT' },   // Select = Shift
+          3: { value: 13, value2: 'START' },    // Start = Enter
+          4: { value: 38, value2: 'DPAD_UP' },  // Up = Arrow Up
+          5: { value: 40, value2: 'DPAD_DOWN' },// Down = Arrow Down
+          6: { value: 37, value2: 'DPAD_LEFT' },// Left = Arrow Left
+          7: { value: 39, value2: 'DPAD_RIGHT' },// Right = Arrow Right
+          8: { value: 88, value2: 'BUTTON_2' }, // A = X
+          9: { value: 83, value2: 'BUTTON_4' }, // X = S
+          10: { value: 81, value2: 'LEFT_TOP_SHOULDER' }, // L = Q
+          11: { value: 69, value2: 'RIGHT_TOP_SHOULDER' }, // R = E
+        };
+      }
+
+      window.EJS_defaultControls = {
+        0: p0Controls,
+        1: {},
+        2: {},
+        3: {}
+      };
+
+      // Comprehensive Audio Unlock & Game Start Function
+      function unlockAndStart() {
+        const overlay = document.getElementById('retro-start-overlay');
+        if (overlay) {
+          overlay.classList.add('hidden');
+          setTimeout(() => {
+            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+          }, 300);
+        }
+
+        // Resume all WebAudio contexts
+        try {
+          const emu = window.EJS_emulator;
+          if (emu) {
+            if (emu.audioContext && emu.audioContext.state === 'suspended') {
+              emu.audioContext.resume();
+            }
+            if (emu.Module && emu.Module.AL && emu.Module.AL.currentCtx) {
+              const curCtx = emu.Module.AL.currentCtx;
+              if (curCtx.audioCtx && curCtx.audioCtx.state === 'suspended') {
+                curCtx.audioCtx.resume();
+              }
+              const sources = curCtx.sources || [];
+              sources.forEach(src => {
+                if (src && src.gain && src.gain.context && src.gain.context.state === 'suspended') {
+                  src.gain.context.resume();
+                }
+              });
+            }
+            if (typeof emu.play === 'function') {
+              emu.play();
+            }
+            const ejsStartBtn = document.querySelector('.ejs_start_button');
+            if (ejsStartBtn) {
+              ejsStartBtn.click();
+            }
+          }
+        } catch (e) {
+          console.warn('Audio unlock error:', e);
+        }
+
+        // Focus canvas and parent element so keydown events work
+        try {
+          const gameEl = document.getElementById('game');
+          if (gameEl) gameEl.focus();
+          const canvas = document.querySelector('canvas');
+          if (canvas) canvas.focus();
+          window.focus();
+        } catch {}
+      }
+
+      // Attach unlock listeners to overlay and window
+      const overlayEl = document.getElementById('retro-start-overlay');
+      if (overlayEl) {
+        overlayEl.addEventListener('click', unlockAndStart);
+        overlayEl.addEventListener('touchstart', unlockAndStart, { passive: true });
+      }
+
+      // Robust key handler forwarding to EmulatorJS
+      function handleGameKey(e) {
+        unlockAndStart();
+        const emu = window.EJS_emulator;
+        if (!emu || typeof emu.keyChange !== 'function') return;
+        
+        // Prevent default browser behavior for gaming keys (scrolling on arrows, space)
+        if ([37, 38, 39, 40, 32, 13, 9].includes(e.keyCode)) {
+          e.preventDefault();
+        }
+        emu.keyChange(e);
+      }
+
+      window.addEventListener('keydown', handleGameKey, { passive: false });
+      window.addEventListener('keyup', handleGameKey, { passive: false });
+      window.addEventListener('click', unlockAndStart);
+
+      // Support postMessage key event forwarding from parent window
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'RETRO_KEY_EVENT') {
+          unlockAndStart();
+          const emu = window.EJS_emulator;
+          if (emu && typeof emu.keyChange === 'function') {
+            const fakeEvent = {
+              type: event.data.eventType,
+              keyCode: event.data.keyCode,
+              key: event.data.key,
+              code: event.data.code,
+              repeat: false,
+              preventDefault: function() {}
+            };
+            emu.keyChange(fakeEvent);
+          }
+        }
+      });
+
+      // Hook into EmulatorJS start event
+      window.EJS_onGameStart = function() {
+        console.log('EJS_onGameStart fired');
+        setTimeout(() => {
+          const emu = window.EJS_emulator;
+          const alCtx = emu?.Module?.AL?.currentCtx?.audioCtx;
+          if (alCtx && alCtx.state === 'running') {
+            const overlay = document.getElementById('retro-start-overlay');
+            if (overlay) {
+              overlay.classList.add('hidden');
+              setTimeout(() => {
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+              }, 300);
+            }
+          }
+        }, 1200);
+      };
+
+      // Load loader.js dynamically
+      const loader = document.createElement('script');
+      loader.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+      loader.onerror = function() {
+        const err = document.getElementById('error-display');
+        if (err) {
+          err.style.display = 'block';
+          err.innerHTML = '<strong>Failed to load EmulatorJS CDN</strong><br><small>Please check your internet connection or disable ad-blockers for cdn.emulatorjs.org</small>';
+        }
+      };
+      document.body.appendChild(loader);
+
+      window.addEventListener('load', function() {
+        window.focus();
+      });
+    })();
+  </script>
+</body>
+</html>

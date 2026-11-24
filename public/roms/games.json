@@ -1,0 +1,44 @@
+[
+  {
+    "id": "mario",
+    "title": "Super Mario Bros.",
+    "core": "nes",
+    "system": "NES",
+    "gameUrl": "/roms/smb.nes"
+  },
+  {
+    "id": "sonic",
+    "title": "Sonic the Hedgehog",
+    "core": "segaMD",
+    "system": "Sega Genesis",
+    "gameUrl": "/roms/sonic.bin"
+  },
+  {
+    "id": "pokemon",
+    "title": "Pokémon Emerald",
+    "core": "gba",
+    "system": "Game Boy Advance",
+    "gameUrl": "/roms/emerald.gba"
+  },
+  {
+    "id": "gta",
+    "title": "Grand Theft Auto: Chinatown Wars",
+    "core": "nds",
+    "system": "Nintendo DS",
+    "gameUrl": "/roms/gta.zip"
+  },
+  {
+    "id": "zelda",
+    "title": "The Legend of Zelda: A Link to the Past",
+    "core": "snes",
+    "system": "Super Nintendo",
+    "gameUrl": "/roms/zelda.sfc"
+  },
+  {
+    "id": "pacman",
+    "title": "Pac-Man",
+    "core": "nes",
+    "system": "NES",
+    "gameUrl": "/roms/pacman.nes"
+  }
+]

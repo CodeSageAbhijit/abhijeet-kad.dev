@@ -267,29 +267,12 @@ export function PaintIcon({ size = 32 }) {
   );
 }
 
-export function PinballIcon({ size = 32 }) {
+export function TileIcon({ size = 32 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      {/* Space Cadet Pinball table */}
-      <rect x="6" y="4" width="20" height="24" rx="2" fill="#101428" stroke="#506080" strokeWidth="1" />
-      {/* Glowing table markings */}
-      <circle cx="16" cy="13" r="5" stroke="#7040D0" strokeWidth="1.5" />
-      <circle cx="16" cy="13" r="2" fill="#FFC820" />
-      {/* Bumpers */}
-      <circle cx="11" cy="9" r="2" fill="#E03020" stroke="#FFFFFF" strokeWidth="0.8" />
-      <circle cx="21" cy="9" r="2" fill="#E03020" stroke="#FFFFFF" strokeWidth="0.8" />
-      {/* Flippers */}
-      <line x1="10" y1="23" x2="14" y2="22" stroke="#FF4020" strokeWidth="2" strokeLinecap="round" />
-      <line x1="22" y1="23" x2="18" y2="22" stroke="#FF4020" strokeWidth="2" strokeLinecap="round" />
-      {/* Pinball metallic sphere */}
-      <circle cx="18" cy="17" r="1.8" fill="url(#ballGrad)" />
-      <defs>
-        <radialGradient id="ballGrad" cx="30%" cy="30%" r="70%">
-          <stop stopColor="#FFFFFF" />
-          <stop offset="0.6" stopColor="#C0C8D0" />
-          <stop offset="1" stopColor="#506070" />
-        </radialGradient>
-      </defs>
+      <rect x="4" y="4" width="24" height="24" rx="3" fill="#3B82F6" stroke="#1D4ED8" strokeWidth="1.5" />
+      <rect x="6" y="6" width="20" height="20" rx="2" fill="#60A5FA" />
+      <polygon points="16,8 18.5,13.5 24,14 20,18 21,23.5 16,20.5 11,23.5 12,18 8,14 13.5,13.5" fill="#FBBF24" stroke="#D97706" strokeWidth="0.8" />
     </svg>
   );
 }
@@ -405,6 +388,220 @@ export function PalmAvatar({ size = 48 }) {
           <stop offset="1" stopColor="#D8F0FF" />
         </linearGradient>
       </defs>
+    </svg>
+  );
+}
+
+export function GamesFolderIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      {/* Yellow / Blue XP folder base */}
+      <path d="M3 6C3 4.8 4 4 5 4H12L15 7H27C28.2 7 29 7.8 29 9V12H3V6Z" fill="#F0C040" stroke="#B88018" strokeWidth="1" />
+      <rect x="3" y="10" width="26" height="18" rx="2" fill="#FFE070" stroke="#B88018" strokeWidth="1" />
+      {/* Black / Cyan Gamepad Controller */}
+      <rect x="7" y="14" width="18" height="10" rx="4" fill="#202428" stroke="#00D4FF" strokeWidth="1" />
+      {/* D-Pad cross */}
+      <rect x="9" y="18" width="4" height="2" fill="#E2E8F0" />
+      <rect x="10" y="17" width="2" height="4" fill="#E2E8F0" />
+      {/* Action buttons (Red, Green, Blue, Yellow) */}
+      <circle cx="20" cy="18" r="1" fill="#EF4444" />
+      <circle cx="22" cy="19" r="1" fill="#10B981" />
+      <circle cx="21" cy="21" r="1" fill="#FBBF24" />
+      <circle cx="19" cy="20" r="1" fill="#3B82F6" />
+    </svg>
+  );
+}
+
+export function MinesweeperIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      {/* XP Beveled Cell Base */}
+      <rect x="2" y="2" width="28" height="28" fill="#C0C0C0" stroke="#808080" strokeWidth="1.5" />
+      <path d="M2 2H30V5H5V30H2V2Z" fill="#FFFFFF" />
+      <path d="M27 5H30V30H5V27H27V5Z" fill="#808080" />
+      {/* Classic Black Spike Mine */}
+      <circle cx="16" cy="16" r="6" fill="#111827" />
+      {/* Mine spikes */}
+      <line x1="16" y1="7" x2="16" y2="25" stroke="#111827" strokeWidth="2" strokeLinecap="round" />
+      <line x1="7" y1="16" x2="25" y2="16" stroke="#111827" strokeWidth="2" strokeLinecap="round" />
+      <line x1="9.5" y1="9.5" x2="22.5" y2="22.5" stroke="#111827" strokeWidth="2" strokeLinecap="round" />
+      <line x1="9.5" y1="22.5" x2="22.5" y2="9.5" stroke="#111827" strokeWidth="2" strokeLinecap="round" />
+      {/* Highlight reflection */}
+      <circle cx="14" cy="14" r="1.8" fill="#FFFFFF" />
+    </svg>
+  );
+}
+
+export function MarioIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="crispEdges">
+      {/* 8-bit Pixel Red Cap & Mushroom Motif */}
+      <rect x="2" y="2" width="28" height="28" rx="4" fill="#1E293B" />
+      {/* Red Cap */}
+      <rect x="10" y="6" width="12" height="3" fill="#DC2626" />
+      <rect x="8" y="9" width="18" height="3" fill="#DC2626" />
+      {/* Face & Mustache */}
+      <rect x="8" y="12" width="10" height="3" fill="#FCD34D" />
+      <rect x="18" y="12" width="5" height="3" fill="#78350F" />
+      <rect x="10" y="15" width="4" height="2" fill="#FCD34D" />
+      <rect x="14" y="15" width="10" height="2" fill="#78350F" />
+      {/* Blue Overalls & Red Shirt */}
+      <rect x="8" y="17" width="16" height="3" fill="#DC2626" />
+      <rect x="10" y="20" width="12" height="6" fill="#2563EB" />
+      <rect x="8" y="20" width="2" height="4" fill="#DC2626" />
+      <rect x="22" y="20" width="2" height="4" fill="#DC2626" />
+      {/* Yellow Buttons */}
+      <rect x="11" y="21" width="2" height="2" fill="#FBBF24" />
+      <rect x="19" y="21" width="2" height="2" fill="#FBBF24" />
+      {/* Shoes */}
+      <rect x="7" y="26" width="6" height="3" fill="#78350F" />
+      <rect x="19" y="26" width="6" height="3" fill="#78350F" />
+    </svg>
+  );
+}
+
+export function SonicIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="crispEdges">
+      {/* Blue Pixel Spikes & Golden Ring */}
+      <rect x="2" y="2" width="28" height="28" rx="4" fill="#0F172A" />
+      {/* Spikes */}
+      <rect x="6" y="8" width="6" height="4" fill="#1D4ED8" />
+      <rect x="4" y="12" width="8" height="4" fill="#1D4ED8" />
+      <rect x="6" y="16" width="6" height="4" fill="#1D4ED8" />
+      {/* Head */}
+      <rect x="10" y="7" width="12" height="10" fill="#2563EB" />
+      {/* Face & Snout */}
+      <rect x="16" y="12" width="8" height="6" fill="#FDE68A" />
+      <rect x="24" y="14" width="3" height="3" fill="#000000" />
+      {/* Eye */}
+      <rect x="18" y="9" width="4" height="5" fill="#FFFFFF" />
+      <rect x="20" y="10" width="2" height="3" fill="#0284C7" />
+      {/* Golden Ring Emblem */}
+      <circle cx="23" cy="23" r="5" stroke="#F59E0B" strokeWidth="2.5" fill="none" />
+      <circle cx="23" cy="23" r="5" stroke="#FDE68A" strokeWidth="1" fill="none" />
+    </svg>
+  );
+}
+
+export function PokemonIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="crispEdges">
+      {/* Pixel Pokéball */}
+      <rect x="2" y="2" width="28" height="28" rx="4" fill="#0F172A" />
+      {/* Top half red */}
+      <path d="M7 15C7 10.0294 11.0294 6 16 6C20.9706 6 25 10.0294 25 15H7Z" fill="#EF4444" stroke="#000" strokeWidth="1.5" />
+      {/* Bottom half white */}
+      <path d="M7 17C7 21.9706 11.0294 26 16 26C20.9706 26 25 21.9706 25 17H7Z" fill="#F8FAFC" stroke="#000" strokeWidth="1.5" />
+      {/* Center Black Divider Line */}
+      <rect x="6.5" y="15" width="19" height="2" fill="#000000" />
+      {/* Center Button */}
+      <circle cx="16" cy="16" r="4" fill="#000000" />
+      <circle cx="16" cy="16" r="2.8" fill="#FFFFFF" />
+      <circle cx="16" cy="16" r="1.5" fill="#CBD5E1" />
+    </svg>
+  );
+}
+
+export function GtaIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="crispEdges">
+      {/* GTA Chinatown Wars - Top-down Yellow Sports Car & Dragon Red Accent */}
+      <rect x="2" y="2" width="28" height="28" rx="4" fill="#0F172A" />
+      {/* Dual screen DS border hint */}
+      <rect x="4" y="4" width="24" height="11" rx="1" fill="#1E293B" stroke="#334155" strokeWidth="0.8" />
+      <rect x="4" y="17" width="24" height="11" rx="1" fill="#1E293B" stroke="#334155" strokeWidth="0.8" />
+      {/* Top Screen: Yellow Sports Car (Top-down GTA view) */}
+      <rect x="13" y="6" width="6" height="7" fill="#F59E0B" />
+      <rect x="14" y="7" width="4" height="2" fill="#1E3A8A" />
+      {/* Headlights */}
+      <rect x="13" y="6" width="1" height="1" fill="#FEF08A" />
+      <rect x="18" y="6" width="1" height="1" fill="#FEF08A" />
+      {/* Tires */}
+      <rect x="11" y="7" width="2" height="2" fill="#000000" />
+      <rect x="19" y="7" width="2" height="2" fill="#000000" />
+      <rect x="11" y="11" width="2" height="2" fill="#000000" />
+      <rect x="19" y="11" width="2" height="2" fill="#000000" />
+      {/* Bottom Touch Screen: Stylus Crosshair & Chinatown Emblem */}
+      <circle cx="16" cy="22" r="3.5" fill="#DC2626" />
+      <rect x="15" y="21" width="2" height="2" fill="#FEF08A" />
+      {/* Stylus pointer */}
+      <line x1="22" y1="18" x2="18" y2="22" stroke="#38BDF8" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="23" cy="17" r="1" fill="#E0F2FE" />
+    </svg>
+  );
+}
+
+export function ViceCityIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="crispEdges">
+      {/* 80s Miami Synthwave Sunset Gradient */}
+      <rect x="2" y="2" width="28" height="28" rx="4" fill="#180B2E" />
+      {/* Neon Sunset Horizon Bands */}
+      <rect x="4" y="8" width="24" height="2" fill="#E11D48" />
+      <rect x="4" y="11" width="24" height="2" fill="#F43F5E" />
+      <rect x="4" y="14" width="24" height="2" fill="#FB7185" />
+      <rect x="4" y="17" width="24" height="2" fill="#FDA4AF" />
+      {/* Palm Tree Trunk & Fronds */}
+      <path d="M16 28V14" stroke="#042F2E" strokeWidth="2" strokeLinecap="round" />
+      <path d="M16 14C14 11 10 11 8 13" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M16 14C18 11 22 11 24 13" stroke="#0D9488" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M16 15C13 14 11 16 9 18" stroke="#14B8A6" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M16 15C19 14 21 16 23 18" stroke="#14B8A6" strokeWidth="1.5" strokeLinecap="round" />
+      {/* Hot Pink Glowing "VC" Lettering */}
+      <text x="16" y="27" textAnchor="middle" fill="#FF1493" fontSize="9" fontWeight="900" fontFamily="sans-serif" letterSpacing="0.5" style={{ textShadow: "0 0 4px #FF1493" }}>VC</text>
+    </svg>
+  );
+}
+
+export function ZeldaIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="crispEdges">
+      {/* Pixel Triforce & Emerald Crest */}
+      <rect x="2" y="2" width="28" height="28" rx="4" fill="#064E3B" />
+      {/* Golden Triforce */}
+      {/* Top triangle */}
+      <polygon points="16,6 11,14 21,14" fill="#F59E0B" stroke="#D97706" strokeWidth="0.8" />
+      <polygon points="16,8 13,13 19,13" fill="#FDE68A" />
+      {/* Bottom left triangle */}
+      <polygon points="11,14 6,22 16,22" fill="#F59E0B" stroke="#D97706" strokeWidth="0.8" />
+      <polygon points="11,16 8,21 14,21" fill="#FDE68A" />
+      {/* Bottom right triangle */}
+      <polygon points="21,14 16,22 26,22" fill="#F59E0B" stroke="#D97706" strokeWidth="0.8" />
+      <polygon points="21,16 18,21 24,21" fill="#FDE68A" />
+      {/* Emerald Master Sword Gem */}
+      <circle cx="16" cy="26" r="2.5" fill="#10B981" stroke="#34D399" strokeWidth="1" />
+    </svg>
+  );
+}
+
+export function PacmanIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" shapeRendering="crispEdges">
+      {/* Pixel Pacman & Power Pellets */}
+      <rect x="2" y="2" width="28" height="28" rx="4" fill="#000000" />
+      {/* Yellow Pac-Man Chomp */}
+      <path d="M12 8A9 9 0 1 0 18.5 22.5L12 16L18.5 9.5A8.95 8.95 0 0 0 12 8Z" fill="#FBBF24" />
+      {/* Eye */}
+      <circle cx="11" cy="12" r="1.5" fill="#000000" />
+      {/* Pellets */}
+      <circle cx="21" cy="16" r="2" fill="#FDE68A" />
+      <circle cx="26" cy="16" r="1.5" fill="#FDE68A" />
+    </svg>
+  );
+}
+
+export function SolitaireIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      {/* Playing Cards */}
+      <rect x="3" y="6" width="16" height="22" rx="2" fill="#FFFFFF" stroke="#1E293B" strokeWidth="1" />
+      <text x="5" y="13" fill="#EF4444" fontSize="8" fontWeight="bold">A</text>
+      <text x="8" y="20" fill="#EF4444" fontSize="10">♥</text>
+      {/* Second card tilted */}
+      <rect x="13" y="4" width="16" height="22" rx="2" fill="#FFFFFF" stroke="#1E293B" strokeWidth="1" />
+      <text x="15" y="11" fill="#0F172A" fontSize="8" fontWeight="bold">K</text>
+      <text x="18" y="18" fill="#0F172A" fontSize="10">♠</text>
     </svg>
   );
 }
