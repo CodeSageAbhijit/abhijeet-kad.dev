@@ -138,6 +138,7 @@ const technologies = [
 
 const experiences = [
   {
+    id: "aarohi",
     title: "Software Developer Intern",
     company_name: "Aarohi Infotech",
     icon: afiml,
@@ -149,8 +150,16 @@ const experiences = [
       "Shipped features and fixes through 50+ merged pull requests over three months and resolved 10+ merge conflicts.",
       "Traced production requests from UI to database and helped senior engineers troubleshoot an outage.",
     ],
+    confessionTitle: "Software Developer Intern · Unfiltered",
+    confessionSubtitle: "First startup sprint (click logo to switch back)",
+    confessionPoints: [
+      "Stepping into a fast-moving startup environment was overwhelming at first—every ticket moved faster than anything I had built before.",
+      "Triggered a real production break early on and came face-to-face with a dinosaur named git merge conflict for the very first time.",
+      "Lived through 2 AM debugging sessions tracing logs line by line—those chaotic late nights taught me how real systems survive in production.",
+    ],
   },
   {
+    id: "robotics",
     title: "President",
     company_name: "Innovation and Robotics Lab",
     icon: irlLogo,
@@ -160,6 +169,13 @@ const experiences = [
     points: [
       "Built event registration portals and co-organised the 24-hour LOOP hackathon with C-DAC for over 300 participants.",
       "Led an eight-person team that built the I&RL inventory app and dashboard for 30 lab users to borrow equipment and track availability, with live Firebase updates and automated reminders.",
+    ],
+    confessionTitle: "President · The Honest Version",
+    confessionSubtitle: "From rejection to leading the lab (click logo to switch back)",
+    confessionPoints: [
+      "Plot twist: I got rejected the first time I applied here. I came back the following year better prepared, earned my spot, and eventually became President.",
+      "My early builds weren't pretty—I snapped two propellers mid-flight and set off a real fire spark on a drone flight controller (not gonna lie, watching it ignite felt pretty cool).",
+      "My senior didn't scold me for breaking the drone or the mishap; he just looked at the charred board and said, 'Parts burn and hardware gets replaced—never lose the courage to power on what you build, just double-check polarity before you plug it in.'",
     ],
   },
 ];

@@ -1,8 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { styles } from "../styles";
 import TerminalWidget from "./TerminalWidget";
 import HireMeButton from "./HireMeButton";
+import BugsSquashOverlay from "./BugsSquashOverlay";
+import { markEasterEggFound } from "../utils/analytics";
+import { playNextRingtone } from "../utils/retroRingtone";
 
 const ROLES = [
   "Full Stack Developer",
@@ -56,6 +59,37 @@ const useTypewriter = (words, speed = 90, pause = 1800) => {
 
 const Hero = ({ children }) => {
   const { text: role, highlighted: highlightedRole } = useTypewriter(ROLES);
+  const [bugClicks, setBugClicks] = useState(0);
+  const [bugsActive, setBugsActive] = useState(false);
+  const [ringtoneBanner, setRingtoneBanner] = useState("");
+  const bugResetTimer = useRef(null);
+  const ringBannerTimer = useRef(null);
+
+  useEffect(() => () => {
+    clearTimeout(bugResetTimer.current);
+    clearTimeout(ringBannerTimer.current);
+  }, []);
+
+  const handleBugCardClick = () => {
+    clearTimeout(bugResetTimer.current);
+    const next = bugClicks + 1;
+    if (next >= 3) {
+      setBugClicks(0);
+      setBugsActive(true);
+      markEasterEggFound("bugs_squashed_swarm", "click");
+    } else {
+      setBugClicks(next);
+      bugResetTimer.current = setTimeout(() => setBugClicks(0), 2500);
+    }
+  };
+
+  const handlePhoneRingtone = () => {
+    const res = playNextRingtone();
+    markEasterEggFound("nostalgic_ringtone_synth", "click");
+    setRingtoneBanner(`✆ ${res.label} ♪`);
+    clearTimeout(ringBannerTimer.current);
+    ringBannerTimer.current = setTimeout(() => setRingtoneBanner(""), Math.max(2600, res.durationMs + 400));
+  };
 
   return (
     <section id="hero" data-analytics-section="hero" className="relative w-full h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center">
@@ -162,19 +196,29 @@ const Hero = ({ children }) => {
             {STATS.map(({ val, label, href, external, accent, title }) => {
               const isAlt = accent === "alt";
               const isLeet = accent === "leetcode";
-              const Stat = href ? "a" : "div";
+              const isBugs = label === "Bugs Squashed";
+              const Stat = href ? "a" : isBugs ? "button" : "div";
               return (
-                <Stat key={label} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} style={{
-                  display: "flex", flexDirection: "column",
-                  padding: "10px 12px",
-                  flexShrink: 0,
-                  background: isAlt ? "rgb(var(--accent-alt-rgb) / 0.05)" : isLeet ? "rgba(248,161,0,0.05)" : "rgb(var(--accent-rgb) / 0.04)",
-                  border: isAlt ? "1px solid rgb(var(--accent-alt-rgb) / 0.22)" : isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgb(var(--accent-rgb) / 0.18)",
-                  borderTop: isAlt ? "2px solid rgb(var(--accent-alt-rgb) / 0.65)" : isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgb(var(--accent-rgb) / 0.5)",
-                  cursor: href ? "pointer" : "default",
-                  textDecoration: "none",
-                }}
-                  title={title}
+                <Stat
+                  key={label}
+                  type={isBugs ? "button" : undefined}
+                  href={href}
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noopener noreferrer" : undefined}
+                  onClick={isBugs ? handleBugCardClick : undefined}
+                  style={{
+                    display: "flex", flexDirection: "column", textAlign: "left",
+                    padding: "10px 12px",
+                    flexShrink: 0,
+                    background: isAlt ? "rgb(var(--accent-alt-rgb) / 0.05)" : isLeet ? "rgba(248,161,0,0.05)" : "rgb(var(--accent-rgb) / 0.04)",
+                    border: isAlt ? "1px solid rgb(var(--accent-alt-rgb) / 0.22)" : isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgb(var(--accent-rgb) / 0.18)",
+                    borderTop: isAlt ? "2px solid rgb(var(--accent-alt-rgb) / 0.65)" : isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgb(var(--accent-rgb) / 0.5)",
+                    cursor: (href || isBugs) ? "pointer" : "default",
+                    textDecoration: "none",
+                    transform: isBugs && bugClicks > 0 ? "scale(0.96)" : "none",
+                    transition: "transform 0.12s ease",
+                  }}
+                  title={isBugs ? (bugClicks ? `Click ${3 - bugClicks} more time${3 - bugClicks > 1 ? "s" : ""}...` : "Triple-click?") : title}
                 >
                   <span style={{
                     fontFamily: "'Bebas Neue', sans-serif",
@@ -204,14 +248,54 @@ const Hero = ({ children }) => {
             {[
               { icon: "✉", val: "abhijitkad62@gmail.com" },
               { icon: "⬡", val: "linkedin.com/in/abhijit-kad" },
-              { icon: "⌥", val: "+91 9137292367" },
-            ].map(({ icon, val }) => (
-              <span key={val} style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                <span style={{ color: "var(--accent)" }}>{icon}</span>
-                {val}
-              </span>
-            ))}
+              { icon: "⌥", val: "+91 9137292367", isPhone: true },
+            ].map(({ icon, val, isPhone }) =>
+              isPhone ? (
+                <button
+                  key={val}
+                  type="button"
+                  onClick={handlePhoneRingtone}
+                  title="Play Nokia 3310 / Classic Landline ringtone"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 5,
+                    background: "transparent",
+                    border: "none",
+                    padding: 0,
+                    color: ringtoneBanner ? "var(--accent)" : "inherit",
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                    cursor: "pointer",
+                    textShadow: ringtoneBanner ? "0 0 8px var(--accent)" : "none",
+                  }}
+                >
+                  <span style={{ color: "var(--accent)" }}>{icon}</span>
+                  {val}
+                </button>
+              ) : (
+                <span key={val} style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                  <span style={{ color: "var(--accent)" }}>{icon}</span>
+                  {val}
+                </span>
+              )
+            )}
           </div>
+          {ringtoneBanner && (
+            <div
+              role="status"
+              style={{
+                marginTop: 8,
+                fontFamily: "'Share Tech Mono', monospace",
+                fontSize: 11,
+                color: "var(--accent)",
+                letterSpacing: 1,
+                textShadow: "0 0 8px rgb(var(--accent-rgb) / 0.45)",
+              }}
+            >
+              {ringtoneBanner}
+            </div>
+          )}
 
           <div className="hero-actions"><HireMeButton />{children}</div>
         </motion.div>
@@ -257,6 +341,7 @@ const Hero = ({ children }) => {
         boxShadow: "0 0 16px rgb(var(--accent-rgb) / 0.5), 0 0 32px rgb(var(--accent-alt-rgb) / 0.3)",
         zIndex: 10,
       }} />
+      {bugsActive && <BugsSquashOverlay onClose={() => setBugsActive(false)} />}
     </section>
   );
 };

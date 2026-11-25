@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { createKeyClick, preloadKeyClicks } from "../components/canvas/keyClick";
 import RetroDesktop from "./RetroDesktop";
+import CrtTvGlitch from "./CrtTvGlitch";
 import { exitDesktopFullscreen, requestDesktopFullscreen } from "./fullscreen";
 import { monitorLayout } from "./monitorLayout";
 import {
   consumeRetroEntryPoint,
   enterRetroSection,
   exitRetroSection,
+  markEasterEggFound,
   trackHiddenFeature,
 } from "../utils/analytics";
+import {
+  playCrtRestoreSfx,
+  playCrtStaticBurst,
+  playMonitorSmackSfx,
+} from "../utils/retroRingtone";
 import {
   playShutdownSound,
   playStartupSound,
@@ -126,6 +133,7 @@ function ShuttingDown() {
 
 export default function RetroStation() {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const [phase, setPhase] = useState(state?.boot ? "starting" : "off");
   const [sound, setSound] = useState(state?.sound ?? true);
   // const [cameos, setCameos] = useState(true);
@@ -139,7 +147,22 @@ export default function RetroStation() {
   const [adjustment, setAdjustment] = useState(null);
   const adjustmentTimer = useRef(null);
   const screen = useRef(null);
+  const hasGlitchedRef = useRef(false);
+  const [tvGlitchActive, setTvGlitchActive] = useState(false);
+  const [tvGlitchHits, setTvGlitchHits] = useState(0);
+  const [tvShowHint, setTvShowHint] = useState(false);
+  const [tvBlackout, setTvBlackout] = useState(false);
+  const [isSmacking, setIsSmacking] = useState(false);
+  const [tvRestoredMsg, setTvRestoredMsg] = useState(false);
+  const smackTimer = useRef(null);
   const powered = phase !== "off";
+
+  function returnToPortfolio() {
+    stopStartupSound();
+    exitDesktopFullscreen();
+    exitRetroSection({ destinationSection: "search" });
+    navigate("/#search");
+  }
 
   function powerOn() {
     if (sound) unlockStartupSound();
@@ -155,9 +178,9 @@ export default function RetroStation() {
   }
 
   function immediatePowerOff() {
-    stopStartupSound();
     setFocused(false);
-    setPhase("off");
+    setTvGlitchActive(false);
+    returnToPortfolio();
   }
 
   function adjustDisplay(control) {
@@ -170,14 +193,92 @@ export default function RetroStation() {
     adjustmentTimer.current = setTimeout(() => setAdjustment(null), 1400);
   }
 
-  useEffect(() => () => clearTimeout(adjustmentTimer.current), []);
+  useEffect(() => () => {
+    clearTimeout(adjustmentTimer.current);
+    clearTimeout(smackTimer.current);
+  }, []);
+
+  // Trigger Doordarshan / CRT cable signal glitch strictly once per /retro visit
+  useEffect(() => {
+    if (phase !== "desktop" || tvGlitchActive || hasGlitchedRef.current) return;
+    const delayMs = 18000 + Math.floor(Math.random() * 14000);
+    const timer = setTimeout(() => {
+      if (hasGlitchedRef.current) return;
+      hasGlitchedRef.current = true;
+      setTvGlitchHits(0);
+      setTvShowHint(false);
+      setTvGlitchActive(true);
+      trackHiddenFeature("crt_tv_signal_glitch");
+      if (sound) playCrtStaticBurst(0.32, 0.03);
+    }, delayMs);
+    return () => clearTimeout(timer);
+  }, [phase, tvGlitchActive, sound]);
+
+  // Show repair hint 2.5s after glitch starts & flicker screen blackouts
+  useEffect(() => {
+    if (!tvGlitchActive) {
+      setTvBlackout(false);
+      setTvShowHint(false);
+      return;
+    }
+
+    const hintTimer = setTimeout(() => setTvShowHint(true), 2500);
+    let flickerTimer;
+    const scheduleFlicker = () => {
+      const waitMs = tvGlitchHits === 0 ? 280 + Math.random() * 480 : 650 + Math.random() * 750;
+      flickerTimer = setTimeout(() => {
+        if (tvGlitchHits < 2) {
+          setTvBlackout((prev) => !prev);
+          if (sound && Math.random() < 0.35) playCrtStaticBurst(0.14, 0.02);
+        } else {
+          setTvBlackout(false);
+        }
+        scheduleFlicker();
+      }, waitMs);
+    };
+    scheduleFlicker();
+
+    return () => {
+      clearTimeout(hintTimer);
+      clearTimeout(flickerTimer);
+      setTvBlackout(false);
+    };
+  }, [tvGlitchActive, tvGlitchHits, sound]);
+
+  useEffect(() => {
+    if (!tvRestoredMsg) return;
+    const t = setTimeout(() => setTvRestoredMsg(false), 2400);
+    return () => clearTimeout(t);
+  }, [tvRestoredMsg]);
+
+  function handleTvSmack() {
+    if (!tvGlitchActive) return;
+    const nextHit = tvGlitchHits + 1;
+    clearTimeout(smackTimer.current);
+    setIsSmacking(false);
+    requestAnimationFrame(() => {
+      setIsSmacking(true);
+      smackTimer.current = setTimeout(() => setIsSmacking(false), 340);
+    });
+    if (sound) playMonitorSmackSfx(nextHit);
+
+    if (nextHit >= 3) {
+      setTvGlitchActive(false);
+      setTvGlitchHits(0);
+      setTvBlackout(false);
+      setTvRestoredMsg(true);
+      if (sound) playCrtRestoreSfx();
+      markEasterEggFound("crt_tv_slap_repair", "click");
+    } else {
+      setTvGlitchHits(nextHit);
+    }
+  }
 
   useEffect(() => {
     if (phase !== "shutting_down") return;
     const timer = setTimeout(() => {
-      stopStartupSound();
       setFocused(false);
-      setPhase("off");
+      returnToPortfolio();
     }, 2800);
     return () => clearTimeout(timer);
   }, [phase]);
@@ -272,7 +373,11 @@ export default function RetroStation() {
   const scale = layout ? Math.min(1, layout.glass.width / 392) : 1;
 
   return (
-    <main className="retro-station" ref={stage} aria-label="Retro computer">
+    <main
+      className={`retro-station${isSmacking ? " retro-station-smack" : ""}`}
+      ref={stage}
+      aria-label="Retro computer"
+    >
       {layout && (
         <>
           <div className="retro-monitor-shadow" aria-hidden="true" style={layout.shadow} />
@@ -282,6 +387,23 @@ export default function RetroStation() {
             alt="Front of a beige TVM MD-3 CRT monitor"
             style={layout.photo}
           />
+          {tvGlitchActive && phase === "desktop" && (
+            <div
+              className={`retro-monitor-frame-hitbox${tvShowHint ? " is-hinting" : ""}`}
+              style={layout.photo}
+              onPointerDown={handleTvSmack}
+              role="button"
+              tabIndex={0}
+              aria-label={`Hit the monitor frame to restore TV signal (${tvGlitchHits} of 3)`}
+              title="Tap/hit the CRT monitor frame to restore signal"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleTvSmack();
+                }
+              }}
+            />
+          )}
           {powered && (
             <span
               className="retro-monitor-led"
@@ -295,7 +417,7 @@ export default function RetroStation() {
             />
           )}
           <div
-            className={`retro-glass ${scanlines ? "retro-glass-scanlines" : ""}`}
+            className={`retro-glass ${scanlines ? "retro-glass-scanlines" : ""}${tvGlitchActive ? ` is-tv-glitching hits-${tvGlitchHits}` : ""}`}
             ref={screen}
             tabIndex={-1}
             style={{
@@ -305,7 +427,7 @@ export default function RetroStation() {
               transform: `scale(${scale})`,
             }}
           >
-            <div className={`retro-glass-content${phase === "desktop" ? " retro-glass-content--desktop" : ""}${busy ? " classic-busy" : ""}`}
+            <div className={`retro-glass-content${phase === "desktop" ? " retro-glass-content--desktop" : ""}${busy ? " classic-busy" : ""}${tvBlackout ? " is-tv-blackout" : ""}`}
               style={{
                 filter: display.brightness === 100 && display.contrast === 100 ? undefined
                   : `brightness(${display.brightness}%) contrast(${display.contrast}%)`
@@ -340,6 +462,18 @@ export default function RetroStation() {
                 />
               )}
             </div>
+            {tvGlitchActive && phase === "desktop" && (
+              <CrtTvGlitch
+                hits={tvGlitchHits}
+                maxHits={3}
+                showHint={tvShowHint}
+              />
+            )}
+            {tvRestoredMsg && (
+              <div className="retro-monitor-osd retro-monitor-osd-ok" role="status">
+                ✓ SIGNAL RESTORED · CH-03
+              </div>
+            )}
             {adjustment && <div className="retro-monitor-osd" role="status">
               {adjustment} {display[adjustment]}%
             </div>}

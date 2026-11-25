@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { styles } from "../styles";
 import TerminalWidget from "./TerminalWidget";
 import HireMeButton from "./HireMeButton";
-import { recordOutboundClick } from "../utils/analytics";
+import BugsSquashOverlay from "./BugsSquashOverlay";
+import { markEasterEggFound, recordOutboundClick } from "../utils/analytics";
 
 const ROLES = [
   "Full Stack Developer",
@@ -55,6 +56,24 @@ const useTypewriter = (words, speed = 90, pause = 1800) => {
 
 const HeroMobile = ({ children }) => {
   const { text: role, highlighted: highlightedRole } = useTypewriter(ROLES);
+  const [bugClicks, setBugClicks] = useState(0);
+  const [bugsActive, setBugsActive] = useState(false);
+  const bugResetTimer = useRef(null);
+
+  useEffect(() => () => clearTimeout(bugResetTimer.current), []);
+
+  const handleBugCardClick = () => {
+    clearTimeout(bugResetTimer.current);
+    const next = bugClicks + 1;
+    if (next >= 3) {
+      setBugClicks(0);
+      setBugsActive(true);
+      markEasterEggFound("bugs_squashed_swarm", "click");
+    } else {
+      setBugClicks(next);
+      bugResetTimer.current = setTimeout(() => setBugClicks(0), 2500);
+    }
+  };
 
   return (
     <section id="hero" data-analytics-section="hero" className="relative w-full min-h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center pt-32 pb-20 px-6">
@@ -152,6 +171,7 @@ const HeroMobile = ({ children }) => {
         <div className="grid grid-cols-2 gap-3 w-full max-w-xs mt-4">
           {STATS.map(({ val, label }) => {
             const isLeet = val === "150+";
+            const isBugs = label === "Bugs Squashed";
             return (
               <div key={label} style={{
                 display: "flex", flexDirection: "column",
@@ -160,13 +180,14 @@ const HeroMobile = ({ children }) => {
                 background: isLeet ? "rgba(248,161,0,0.05)" : "rgb(var(--accent-rgb) / 0.04)",
                 border: isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgb(var(--accent-rgb) / 0.18)",
                 borderTop: isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgb(var(--accent-rgb) / 0.5)",
-                cursor: isLeet ? "pointer" : "default",
+                cursor: (isLeet || isBugs) ? "pointer" : "default",
                 borderRadius: 6,
+                transform: isBugs && bugClicks > 0 ? "scale(0.96)" : "none",
               }}
                 onClick={isLeet ? () => {
                   recordOutboundClick("leetcode", "https://leetcode.com/u/AbhijitKad/", "hero");
                   window.open("https://leetcode.com/u/AbhijitKad/", "_blank");
-                } : undefined}
+                } : isBugs ? handleBugCardClick : undefined}
               >
                 <span style={{
                   fontFamily: "'Bebas Neue', sans-serif",
@@ -197,6 +218,7 @@ const HeroMobile = ({ children }) => {
           <div className="hero-actions"><HireMeButton />{children}</div>
         </div>
       </motion.div>
+      {bugsActive && <BugsSquashOverlay onClose={() => setBugsActive(false)} />}
     </section>
   );
 };

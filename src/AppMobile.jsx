@@ -8,6 +8,8 @@ import AboutMobile from "./components/AboutMobile";
 import ExperienceMobile from "./components/ExperienceMobile";
 import TechMobile from "./components/TechMobile";
 import WorksMobile from "./components/WorksMobile";
+import DroneCanvas from "./components/canvas/Drone";
+import CanvasBoundary from "./components/canvas/CanvasBoundary";
 import { usePortfolioSectionTracking } from "./utils/usePortfolioAnalytics";
 
 const AppMobile = ({ isBooting }) => {
@@ -28,7 +30,6 @@ const AppMobile = ({ isBooting }) => {
       <div className="mobile-intro relative">
         <Navbar />
         <HeroMobile />
-        {!isBooting && <SpiritSlot home="hero" />}
       </div>
       
       <PortfolioSearch isBooting={isBooting} />
@@ -36,6 +37,7 @@ const AppMobile = ({ isBooting }) => {
       <AboutMobile />
       {!isBooting && <SpiritSlot home="overview" />}
       <ExperienceMobile />
+      {!isBooting && <CanvasBoundary><DroneCanvas isBooting={isBooting} /></CanvasBoundary>}
       
       {/* Optionally hide Tech if it's too heavy on Mobile or keep it */}
       {!isBooting && <SpiritSlot home="work" />}

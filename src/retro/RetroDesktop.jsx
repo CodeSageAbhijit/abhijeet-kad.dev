@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 // import { useCallback } from "react";
 import { Link } from "react-router-dom";
-import { exitRetroSection } from "../utils/analytics";
+import { exitRetroSection, markEasterEggFound } from "../utils/analytics";
+import { playNextRingtone } from "../utils/retroRingtone";
 import { CircuitGrid, PacketRun, TileMatch } from "./RetroGames";
 import { DisplaySettings, Notes, PortfolioBrowser, ProjectFiles } from "./RetroPrograms";
 import RetroCalendar from "./RetroCalendar";
@@ -212,6 +213,40 @@ function Games({ onLaunch }) {
           {applications[id].icon} {applications[id].name}
         </button>
       ))}
+    </div>
+  );
+}
+
+function TrayPhoneRingtone() {
+  const [balloon, setBalloon] = useState("");
+
+  useEffect(() => {
+    if (!balloon) return;
+    const t = setTimeout(() => setBalloon(""), 3400);
+    return () => clearTimeout(t);
+  }, [balloon]);
+
+  return (
+    <div className="retro-tray-phone-wrap">
+      <button
+        type="button"
+        className="retro-tray-phone-btn"
+        title="Nokia 3310 / Classic Landline Ringtone"
+        aria-label="Play Nokia 3310 or Classic Landline ringtone"
+        onClick={() => {
+          const res = playNextRingtone();
+          markEasterEggFound("nostalgic_ringtone_synth", "click");
+          setBalloon(`✆ ${res.label} ♪`);
+        }}
+      >
+        ✆
+      </button>
+      {balloon && (
+        <div className="retro-tray-balloon" role="status">
+          <strong>Retro Ringtone Synth</strong>
+          <span>{balloon}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -570,6 +605,7 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
 
         {/* Notification Area / System Tray (Right) */}
         <div className="retro-system-tray">
+          <TrayPhoneRingtone />
           <DesktopClock onOpen={() => launch("calendar")} />
         </div>
       </footer>

@@ -1,17 +1,31 @@
 import { SpiritSlot } from "../spirits/SpiritGuestbook";
+import { authenticatedClient, spiritsEnabled } from "../spirits/api";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Link } from "react-router-dom";
 import { designFocus, experiences, projects, technologies } from "../constants";
 import { InternetExplorerIcon, MyDocumentsIcon } from "./RetroIcons";
-import { track, trackHiddenFeature } from "../utils/analytics";
+import { markEasterEggFound, track, trackHiddenFeature } from "../utils/analytics";
 
 const site = "abhijit-kad.dev";
-const pages = { home: "Home", projects: "Projects", experience: "Experience", contact: "Contact" };
+const pages = {
+  google: "Google",
+  home: "Portfolio",
+  projects: "Projects",
+  experience: "Experience",
+  contact: "Contact",
+  orkut: "orkut",
+};
 const profiles = {
   github: { name: "GitHub", url: "https://github.com/CodeSageAbhijit", handle: "CodeSageAbhijit" },
   linkedin: { name: "LinkedIn", url: "https://www.linkedin.com/in/abhijit-kad/", handle: "Abhijeet Kad" },
 };
-const favorites = { home: "Retro Portfolio", github: "GitHub", linkedin: "LinkedIn" };
+const favorites = {
+  google: "Google India (2006)",
+  home: "Retro Portfolio",
+  orkut: "orkut (2007)",
+  github: "GitHub",
+  linkedin: "LinkedIn",
+};
 const notesKey = "retro-pc-notes";
 
 function ProjectDetails({ project }) {
@@ -62,6 +76,8 @@ function ProjectDetails({ project }) {
 }
 
 function pageAddress(page) {
+  if (page === "google") return "https://www.google.co.in/";
+  if (page === "orkut") return "https://www.orkut.co.in/Profile.aspx?uid=abhijeet";
   if (profiles[page]) return profiles[page].url;
   return `https://${site}/${page === "home" ? "" : "#" + page}`;
 }
@@ -72,6 +88,9 @@ function resolvePage(text) {
   try {
     const url = new URL(input.includes("://") ? input : `https://${input}`);
     if (!["https:", "http:"].includes(url.protocol)) return null;
+    const host = url.hostname.replace(/^www\./, "");
+    if (["google.com", "google.co.in"].includes(host)) return "google";
+    if (["orkut.com", "orkut.co.in"].includes(host)) return "orkut";
     const normalized = (link) => link.hostname.replace(/^www\./, "") + link.pathname.replace(/\/$/, "");
     for (const [id, profile] of Object.entries(profiles)) {
       if (normalized(url) === normalized(new URL(profile.url.toLowerCase()))) return id;
@@ -86,18 +105,58 @@ function resolvePage(text) {
   }
 }
 
+const INITIAL_SCRAPS = [
+  { from: "Rahul", time: "2 hrs ago", msg: "Heyy Abhi! Cool profile... check out my scraps too! :)" },
+  { from: "Priya", time: "Yesterday", msg: "Saw your portfolio 3D CRT, total cybercafé vibes!" },
+];
+
 export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
-  const [history, setHistory] = useState({ pages: ["home"], index: 0 });
+  const [history, setHistory] = useState({ pages: ["google"], index: 0 });
   const currentTab = history.pages[history.index];
-  const [url, setUrl] = useState(pageAddress("home"));
+  const [url, setUrl] = useState(pageAddress("google"));
   const [error, setError] = useState(false);
   const [busy, startTransition] = useTransition();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchedTerm, setSearchedTerm] = useState("");
+  const [orkutView, setOrkutView] = useState("profile"); // "profile" | "scrapbook"
+  const [scraps, setScraps] = useState(INITIAL_SCRAPS);
+  const [scrapName, setScrapName] = useState("");
+  const [scrapDraft, setScrapDraft] = useState("");
+  const [scrapBusy, setScrapBusy] = useState(false);
+  const [scrapError, setScrapError] = useState("");
+  const [orkutFans, setOrkutFans] = useState(99);
+  const [becameFan, setBecameFan] = useState(false);
   const body = useRef(null);
   const profile = profiles[currentTab];
 
-  function navigate(page, step) {
+  useEffect(() => {
+    if (!spiritsEnabled) return;
+    let active = true;
+    authenticatedClient()
+      .then((client) => client.rpc("orkut_scrapbook", { action: "list" }))
+      .then(({ data, error: rpcErr }) => {
+        if (!active || rpcErr || !Array.isArray(data)) return;
+        const formatted = data.map((row) => ({
+          id: row.id,
+          from: row.from || "Anonymous",
+          time: row.created_at
+            ? new Date(row.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })
+            : "Recently",
+          msg: row.msg,
+        }));
+        setScraps([...formatted, ...INITIAL_SCRAPS]);
+      })
+      .catch(() => {
+        // Keep seeded scraps if offline or migration pending
+      });
+    return () => { active = false; };
+  }, []);
+
+  function navigate(page, step, triggerSource = "click") {
     trackHiddenFeature("ie7_portfolio_browser");
-    // if (page !== currentTab) onNavigate(page);
+    if (page === "orkut") {
+      markEasterEggFound("orkut_2007_profile", triggerSource);
+    }
     setUrl(pageAddress(page));
     setError(false);
     body.current?.scrollTo(0, 0);
@@ -111,8 +170,68 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
   function submit(event) {
     event.preventDefault();
     const page = resolvePage(url);
-    if (page) navigate(page);
+    if (page) navigate(page, undefined, "url");
     else setError(true);
+  }
+
+  function handleGoogleSearch(e, lucky = false) {
+    e?.preventDefault();
+    const q = searchQuery.trim();
+    trackHiddenFeature("ie7_google_search", { lucky });
+    if (lucky) {
+      if (q.toLowerCase().includes("orkut")) {
+        navigate("orkut", undefined, "search");
+      } else {
+        navigate("home", undefined, "search");
+      }
+      return;
+    }
+    if (q.toLowerCase().includes("orkut")) {
+      setSearchedTerm(q);
+      return;
+    }
+    setSearchedTerm(q || "abhijeet kad portfolio");
+  }
+
+  async function postScrap(e) {
+    e.preventDefault();
+    const message = scrapDraft.trim();
+    if (!message || scrapBusy) return;
+    const sender = scrapName.trim() || "Anonymous";
+    setScrapBusy(true);
+    setScrapError("");
+    trackHiddenFeature("orkut_scrapbook");
+
+    if (spiritsEnabled) {
+      try {
+        const client = await authenticatedClient();
+        const { data, error: rpcErr } = await client.rpc("orkut_scrapbook", {
+          action: "post",
+          payload: { sender_name: sender, message },
+        });
+        if (rpcErr) throw new Error(rpcErr.message);
+        const created = data || { from: sender, msg: message };
+        setScraps((prev) => [
+          { id: created.id, from: created.from || sender, time: "Just now", msg: created.msg || message },
+          ...prev,
+        ]);
+        setScrapDraft("");
+        setScrapBusy(false);
+        return;
+      } catch (err) {
+        const msg = err?.message || "";
+        if (msg.toLowerCase().includes("moment") || msg.toLowerCase().includes("wait")) {
+          setScrapError("Give your last scrap 15 seconds before posting another.");
+          setScrapBusy(false);
+          return;
+        }
+        // Fallback to local session if backend table/RPC hasn't been migrated yet
+      }
+    }
+
+    setScraps((prev) => [{ from: sender, time: "Just now", msg: message }, ...prev]);
+    setScrapDraft("");
+    setScrapBusy(false);
   }
 
   return (
@@ -122,7 +241,7 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
           disabled={busy || history.index === 0} onClick={() => navigate(history.pages[history.index - 1], -1)}>◀</button>
         <button type="button" className="retro-ie-btn-circle" aria-label="Forward"
           disabled={busy || history.index === history.pages.length - 1} onClick={() => navigate(history.pages[history.index + 1], 1)}>▶</button>
-        <button type="button" className="retro-ie-tool-btn" onClick={() => navigate("home")}>⌂ Home</button>
+        <button type="button" className="retro-ie-tool-btn" onClick={() => { setSearchedTerm(""); navigate("google"); }}>⌂ Home</button>
         <button type="button" className="retro-ie-tool-btn" aria-label="Refresh" onClick={() => navigate(currentTab)}>↻</button>
         <details className="retro-ie-favorites">
           <summary className="retro-ie-tool-btn">★ Favorites</summary>
@@ -130,6 +249,7 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
             {Object.entries(favorites).map(([id, title]) => (
               <button type="button" key={id} onClick={(event) => {
                 event.currentTarget.closest("details").open = false;
+                if (id === "google") setSearchedTerm("");
                 navigate(id);
               }}>{title}</button>
             ))}
@@ -145,15 +265,202 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
         </div>
         <button type="submit" className="retro-ie-go-btn">Go</button>
       </form>
-      {error && <p className="retro-ie-error" role="alert">Choose a portfolio page or profile from Favorites.</p>}
+      {error && <p className="retro-ie-error" role="alert">Try abhijit-kad.dev, google.co.in, orkut.com, or pick from Favorites.</p>}
       <div className="retro-ie-content-area" ref={body}>
         <nav className="retro-portfolio-subnav" aria-label="Portfolio pages">
           {Object.entries({ ...pages, github: "GitHub" }).map(([id, title]) => (
             <button type="button" key={id} aria-current={currentTab === id ? "page" : undefined}
-              className={currentTab === id ? "is-active" : ""} onClick={() => navigate(id)}>{title}</button>
+              className={currentTab === id ? "is-active" : ""} onClick={() => { if (id === "google") setSearchedTerm(""); navigate(id); }}>{title}</button>
           ))}
         </nav>
-        <div className="retro-web-content">
+        <div className={`retro-web-content${currentTab === "orkut" ? " retro-orkut-wrap" : ""}`}>
+          {currentTab === "google" && (
+            <div className="retro-google-page">
+              <div className="retro-google-logo" aria-label="Google India">
+                <span className="g-b">G</span>
+                <span className="g-r">o</span>
+                <span className="g-y">o</span>
+                <span className="g-b">g</span>
+                <span className="g-g">l</span>
+                <span className="g-r">e</span>
+                <sub className="g-in">India</sub>
+              </div>
+              <form className="retro-google-form" onSubmit={(e) => handleGoogleSearch(e, false)}>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search the web, Abhijeet's work, or try 'orkut'..."
+                  aria-label="Google Search"
+                />
+                <div className="retro-google-buttons">
+                  <button type="submit" className="retro-native-button">Google Search</button>
+                  <button type="button" className="retro-native-button" onClick={() => handleGoogleSearch(null, true)}>I&apos;m Feeling Lucky</button>
+                </div>
+              </form>
+
+              {searchedTerm ? (
+                <div className="retro-google-results">
+                  <p className="retro-google-meta">Results <b>1 - 5</b> for <b>{searchedTerm}</b> (0.04 seconds)</p>
+                  <article className="retro-google-hit">
+                    <button type="button" onClick={() => navigate("home")}>Abhijeet Kad — Software Engineering Portfolio</button>
+                    <p>Full-stack &amp; systems portfolio featuring React, Node.js, RawTorrent, and interactive 3D web builds.</p>
+                    <span>https://abhijit-kad.dev/</span>
+                  </article>
+                  <article className="retro-google-hit">
+                    <button type="button" onClick={() => navigate("orkut", undefined, "search")}>orkut - Abhijeet Kad (Mumbai, India) · 1 New Scrap!</button>
+                    <p>Connect with Abhijeet on orkut · 148 friends · Trusty / Cool / Sexy ratings &amp; nostalgic scrapbook.</p>
+                    <span>https://www.orkut.co.in/Profile.aspx?uid=abhijeet</span>
+                  </article>
+                  <article className="retro-google-hit">
+                    <button type="button" onClick={() => navigate("projects")}>Projects Index — Abhijeet Kad ({projects.length} builds)</button>
+                    <p>Explore desktop Electron/Node systems, mobile apps, and real-time full-stack applications.</p>
+                    <span>https://abhijit-kad.dev/#projects</span>
+                  </article>
+                  <article className="retro-google-hit">
+                    <button type="button" onClick={() => navigate("github")}>CodeSageAbhijit · GitHub Repositories</button>
+                    <p>Open source contributions, system utilities, and portfolio source repositories.</p>
+                    <span>https://github.com/CodeSageAbhijit</span>
+                  </article>
+                </div>
+              ) : (
+                <>
+                  <p className="retro-google-langs">
+                    Google.co.in offered in: <span>हिन्दी</span> <span>বাংলা</span> <span>తెలుగు</span> <span>मराठी</span> <span>தமிழ்</span>
+                  </p>
+                  <div className="retro-google-shortcuts">
+                    <button type="button" onClick={() => navigate("home")}>Open Abhijeet Portfolio</button>
+                    <span>·</span>
+                    <button type="button" onClick={() => navigate("orkut", undefined, "click")}>
+                      <strong style={{ color: "#ed2b91" }}>New!</strong> orkut.com Profile
+                    </button>
+                    <span>·</span>
+                    <button type="button" onClick={() => navigate("projects")}>Projects</button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
+          {currentTab === "orkut" && (
+            <div className="retro-orkut-page">
+              <header className="retro-orkut-topbar">
+                <strong className="retro-orkut-brand">orkut</strong>
+                <div className="retro-orkut-nav">
+                  <button type="button" onClick={() => setOrkutView("profile")}>Home</button>
+                  <button type="button" onClick={() => { setOrkutView("scrapbook"); trackHiddenFeature("orkut_scrapbook"); }}>Scrapbook ({scraps.length})</button>
+                  <button type="button" onClick={() => navigate("home")}>Portfolio</button>
+                </div>
+                <span className="retro-orkut-user">abhijeet@orkut.co.in</span>
+              </header>
+
+              <div className="retro-orkut-layout">
+                <aside className="retro-orkut-sidebar">
+                  <div className="retro-orkut-avatar">👨‍💻</div>
+                  <h4>Abhijeet Kad</h4>
+                  <p>Mumbai, India</p>
+                  <p>Friends (148)</p>
+                  <div className="retro-orkut-side-links">
+                    <button type="button" className={orkutView === "profile" ? "is-on" : ""} onClick={() => setOrkutView("profile")}>👤 Profile</button>
+                    <button type="button" className={orkutView === "scrapbook" ? "is-on" : ""} onClick={() => { setOrkutView("scrapbook"); trackHiddenFeature("orkut_scrapbook"); }}>
+                      📩 Scrapbook ({scraps.length})
+                    </button>
+                    <button type="button" onClick={() => { if (!becameFan) { setOrkutFans((f) => f + 1); setBecameFan(true); trackHiddenFeature("orkut_become_fan"); } }}>
+                      ★ {becameFan ? `Fan (${orkutFans})` : `Become a fan (${orkutFans}+)`}
+                    </button>
+                  </div>
+                </aside>
+
+                <div className="retro-orkut-main">
+                  <div className="retro-orkut-alert">
+                    <span>📩 You have <strong>1 new scrap</strong> from Rahul!</span>
+                    <button type="button" onClick={() => { setOrkutView("scrapbook"); trackHiddenFeature("orkut_scrapbook"); }}>
+                      Read scrap »
+                    </button>
+                  </div>
+
+                  {orkutView === "profile" ? (
+                    <>
+                      <div className="retro-orkut-card">
+                        <h3>Abhijeet Kad</h3>
+                        <div className="retro-orkut-meters">
+                          <div><span>Trusty</span><strong>😊😊😊 100%</strong></div>
+                          <div><span>Cool</span><strong>😎😎😎 98%</strong></div>
+                          <div><span>Sexy</span><strong>♥♥♥ 96%</strong></div>
+                          <div><span>Fans</span><strong>★ {orkutFans}+</strong></div>
+                        </div>
+                        <table className="retro-orkut-table">
+                          <tbody>
+                            <tr><th>status:</th><td>Shipping fast, writing clean code &amp; sipping cutting chai</td></tr>
+                            <tr><th>passion:</th><td>Distributed Systems, Open Source, GTA Vice City, Kishore Kumar</td></tr>
+                            <tr><th>about me:</th><td>Full-stack &amp; backend engineer. Always down to build wild retro things on the web.</td></tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      <div className="retro-orkut-card">
+                        <h4>Recent Visitors</h4>
+                        <div className="retro-orkut-visitors">
+                          {["Rahul", "Priya", "Ankit", "Neha", "Karan"].map((friend) => (
+                            <span key={friend} className="retro-orkut-visitor-chip">🙂 {friend}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="retro-orkut-card">
+                        <h4>Testimonials (2)</h4>
+                        <p className="retro-orkut-testi">&ldquo;10/10 developer — fixes prod bugs faster than 2-minute Maggi.&rdquo; — <em>Ankit</em></p>
+                        <p className="retro-orkut-testi">&ldquo;Came for the resume, stayed 20 mins playing Mario on his XP CRT!&rdquo; — <em>Priya</em></p>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="retro-orkut-card">
+                      <h4>Scrapbook ({scraps.length})</h4>
+                      <form className="retro-orkut-scrapform" onSubmit={postScrap}>
+                        <input
+                          type="text"
+                          maxLength={40}
+                          placeholder="Your name (optional)..."
+                          value={scrapName}
+                          disabled={scrapBusy}
+                          onChange={(e) => setScrapName(e.target.value)}
+                          aria-label="Your name"
+                        />
+                        <textarea
+                          rows={2}
+                          maxLength={180}
+                          placeholder="Leave a 2007-style scrap for Abhijeet..."
+                          value={scrapDraft}
+                          disabled={scrapBusy}
+                          onChange={(e) => {
+                            setScrapDraft(e.target.value);
+                            setScrapError("");
+                          }}
+                          aria-label="Scrap message"
+                        />
+                        <div className="retro-orkut-scrapbar">
+                          <button type="submit" className="retro-native-button" disabled={!scrapDraft.trim() || scrapBusy}>
+                            {scrapBusy ? "Posting…" : "Post Scrap"}
+                          </button>
+                          <small>{scrapDraft.length}/180</small>
+                        </div>
+                        {scrapError && <p className="retro-ie-error" role="alert">{scrapError}</p>}
+                      </form>
+                      <ul className="retro-orkut-scraplist">
+                        {scraps.map((s, idx) => (
+                          <li key={s.id || `${s.from}-${idx}`}>
+                            <strong>{s.from}</strong> <small>({s.time})</small>
+                            <p>{s.msg}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           {currentTab === "home" && (
             <>
               <div className="retro-site-hero">
@@ -222,7 +529,17 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
           <SpiritSlot home="retro" />
         </div>
       </div>
-      <footer className="retro-ie-statusbar"><span>{busy ? "Opening…" : profile?.name ?? site}</span></footer>
+      <footer className="retro-ie-statusbar">
+        <span>
+          {busy
+            ? "Opening…"
+            : currentTab === "google"
+              ? "Done · Google India Classic"
+              : currentTab === "orkut"
+                ? "Done · orkut (2007)"
+                : profile?.name ?? site}
+        </span>
+      </footer>
     </div>
   );
 }

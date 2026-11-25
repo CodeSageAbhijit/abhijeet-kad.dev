@@ -1432,6 +1432,419 @@
 .retro-packet-cell.is-player { background: #31649d; color: #fff; }
 .retro-game-button { padding: 3px 5px; border: 1px solid #a4b0c1; background: #f5f5f5; }
 
+/* ── Classic Google India (2006) & Orkut (2007) inside IE7 ── */
+.retro-google-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 8px 10px;
+  background: #ffffff;
+  text-align: center;
+}
+.retro-google-logo {
+  font-family: "Times New Roman", Georgia, serif;
+  font-size: clamp(26px, 6cqi, 40px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.05;
+  margin-bottom: 12px;
+  user-select: none;
+}
+.retro-google-logo .g-b { color: #1849c6; }
+.retro-google-logo .g-r { color: #d82520; }
+.retro-google-logo .g-y { color: #e8ad16; }
+.retro-google-logo .g-g { color: #168a39; }
+.retro-google-logo .g-in {
+  font-family: Tahoma, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: #168a39;
+  margin-left: 3px;
+  vertical-align: sub;
+}
+.retro-google-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: min(100%, 340px);
+}
+.retro-google-form input {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #7f9db9;
+  background: #fff;
+  color: #000;
+  font-size: 12px;
+}
+.retro-google-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.retro-google-langs {
+  margin-top: 12px;
+  font-size: 10px;
+  color: #444;
+}
+.retro-google-langs span {
+  color: #164b8e;
+  margin-inline: 3px;
+}
+.retro-google-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 11px;
+}
+.retro-google-shortcuts button {
+  color: #164b8e;
+  text-decoration: underline;
+}
+.retro-google-results {
+  width: 100%;
+  margin-top: 14px;
+  padding-top: 8px;
+  border-top: 1px solid #d5e2f2;
+  text-align: left;
+}
+.retro-google-meta {
+  padding: 3px 6px;
+  background: #e5ecf9;
+  font-size: 10px;
+  margin-bottom: 8px;
+}
+.retro-google-hit {
+  margin-bottom: 10px;
+}
+.retro-google-hit button {
+  color: #0000cc;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-align: left;
+}
+.retro-google-hit p {
+  margin: 2px 0;
+  font-size: 11px;
+  color: #222;
+}
+.retro-google-hit span {
+  font-size: 10px;
+  color: #008000;
+}
+
+.retro-orkut-wrap {
+  padding: 0 !important;
+  background: #d9e6f7;
+  min-height: 100%;
+}
+.retro-orkut-page {
+  font-family: Verdana, Tahoma, sans-serif;
+  font-size: 11px;
+  color: #1b2d47;
+}
+.retro-orkut-topbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px 8px;
+  background: #6899d3;
+  color: #fff;
+  border-bottom: 2px solid #ed2b91;
+}
+.retro-orkut-brand {
+  font-size: 16px;
+  letter-spacing: -0.5px;
+  color: #fff;
+  text-shadow: 1px 1px 0 #ed2b91;
+}
+.retro-orkut-nav {
+  display: flex;
+  gap: 8px;
+}
+.retro-orkut-nav button {
+  color: #eef5ff;
+  font-size: 10px;
+  text-decoration: underline;
+}
+.retro-orkut-user {
+  margin-left: auto;
+  font-size: 10px;
+  color: #ddeafb;
+}
+.retro-orkut-layout {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 8px;
+  padding: 8px;
+}
+@media (max-width: 500px) {
+  .retro-orkut-layout { grid-template-columns: 1fr; }
+}
+.retro-orkut-sidebar {
+  background: #f0f6fe;
+  border: 1px solid #b5cbe8;
+  padding: 6px;
+  text-align: center;
+}
+.retro-orkut-avatar {
+  font-size: 28px;
+  padding: 8px 0;
+  background: #fff;
+  border: 1px solid #cbdcf2;
+  margin-bottom: 5px;
+}
+.retro-orkut-sidebar h4 { margin: 2px 0; font-size: 11px; color: #164b8e; }
+.retro-orkut-sidebar p { margin: 1px 0; font-size: 10px; color: #4c627c; }
+.retro-orkut-side-links {
+  display: grid;
+  gap: 3px;
+  margin-top: 6px;
+  text-align: left;
+}
+.retro-orkut-side-links button {
+  padding: 3px 5px;
+  background: #e5effb;
+  border: 1px solid #c5daf4;
+  color: #164b8e;
+  font-size: 10px;
+  text-align: left;
+}
+.retro-orkut-side-links button.is-on {
+  background: #fce7f3;
+  border-color: #ed2b91;
+  color: #9d174d;
+  font-weight: 700;
+}
+.retro-orkut-main { display: grid; gap: 8px; }
+.retro-orkut-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 5px 8px;
+  background: #fff9c4;
+  border: 1px solid #e6c649;
+  font-size: 10px;
+}
+.retro-orkut-alert button {
+  color: #c2185b;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.retro-orkut-card {
+  background: #ffffff;
+  border: 1px solid #b5cbe8;
+  padding: 8px;
+}
+.retro-orkut-card h3 { font-size: 15px !important; margin: 0 0 6px; color: #164b8e; }
+.retro-orkut-card h4 { margin: 0 0 5px !important; font-size: 11px; color: #164b8e; border-bottom: 1px solid #e5effb; padding-bottom: 3px; }
+.retro-orkut-meters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+  gap: 4px;
+  padding: 5px;
+  background: #f5f9ff;
+  border: 1px solid #dce8f8;
+  margin-bottom: 6px;
+  font-size: 10px;
+}
+.retro-orkut-meters div { display: flex; justify-content: space-between; gap: 4px; }
+.retro-orkut-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+.retro-orkut-table th { width: 72px; text-align: right; padding: 3px 6px 3px 0; color: #5b7491; vertical-align: top; }
+.retro-orkut-table td { padding: 3px 0; color: #1b2d47; }
+.retro-orkut-visitors { display: flex; flex-wrap: wrap; gap: 4px; }
+.retro-orkut-visitor-chip {
+  padding: 2px 6px;
+  background: #eef5ff;
+  border: 1px solid #c5daf4;
+  font-size: 10px;
+}
+.retro-orkut-testi { margin: 3px 0; font-size: 10px; line-height: 1.4; }
+.retro-orkut-scrapform { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+.retro-orkut-scrapform input,
+.retro-orkut-scrapform textarea { width: 100%; padding: 4px 6px; border: 1px solid #7f9db9; font: inherit; background: #fff; color: #000; }
+.retro-orkut-scrapbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.retro-orkut-scrapbar small { color: #5b7491; font-size: 10px; }
+.retro-orkut-scraplist { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.retro-orkut-scraplist li { padding: 5px; background: #f8fbff; border: 1px solid #dce8f8; }
+.retro-orkut-scraplist p { margin: 2px 0 0; }
+
+/* ── Taskbar Nokia 3310 Ringtone Tray & Balloon ── */
+.retro-tray-phone-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.retro-tray-phone-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1;
+  padding: 2px 4px;
+  cursor: pointer;
+  opacity: 0.9;
+}
+.retro-tray-phone-btn:hover { opacity: 1; filter: drop-shadow(0 0 4px #fff); }
+.retro-tray-balloon {
+  position: absolute;
+  bottom: 28px;
+  right: -4px;
+  width: 190px;
+  padding: 6px 8px;
+  background: #ffffe1;
+  color: #111;
+  border: 1px solid #6b6b4e;
+  border-radius: 4px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.35);
+  font-size: 10px;
+  z-index: 90;
+  display: grid;
+  gap: 2px;
+}
+
+/* ── Doordarshan / CRT Cable TV Static Glitch + Smack Repair ── */
+@keyframes crt-monitor-smack {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-11px, 5px) rotate(-1.6deg); }
+  45% { transform: translate(8px, -4px) rotate(1.1deg); }
+  70% { transform: translate(-4px, 2px) rotate(-0.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+.retro-station-smack .retro-station-image,
+.retro-station-smack .retro-glass,
+.retro-station-smack .retro-monitor-led {
+  animation: crt-monitor-smack 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.retro-glass-content.is-tv-blackout {
+  opacity: 0.08;
+  filter: contrast(2.2) brightness(0.35) !important;
+}
+@keyframes crt-roll-jitter {
+  0%, 100% { transform: translateY(0) skewX(0deg); }
+  30% { transform: translateY(2px) skewX(0.9deg); }
+  65% { transform: translateY(-2px) skewX(-0.7deg); }
+}
+.retro-glass.is-tv-glitching.hits-0 .retro-glass-content {
+  animation: crt-roll-jitter 0.14s steps(2, end) infinite;
+}
+.retro-glass.is-tv-glitching.hits-1 .retro-glass-content {
+  animation: crt-roll-jitter 0.28s steps(2, end) infinite;
+}
+.retro-tv-glitch-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 95;
+  pointer-events: none;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+}
+.retro-monitor-frame-hitbox {
+  position: absolute;
+  z-index: 2;
+  cursor: pointer;
+  clip-path: polygon(
+    2.7% 15.6%, 3.1% 14.6%, 5.6% 13.7%, 94.4% 13.7%, 95.7% 14.7%,
+    96.75% 16.2%, 96.8% 18%, 93.5% 92.4%, 93.05% 94.2%, 91.9% 95.1%,
+    90.3% 95.45%, 7.25% 94.7%, 6.45% 94.25%, 5.85% 92.9%, 5.5% 89%
+  );
+}
+@keyframes bezel-pulse {
+  0%, 100% { box-shadow: inset 0 0 0 2px rgba(251, 191, 36, 0.25); }
+  50% { box-shadow: inset 0 0 24px 3px rgba(251, 191, 36, 0.5); }
+}
+.retro-monitor-frame-hitbox.is-hinting {
+  animation: bezel-pulse 1.3s ease-in-out infinite;
+}
+.retro-glass { z-index: 3; }
+.retro-tv-snow-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.retro-tv-osd-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  font-family: "Courier New", monospace;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  color: #86efac;
+  text-shadow: 0 1px 0 #000;
+  background: rgba(8, 12, 16, 0.65);
+  padding: 3px 7px;
+  border-radius: 2px;
+}
+.retro-tv-hint-box {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: min(88%, 320px);
+  padding: 8px 12px;
+  background: rgba(9, 13, 19, 0.9);
+  border: 1px solid rgba(251, 191, 36, 0.65);
+  border-left: 3px solid #fbbf24;
+  border-radius: 3px;
+  color: #f1f5f9;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(2px);
+}
+.retro-tv-hint-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.retro-tv-hint-badge {
+  font-family: "Courier New", monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #fbbf24;
+}
+.retro-tv-hint-bars {
+  display: flex;
+  gap: 3px;
+}
+.retro-tv-hint-bars i {
+  display: block;
+  width: 11px;
+  height: 5px;
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 1px;
+}
+.retro-tv-hint-bars i.is-lit {
+  background: #4ade80;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.7);
+}
+.retro-tv-hint-sub {
+  margin: 0;
+  font-family: Tahoma, sans-serif;
+  font-size: 11px;
+  line-height: 1.38;
+  color: #cbd5e1;
+}
+.retro-monitor-osd-ok {
+  color: #39ff14;
+}
+
 @media (any-pointer: fine) {
   .retro-station, .pinball-screen, .retro-station .retro-window-titlebar,
   :is(.retro-station, .pinball-screen) button:disabled {

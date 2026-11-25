@@ -7,7 +7,7 @@ const HireMeButton = () => {
   return (
     <div className="relative mt-10 w-fit flex flex-col items-start">
       <motion.a
-        href="#contact"
+        href="mailto:abhijitkad62@gmail.com?subject=Opportunity%20for%20Abhijeet"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="relative inline-flex items-center px-10 py-3 overflow-hidden group"

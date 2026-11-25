@@ -59,13 +59,13 @@ export function SpiritField({ children }) {
   }, [landing]);
   const populated = Object.values(homes).some(({ total }) => total > 0) || releasedNotes.current.size > 0;
   const slots = visible.filter(id =>
-    id === active || id === "hero" || homes[id]?.total > 0 || releasedNotes.current.has(id)
+    id === active || id === "overview" || homes[id]?.total > 0 || releasedNotes.current.has(id)
   );
   const priority = (id) => homes[id]?.priority ?? Infinity;
   slots.sort(
     (a, b) =>
       Number(b === active) - Number(a === active) ||
-      Number(b === "hero") - Number(a === "hero") ||
+      Number(b === "overview") - Number(a === "overview") ||
       priority(a) - priority(b) ||
       Number(releasedNotes.current.has(b)) - Number(releasedNotes.current.has(a)),
   );
@@ -222,7 +222,7 @@ export function SpiritSlot({ home }) {
     clearTimeout(leaveTimer.current);
     if (!open && !saving.current) {
       markEasterEggFound("wandering_spirit", "click");
-      if (home === "hero") {
+      if (home === "overview") {
         setAbove(trigger.current?.getBoundingClientRect().bottom > innerHeight / 2);
         setActive(home);
         setError("");

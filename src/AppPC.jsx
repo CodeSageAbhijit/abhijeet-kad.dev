@@ -7,6 +7,7 @@ import Tech from "./components/Tech";
 import Works from "./components/Works";
 import Contact from "./components/Contact";
 import StarsCanvas from "./components/canvas/Stars";
+import DroneCanvas from "./components/canvas/Drone";
 import CanvasBoundary from "./components/canvas/CanvasBoundary";
 import PortfolioSearch from "./components/PortfolioSearch";
 import { usePortfolioSectionTracking } from "./utils/usePortfolioAnalytics";
@@ -30,12 +31,12 @@ const AppPC = ({ isBooting }) => {
         <Navbar />
         <Hero />
       </div>
-      {!isBooting && <SpiritSlot home="hero" />}
       <PortfolioSearch isBooting={isBooting} />
       {!isBooting && <SpiritSlot home="search" />}
       <About />
       {!isBooting && <SpiritSlot home="overview" />}
       <Experience />
+      {!isBooting && <CanvasBoundary><DroneCanvas isBooting={isBooting} /></CanvasBoundary>}
       
       {!isBooting && <SpiritSlot home="work" />}
       <Tech isBooting={isBooting} />
