@@ -169,7 +169,11 @@ function performInit() {
   }
 
   try {
-    const apiHost = (import.meta.env.VITE_MIXPANEL_API_HOST || "").trim();
+    const rawHost = (import.meta.env.VITE_MIXPANEL_API_HOST || "").trim();
+    const useFirstPartyProxy =
+      !rawHost || rawHost === "https://api-eu.mixpanel.com" || rawHost.startsWith("/");
+    const proxyPath = rawHost.startsWith("/") ? rawHost.replace(/\/+$/, "") : "/pulse";
+
     const config = {
       track_pageview: "url-with-path",
       persistence: "localStorage",
@@ -178,8 +182,20 @@ function performInit() {
       ignore_dnt: false,
       debug: false,
     };
-    if (apiHost) {
-      config.api_host = apiHost;
+
+    if (useFirstPartyProxy) {
+      config.api_host = `${window.location.origin}${proxyPath}`;
+      config.api_payload_format = "json";
+      config.api_routes = {
+        track: "ev/",
+        engage: "engage/",
+        groups: "groups/",
+        record: "record/",
+        flags: "flags/",
+        settings: "settings/",
+      };
+    } else {
+      config.api_host = rawHost;
     }
 
     mixpanel.init(token, config);

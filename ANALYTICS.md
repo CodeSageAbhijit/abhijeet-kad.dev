@@ -30,6 +30,7 @@ VITE_MIXPANEL_DEV_TOKEN=your_optional_dev_token
 - **Opt-out (`?notrack=1`)**: Visiting `https://abhijit-kad.dev/?notrack=1` once writes `portfolio_notrack = "1"` in `localStorage` and permanently disables tracking in that browser (`?notrack=0` re-enables it).
 - **Do Not Track**: `ignore_dnt: false` + browser DNT check honors Do Not Track automatically.
 - **Zero PII**: Never captures form names, emails, message text, guestbook bodies, IP-derived fields, or fingerprints.
+- **First-Party Ingestion Proxy (`/pulse/*`)**: [`vercel.json`](vercel.json) rewrites `/pulse/ev/` (and `/pulse/*`) to `https://api-eu.mixpanel.com` on your own domain so privacy-respecting analytics isn't dropped by third-party domain rules while still honoring `Do Not Track` and `?notrack=1`.
 
 ---
 

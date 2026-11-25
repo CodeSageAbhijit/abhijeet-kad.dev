@@ -11,6 +11,18 @@ export default defineConfig({
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'credentialless',
     },
+    proxy: {
+      '/pulse/ev': {
+        target: 'https://api-eu.mixpanel.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/pulse\/ev\/?/, '/track/'),
+      },
+      '/pulse': {
+        target: 'https://api-eu.mixpanel.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/pulse/, ''),
+      },
+    },
   },
   optimizeDeps: {
     include: ['three/examples/jsm/loaders/GLTFLoader.js'],
