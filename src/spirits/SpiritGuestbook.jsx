@@ -331,7 +331,7 @@ export function SpiritSlot({ home }) {
                   <label>
                     {prompts[home]}
                     <textarea
-                      placeholder="Tell the next explorer your thoughts on this portfolio…"
+                      placeholder="Whisper a thought — it becomes a wandering spirit in this space…"
                       autoFocus
                       required
                       maxLength={180}

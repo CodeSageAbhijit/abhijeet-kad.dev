@@ -7,12 +7,12 @@ import HireMeButton from "./HireMeButton";
 const ROLES = [
   "Full Stack Developer",
   "React & Node.js Engineer",
-  "System Design",
+  "Open Source Contributor",
   "3D Web Experiences Dev",
   "Problem Solver",
 ];
 
-const HIGHLIGHTED_ROLES = ["System Design"];
+const HIGHLIGHTED_ROLES = ["Open Source Contributor"];
 
 // Show only 2 important stats for mobile
 const STATS = [

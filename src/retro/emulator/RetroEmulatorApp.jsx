@@ -153,12 +153,15 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
     setIsPreconfigured(false);
   }
 
-  // Refocus iframe canvas when window is clicked or active
+  // Refocus iframe and EmulatorJS #game container when window is clicked, loaded, or active
   const focusGame = useCallback(() => {
     try {
-      if (iframeRef.current && iframeRef.current.contentWindow) {
-        iframeRef.current.contentWindow.focus();
-      }
+      const iframe = iframeRef.current;
+      if (!iframe) return;
+      iframe.focus({ preventScroll: true });
+      iframe.contentWindow?.focus();
+      const gameEl = iframe.contentDocument?.getElementById("game");
+      if (gameEl) gameEl.focus({ preventScroll: true });
     } catch {
       // Cross-origin safe
     }
@@ -223,36 +226,54 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
     };
   }, [focusGame]);
 
-  // Forward keys to the emulator iframe and prevent scrolling / OS navigation while playing
+  // Forward keys in capture phase to the emulator iframe and prevent scrolling / XP button activation on Mac & desktop
   useEffect(() => {
+    const CODE_TO_KEYCODE = {
+      ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40,
+      Space: 32, Enter: 13, ShiftLeft: 16, ShiftRight: 16,
+      KeyX: 88, KeyZ: 90, KeyS: 83, KeyA: 65, KeyQ: 81, KeyE: 69, KeyC: 67, KeyD: 68,
+    };
+    const GAME_KEYS = new Set([
+      "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+      " ", "Enter", "Shift", "x", "X", "z", "Z", "s", "S", "a", "A", "q", "Q", "e", "E", "c", "C", "d", "D",
+    ]);
+
     function handleParentKeyEvent(e) {
       if (!active || !gameUrl) return;
+      if (e.metaKey || e.ctrlKey) return;
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.tagName === "SELECT") return;
 
-      // Fullscreen shortcut 'F' (when not inside an input field)
-      if ((e.key === "f" || e.key === "F") && e.type === "keydown") {
-        if (e.target.tagName !== "INPUT" && e.target.tagName !== "TEXTAREA") {
-          e.preventDefault();
-          toggleFullscreen();
-          return;
-        }
+      if (e.key === "Escape" && showControls && e.type === "keydown") {
+        e.preventDefault();
+        setShowControls(false);
+        focusGame();
+        return;
       }
 
-      const gameKeys = [
-        "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
-        " ", "Enter", "Shift", "x", "X", "z", "Z", "s", "S", "a", "A", "q", "Q", "e", "E", "c", "C", "d", "D"
-      ];
+      if (showControls) return;
 
-      if (gameKeys.includes(e.key) && e.target.tagName !== "INPUT" && e.target.tagName !== "TEXTAREA") {
+      // Fullscreen shortcut 'F'
+      if ((e.code === "KeyF" || e.key === "f" || e.key === "F") && e.type === "keydown") {
         e.preventDefault();
+        e.stopPropagation();
+        toggleFullscreen();
+        return;
+      }
+
+      const mappedCode = CODE_TO_KEYCODE[e.code];
+      if (mappedCode !== undefined || GAME_KEYS.has(e.key)) {
+        e.preventDefault();
+        e.stopPropagation();
         try {
           if (iframeRef.current && iframeRef.current.contentWindow) {
             iframeRef.current.contentWindow.postMessage({
               type: "RETRO_KEY_EVENT",
               eventType: e.type,
-              keyCode: e.keyCode,
+              keyCode: mappedCode ?? e.keyCode,
               key: e.key,
-              code: e.code
-            }, "*");
+              code: e.code,
+              repeat: e.repeat,
+            }, window.location.origin);
           }
         } catch {
           // Cross-origin safe
@@ -260,13 +281,13 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
       }
     }
 
-    window.addEventListener("keydown", handleParentKeyEvent, { passive: false });
-    window.addEventListener("keyup", handleParentKeyEvent, { passive: false });
+    window.addEventListener("keydown", handleParentKeyEvent, { capture: true, passive: false });
+    window.addEventListener("keyup", handleParentKeyEvent, { capture: true, passive: false });
     return () => {
-      window.removeEventListener("keydown", handleParentKeyEvent);
-      window.removeEventListener("keyup", handleParentKeyEvent);
+      window.removeEventListener("keydown", handleParentKeyEvent, { capture: true });
+      window.removeEventListener("keyup", handleParentKeyEvent, { capture: true });
     };
-  }, [active, gameUrl, toggleFullscreen]);
+  }, [active, gameUrl, showControls, toggleFullscreen, focusGame]);
 
   // Resolve gameUrl to an absolute URL so that fetch/XHR inside the emulator iframe always succeeds
   const resolvedGameUrl = gameUrl
@@ -300,7 +321,10 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
             <button
               type="button"
               className="retro-emulator-tool-btn"
-              onClick={handleEject}
+              onClick={(e) => {
+                e.currentTarget.blur();
+                handleEject();
+              }}
               title="Eject / Select another game file"
             >
               ⏏ Eject
@@ -309,7 +333,11 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
           <button
             type="button"
             className={`retro-emulator-tool-btn ${crtShader ? "active" : ""}`}
-            onClick={() => setCrtShader(!crtShader)}
+            onClick={(e) => {
+              e.currentTarget.blur();
+              setCrtShader(!crtShader);
+              focusGame();
+            }}
             title="Toggle CRT Scanline Shader"
           >
             📺 CRT {crtShader ? "ON" : "OFF"}
@@ -317,7 +345,10 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
           <button
             type="button"
             className="retro-emulator-tool-btn"
-            onClick={() => setShowControls(!showControls)}
+            onClick={(e) => {
+              e.currentTarget.blur();
+              setShowControls(!showControls);
+            }}
             title="View keyboard and gamepad cheat-sheet"
           >
             🎮 Controls
@@ -325,7 +356,11 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
           <button
             type="button"
             className="retro-emulator-tool-btn"
-            onClick={toggleFullscreen}
+            onClick={(e) => {
+              e.currentTarget.blur();
+              toggleFullscreen();
+              focusGame();
+            }}
             title="Toggle Fullscreen (or press F)"
           >
             {isFullscreen ? "🗗 Windowed" : "⛶ Fullscreen"}
@@ -417,6 +452,7 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
               src={emulatorSrc}
               className="retro-emulator-iframe"
               allow="autoplay; fullscreen; gamepad"
+              onLoad={focusGame}
             />
           </div>
         )}
@@ -471,21 +507,21 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
                         ) : (
                           <>
                             <tr>
-                              <td><strong>A Button</strong></td>
+                              <td><strong>A Button{gameId === "mario" ? " (Jump)" : gameId === "gta" ? " (Gas / Action)" : ""}</strong></td>
                               <td><kbd>X</kbd></td>
                             </tr>
                             <tr>
-                              <td><strong>B Button</strong></td>
+                              <td><strong>B Button{gameId === "mario" ? " (Run / Fire)" : gameId === "gta" ? " (Brake / Reverse)" : ""}</strong></td>
                               <td><kbd>Z</kbd></td>
                             </tr>
                             {(spec.core === "snes" || spec.core === "nds") && (
                               <>
                                 <tr>
-                                  <td><strong>X Button</strong></td>
+                                  <td><strong>X Button{gameId === "gta" ? " (Attack)" : ""}</strong></td>
                                   <td><kbd>S</kbd></td>
                                 </tr>
                                 <tr>
-                                  <td><strong>Y Button</strong></td>
+                                  <td><strong>Y Button{gameId === "gta" ? " (Enter / Exit Car)" : ""}</strong></td>
                                   <td><kbd>A</kbd></td>
                                 </tr>
                               </>
@@ -493,11 +529,11 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
                             {(spec.core === "snes" || spec.core === "nds" || spec.core === "gba") && (
                               <>
                                 <tr>
-                                  <td><strong>L Shoulder</strong></td>
+                                  <td><strong>L Shoulder{gameId === "gta" ? " (Handbrake)" : ""}</strong></td>
                                   <td><kbd>Q</kbd></td>
                                 </tr>
                                 <tr>
-                                  <td><strong>R Shoulder</strong></td>
+                                  <td><strong>R Shoulder{gameId === "gta" ? " (Aim / Camera)" : ""}</strong></td>
                                   <td><kbd>E</kbd></td>
                                 </tr>
                               </>
@@ -548,7 +584,11 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
       {/* Footer Info & Disclaimer */}
       <footer className="retro-emulator-footer">
         <div className="retro-emulator-help-hint">
-          ⌨ D-Pad: Arrows | A: X | B: Z | Start: Enter | Select: Shift {spec.aspectRatio === "2/3" ? "| Stylus: Mouse on bottom screen" : "| Fullscreen: F"}
+          {gameId === "mario"
+            ? "⌨ Move: ←/→ | Jump: X | Run: Z | Pipe: ↓ | Start: Enter | 1P/2P: Shift | Fullscreen: F"
+            : gameId === "gta"
+            ? "⌨ Walk/Steer: Arrows | Gas/A: X | Brake/Rev/B: Z | Car/Y: A | Handbrake/L: Q | Stylus: Bottom Screen"
+            : `⌨ D-Pad: Arrows | A: X | B: Z | Start: Enter | Select: Shift | Fullscreen: F`}
         </div>
         <div className="retro-emulator-disclaimer">
           Game files are provided by the user. All trademarks belong to their respective owners.

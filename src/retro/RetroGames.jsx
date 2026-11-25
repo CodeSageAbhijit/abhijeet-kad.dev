@@ -198,7 +198,7 @@ export function PacketRun() {
   }
 
   return (
-    <div className="retro-game" onKeyDown={(event) => {
+    <div className="retro-game" tabIndex={0} onKeyDown={(event) => {
       const move = packetArrows[event.key];
       if (!move) return;
       event.preventDefault();

@@ -181,7 +181,7 @@ export default function RetroStation() {
   }
 
   function playTyping(event) {
-    if (!sound || event.ctrlKey || event.metaKey || event.altKey || event.nativeEvent.isComposing) return;
+    if (event.defaultPrevented || !sound || event.ctrlKey || event.metaKey || event.altKey || event.nativeEvent.isComposing) return;
     if (event.key.length !== 1 && !["Backspace", "Delete", "Enter"].includes(event.key)) return;
     try {
       audio.current ??= createKeyClick();

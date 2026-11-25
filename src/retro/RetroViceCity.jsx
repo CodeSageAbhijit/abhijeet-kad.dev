@@ -13,9 +13,10 @@ export default function RetroViceCity({ active = true }) {
 
   const focusGame = useCallback(() => {
     try {
-      if (iframeRef.current && iframeRef.current.contentWindow) {
-        iframeRef.current.contentWindow.focus();
-      }
+      const iframe = iframeRef.current;
+      if (!iframe) return;
+      iframe.focus({ preventScroll: true });
+      iframe.contentWindow?.focus();
     } catch {
       // Cross-origin safe
     }
@@ -78,10 +79,10 @@ export default function RetroViceCity({ active = true }) {
     };
   }, [focusGame]);
 
-  // Fullscreen shortcut 'F' when not in inputs
+  // Fullscreen shortcut 'F' when not in inputs or OS shortcuts
   useEffect(() => {
     function handleKeyDown(e) {
-      if (!active) return;
+      if (!active || e.metaKey || e.ctrlKey) return;
       if (e.key === "f" || e.key === "F") {
         if (e.target.tagName !== "INPUT" && e.target.tagName !== "TEXTAREA") {
           e.preventDefault();

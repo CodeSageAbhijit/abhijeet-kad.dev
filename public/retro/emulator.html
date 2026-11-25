@@ -135,7 +135,7 @@
   </style>
 </head>
 <body>
-  <div id="game"></div>
+  <div id="game" tabindex="-1"></div>
   <div id="error-display"></div>
 
   <!-- Retro Start / Audio Unlock Overlay -->
@@ -153,6 +153,18 @@
 
   <script>
     (function() {
+      // Clear legacy cached controlSettings once so fixed EJS_defaultControls take effect on Mac & desktop
+      try {
+        if (!localStorage.getItem('retro_controls_v2')) {
+          Object.keys(localStorage).forEach(function(key) {
+            if (key.startsWith('ejs-') && key.endsWith('-settings')) {
+              localStorage.removeItem(key);
+            }
+          });
+          localStorage.setItem('retro_controls_v2', '1');
+        }
+      } catch {}
+
       const params = new URLSearchParams(window.location.search);
       const core = params.get('core') || 'nes';
       const gameName = params.get('gameName') || 'Game';
@@ -179,11 +191,13 @@
         if (core === 'segaMD') {
           overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrow keys | <strong>A:</strong> Z | <strong>B:</strong> X | <strong>C:</strong> C<br><strong>Start:</strong> Enter | <strong>Mode:</strong> Shift | <strong>X/Y/Z:</strong> A/S/D';
         } else if (core === 'nds') {
-          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>X:</strong> S | <strong>Y:</strong> A<br><strong>Start:</strong> Enter | <strong>Select:</strong> Shift | <strong>L/R:</strong> Q/E | <strong>Stylus:</strong> Mouse on bottom screen';
+          overlayControls.innerHTML = '⌨ <strong>Walk / Steer:</strong> Arrows | <strong>Gas / A:</strong> X | <strong>Brake & Rev / B:</strong> Z | <strong>Enter Car / Y:</strong> A<br><strong>Handbrake / L:</strong> Q | <strong>Attack / X:</strong> S | <strong>Start:</strong> Enter | <strong>Stylus:</strong> Bottom Screen';
         } else if (core === 'snes') {
           overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>X:</strong> S | <strong>Y:</strong> A<br><strong>Start:</strong> Enter | <strong>Select:</strong> Shift | <strong>L/R:</strong> Q/E';
         } else if (core === 'gba') {
           overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>Start:</strong> Enter | <strong>Select:</strong> Shift | <strong>L/R:</strong> Q/E';
+        } else if (gameName.toLowerCase().includes('mario')) {
+          overlayControls.innerHTML = '⌨ <strong>Move:</strong> ← / → | <strong>Jump (A):</strong> X | <strong>Run / Fire (B):</strong> Z | <strong>Crouch / Pipe:</strong> ↓<br><strong>Start:</strong> Enter | <strong>1P/2P (Select):</strong> Shift';
         } else {
           overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>Start:</strong> Enter | <strong>Select:</strong> Shift';
         }
@@ -297,36 +311,61 @@
         3: {}
       };
 
+      let overlayDismissed = false;
+
+      function focusEmulatorRoot() {
+        try {
+          const gameEl = document.getElementById('game');
+          if (gameEl && document.activeElement !== gameEl) {
+            gameEl.focus({ preventScroll: true });
+          }
+        } catch {}
+      }
+
+      function resumeWebAudio() {
+        try {
+          const emu = window.EJS_emulator;
+          if (!emu) return;
+          if (emu.audioContext && emu.audioContext.state === 'suspended') {
+            emu.audioContext.resume();
+          }
+          if (emu.Module && emu.Module.AL && emu.Module.AL.currentCtx) {
+            const curCtx = emu.Module.AL.currentCtx;
+            if (curCtx.audioCtx && curCtx.audioCtx.state === 'suspended') {
+              curCtx.audioCtx.resume();
+            }
+            const sources = curCtx.sources || [];
+            sources.forEach(src => {
+              if (src && src.gain && src.gain.context && src.gain.context.state === 'suspended') {
+                src.gain.context.resume();
+              }
+            });
+          }
+        } catch (e) {
+          console.warn('Audio unlock error:', e);
+        }
+      }
+
       // Comprehensive Audio Unlock & Game Start Function
-      function unlockAndStart() {
-        const overlay = document.getElementById('retro-start-overlay');
-        if (overlay) {
-          overlay.classList.add('hidden');
-          setTimeout(() => {
-            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-          }, 300);
+      function unlockAndStart(options) {
+        const shouldFocus = !options || options.focus !== false;
+        if (!overlayDismissed) {
+          overlayDismissed = true;
+          const overlay = document.getElementById('retro-start-overlay');
+          if (overlay) {
+            overlay.classList.add('hidden');
+            setTimeout(() => {
+              if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+            }, 300);
+          }
         }
 
-        // Resume all WebAudio contexts
+        resumeWebAudio();
+
         try {
           const emu = window.EJS_emulator;
           if (emu) {
-            if (emu.audioContext && emu.audioContext.state === 'suspended') {
-              emu.audioContext.resume();
-            }
-            if (emu.Module && emu.Module.AL && emu.Module.AL.currentCtx) {
-              const curCtx = emu.Module.AL.currentCtx;
-              if (curCtx.audioCtx && curCtx.audioCtx.state === 'suspended') {
-                curCtx.audioCtx.resume();
-              }
-              const sources = curCtx.sources || [];
-              sources.forEach(src => {
-                if (src && src.gain && src.gain.context && src.gain.context.state === 'suspended') {
-                  src.gain.context.resume();
-                }
-              });
-            }
-            if (typeof emu.play === 'function') {
+            if (emu.paused && typeof emu.play === 'function') {
               emu.play();
             }
             const ejsStartBtn = document.querySelector('.ejs_start_button');
@@ -334,56 +373,72 @@
               ejsStartBtn.click();
             }
           }
-        } catch (e) {
-          console.warn('Audio unlock error:', e);
-        }
-
-        // Focus canvas and parent element so keydown events work
-        try {
-          const gameEl = document.getElementById('game');
-          if (gameEl) gameEl.focus();
-          const canvas = document.querySelector('canvas');
-          if (canvas) canvas.focus();
-          window.focus();
         } catch {}
+
+        if (shouldFocus) {
+          focusEmulatorRoot();
+        }
       }
 
-      // Attach unlock listeners to overlay and window
+      // Attach unlock listeners to overlay and pointer interaction
       const overlayEl = document.getElementById('retro-start-overlay');
       if (overlayEl) {
-        overlayEl.addEventListener('click', unlockAndStart);
-        overlayEl.addEventListener('touchstart', unlockAndStart, { passive: true });
+        overlayEl.addEventListener('pointerdown', () => unlockAndStart({ focus: true }));
+        overlayEl.addEventListener('click', () => unlockAndStart({ focus: true }));
       }
+      window.addEventListener('pointerdown', () => {
+        resumeWebAudio();
+        focusEmulatorRoot();
+      });
 
-      // Robust key handler forwarding to EmulatorJS
+      // Only forward key events to emu.keyChange when #game did NOT already receive them,
+      // preventing double keyChange calls while ensuring keys still work when body/window is activeElement.
       function handleGameKey(e) {
-        unlockAndStart();
-        const emu = window.EJS_emulator;
-        if (!emu || typeof emu.keyChange !== 'function') return;
-        
-        // Prevent default browser behavior for gaming keys (scrolling on arrows, space)
+        if (!overlayDismissed) {
+          unlockAndStart({ focus: true });
+        } else {
+          resumeWebAudio();
+        }
+
         if ([37, 38, 39, 40, 32, 13, 9].includes(e.keyCode)) {
           e.preventDefault();
         }
-        emu.keyChange(e);
+
+        const gameEl = document.getElementById('game');
+        const insideGame = gameEl && (e.target === gameEl || gameEl.contains(e.target));
+        if (insideGame) {
+          // EmulatorJS listener on this.elements.parent (#game) handles it directly.
+          return;
+        }
+
+        focusEmulatorRoot();
+        const emu = window.EJS_emulator;
+        if (emu && typeof emu.keyChange === 'function') {
+          emu.keyChange(e);
+        }
       }
 
       window.addEventListener('keydown', handleGameKey, { passive: false });
       window.addEventListener('keyup', handleGameKey, { passive: false });
-      window.addEventListener('click', unlockAndStart);
 
-      // Support postMessage key event forwarding from parent window
+      // Support postMessage key event forwarding from parent window when parent holds focus
       window.addEventListener('message', function(event) {
+        if (event.origin !== window.location.origin) return;
         if (event.data && event.data.type === 'RETRO_KEY_EVENT') {
-          unlockAndStart();
+          if (!overlayDismissed) {
+            unlockAndStart({ focus: false });
+          } else {
+            resumeWebAudio();
+          }
           const emu = window.EJS_emulator;
           if (emu && typeof emu.keyChange === 'function') {
             const fakeEvent = {
               type: event.data.eventType,
               keyCode: event.data.keyCode,
+              which: event.data.keyCode,
               key: event.data.key,
               code: event.data.code,
-              repeat: false,
+              repeat: Boolean(event.data.repeat),
               preventDefault: function() {}
             };
             emu.keyChange(fakeEvent);
@@ -393,18 +448,12 @@
 
       // Hook into EmulatorJS start event
       window.EJS_onGameStart = function() {
-        console.log('EJS_onGameStart fired');
+        focusEmulatorRoot();
         setTimeout(() => {
           const emu = window.EJS_emulator;
           const alCtx = emu?.Module?.AL?.currentCtx?.audioCtx;
           if (alCtx && alCtx.state === 'running') {
-            const overlay = document.getElementById('retro-start-overlay');
-            if (overlay) {
-              overlay.classList.add('hidden');
-              setTimeout(() => {
-                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-              }, 300);
-            }
+            unlockAndStart({ focus: false });
           }
         }, 1200);
       };
@@ -421,9 +470,7 @@
       };
       document.body.appendChild(loader);
 
-      window.addEventListener('load', function() {
-        window.focus();
-      });
+      window.addEventListener('load', focusEmulatorRoot);
     })();
   </script>
 </body>

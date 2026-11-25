@@ -45,7 +45,7 @@ const BioTerminal = () => {
         </div>
         <div style={{ paddingLeft: "20px" }}>
           <span style={K}>"philosophy"</span><span style={C}>: </span>
-          <span style={V}>"Define interfaces and document trade-offs"</span>
+          <span style={V}>"Ship real systems, trace every layer, keep the web fun"</span>
           <span style={C}>,</span>
         </div>
         <div style={{ paddingLeft: "20px" }}>

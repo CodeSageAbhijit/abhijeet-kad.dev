@@ -7,18 +7,18 @@ import HireMeButton from "./HireMeButton";
 const ROLES = [
   "Full Stack Developer",
   "React & Node.js Engineer",
-  "System Design",
+  "Open Source Contributor",
   "3D Web Experiences Dev",
   "Problem Solver",
 ];
 
-const HIGHLIGHTED_ROLES = ["System Design"];
+const HIGHLIGHTED_ROLES = ["Open Source Contributor"];
 
 const STATS = [
-  { val: "10+",  label: "Projects Built" },
-  { val: "Systems", label: "Design", href: "#projects" },
-  { val: "150+", label: "LeetCode Solved", href: "https://leetcode.com/u/AbhijitKad/", external: true },
-  { val: "∞",   label: "Bugs Squashed" },
+  { val: "10+",         label: "Projects Built" },
+  { val: "Open Source", label: "Contributor",     href: "https://github.com/CodeSageAbhijit", external: true, accent: "alt",      title: "View GitHub profile" },
+  { val: "150+",        label: "LeetCode Solved", href: "https://leetcode.com/u/AbhijitKad/", external: true, accent: "leetcode", title: "View LeetCode profile" },
+  { val: "∞",           label: "Bugs Squashed" },
 ];
 
 const useTypewriter = (words, speed = 90, pause = 1800) => {
@@ -158,37 +158,37 @@ const Hero = ({ children }) => {
           </div>
 
           {/* Stats row */}
-          <div style={{ display: "flex", gap: 12, flexWrap: "nowrap", marginBottom: 32, overflowX: "auto" }}>
-            {STATS.map(({ val, label, href, external }) => {
-              const isDesignStat = href === "#projects";
-              const isLeet = external;
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 32, maxWidth: "100%" }}>
+            {STATS.map(({ val, label, href, external, accent, title }) => {
+              const isAlt = accent === "alt";
+              const isLeet = accent === "leetcode";
               const Stat = href ? "a" : "div";
               return (
                 <Stat key={label} href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined} style={{
                   display: "flex", flexDirection: "column",
-                  padding: "10px 14px",
+                  padding: "10px 12px",
                   flexShrink: 0,
-                  background: isDesignStat ? "rgb(var(--accent-alt-rgb) / 0.05)" : isLeet ? "rgba(248,161,0,0.05)" : "rgb(var(--accent-rgb) / 0.04)",
-                  border: isDesignStat ? "1px solid rgb(var(--accent-alt-rgb) / 0.22)" : isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgb(var(--accent-rgb) / 0.18)",
-                  borderTop: isDesignStat ? "2px solid rgb(var(--accent-alt-rgb) / 0.65)" : isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgb(var(--accent-rgb) / 0.5)",
+                  background: isAlt ? "rgb(var(--accent-alt-rgb) / 0.05)" : isLeet ? "rgba(248,161,0,0.05)" : "rgb(var(--accent-rgb) / 0.04)",
+                  border: isAlt ? "1px solid rgb(var(--accent-alt-rgb) / 0.22)" : isLeet ? "1px solid rgba(248,161,0,0.22)" : "1px solid rgb(var(--accent-rgb) / 0.18)",
+                  borderTop: isAlt ? "2px solid rgb(var(--accent-alt-rgb) / 0.65)" : isLeet ? "2px solid rgba(248,161,0,0.65)" : "2px solid rgb(var(--accent-rgb) / 0.5)",
                   cursor: href ? "pointer" : "default",
                   textDecoration: "none",
                 }}
-                  title={isDesignStat ? "Explore project architecture" : isLeet ? "View LeetCode profile" : undefined}
+                  title={title}
                 >
                   <span style={{
                     fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: 28, lineHeight: 1,
-                    background: isDesignStat ? "linear-gradient(to top, var(--accent-alt), var(--accent-soft))" : isLeet ? "linear-gradient(to top, #f8a100, #ffd166)" : "none",
-                    WebkitBackgroundClip: (isDesignStat || isLeet) ? "text" : "unset",
-                    WebkitTextFillColor: (isDesignStat || isLeet) ? "transparent" : "var(--accent)",
-                    color: (isDesignStat || isLeet) ? undefined : "var(--accent)",
-                    textShadow: (isDesignStat || isLeet) ? "none" : "0 0 12px rgb(var(--accent-rgb) / 0.4)",
+                    fontSize: 26, lineHeight: 1, whiteSpace: "nowrap",
+                    background: isAlt ? "linear-gradient(to top, var(--accent-alt), var(--accent-soft))" : isLeet ? "linear-gradient(to top, #f8a100, #ffd166)" : "none",
+                    WebkitBackgroundClip: (isAlt || isLeet) ? "text" : "unset",
+                    WebkitTextFillColor: (isAlt || isLeet) ? "transparent" : "var(--accent)",
+                    color: (isAlt || isLeet) ? undefined : "var(--accent)",
+                    textShadow: (isAlt || isLeet) ? "none" : "0 0 12px rgb(var(--accent-rgb) / 0.4)",
                   }}>{val}</span>
                   <span style={{
                     fontFamily: "'Share Tech Mono', monospace",
-                    fontSize: 10, color: isDesignStat ? "rgb(var(--accent-alt-rgb) / 0.5)" : "rgb(var(--accent-rgb) / 0.45)",
-                    letterSpacing: 2, marginTop: 3, textTransform: "uppercase",
+                    fontSize: 10, color: isAlt ? "rgb(var(--accent-alt-rgb) / 0.5)" : "rgb(var(--accent-rgb) / 0.45)",
+                    letterSpacing: 1.5, marginTop: 3, textTransform: "uppercase", whiteSpace: "nowrap",
                   }}>{label}</span>
                 </Stat>
               );
