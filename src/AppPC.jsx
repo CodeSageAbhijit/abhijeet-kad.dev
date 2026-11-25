@@ -9,8 +9,11 @@ import Contact from "./components/Contact";
 import StarsCanvas from "./components/canvas/Stars";
 import CanvasBoundary from "./components/canvas/CanvasBoundary";
 import PortfolioSearch from "./components/PortfolioSearch";
+import { usePortfolioSectionTracking } from "./utils/usePortfolioAnalytics";
 
 const AppPC = ({ isBooting }) => {
+  usePortfolioSectionTracking(!isBooting);
+
   return (
     <div className='relative z-0 bg-primary'>
       {/* Bottom edge glow */}
@@ -70,6 +73,9 @@ const AppPC = ({ isBooting }) => {
               <a href="https://www.linkedin.com/in/abhijit-kad/" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none", letterSpacing: 1, transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = "var(--accent)"} onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.5)"}>// linkedin</a>
               <a href="mailto:abhijitkad62@gmail.com" style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none", letterSpacing: 1, transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = "var(--accent)"} onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.5)"}>// email</a>
             </div>
+          </div>
+          <div style={{ fontSize: 10, letterSpacing: 1, color: "rgba(255,255,255,0.24)", textAlign: "right" }}>
+            Privacy-friendly analytics enabled (?notrack=1 to opt out)
           </div>
         </div>
       </footer>

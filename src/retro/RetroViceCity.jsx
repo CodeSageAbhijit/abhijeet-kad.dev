@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { finishGame, startGame, trackHiddenFeature } from "../utils/analytics";
 
 const VICE_CITY_URL = "https://karoly38-vc.hf.space/?lang=en&fullscreen=0&max_fps=60";
 
@@ -27,6 +28,14 @@ export default function RetroViceCity({ active = true }) {
       focusGame();
     }
   }, [active, isPlaying, focusGame]);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    startGame("vicecity");
+    return () => {
+      finishGame("vicecity", "quit");
+    };
+  }, [isPlaying]);
 
   const toggleFullscreen = useCallback(() => {
     const el = containerRef.current;
@@ -121,7 +130,10 @@ export default function RetroViceCity({ active = true }) {
           <button
             type="button"
             className={`retro-emulator-tool-btn ${crtShader ? "active" : ""}`}
-            onClick={() => setCrtShader(!crtShader)}
+            onClick={() => {
+              trackHiddenFeature("vicecity_crt_shader");
+              setCrtShader(!crtShader);
+            }}
             title="Toggle CRT Scanline Shader"
           >
             📺 CRT {crtShader ? "ON" : "OFF"}
@@ -129,7 +141,10 @@ export default function RetroViceCity({ active = true }) {
           <button
             type="button"
             className="retro-emulator-tool-btn"
-            onClick={() => setShowControls(!showControls)}
+            onClick={() => {
+              trackHiddenFeature("vicecity_controls_sheet");
+              setShowControls(!showControls);
+            }}
             title="View keyboard and mouse controls"
           >
             🎮 Controls

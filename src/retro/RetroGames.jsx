@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { finishGame, startGame } from "../utils/analytics";
 
 const cards = [
   ["✿", "Flower"], ["✦", "Star"], ["☁", "Cloud"], ["◆", "Gem"],
@@ -36,6 +37,16 @@ export function TileMatch() {
   }
 
   const cleared = round.matched.length === round.deck.length;
+
+  useEffect(() => {
+    startGame("memory");
+    return () => finishGame("memory", "quit");
+  }, []);
+
+  useEffect(() => {
+    if (cleared) finishGame("memory", "won", round.moves);
+  }, [cleared, round.moves]);
+
   return (
     <div className="retro-game">
       <p>Turn over two tiles to find a pair.</p>
@@ -58,7 +69,15 @@ export function TileMatch() {
           );
         })}
       </div>
-      <button type="button" className="retro-game-button" onClick={() => setRound(newDeck)}>Shuffle tiles</button>
+      <button
+        type="button"
+        className="retro-game-button"
+        onClick={() => {
+          finishGame("memory", "quit", round.moves);
+          setRound(newDeck());
+          startGame("memory");
+        }}
+      >Shuffle tiles</button>
     </div>
   );
 }
@@ -116,10 +135,21 @@ export function CircuitGrid() {
   const end = board.length - 1;
   const won = powered.has(end);
 
+  useEffect(() => {
+    startGame("circuit");
+    return () => finishGame("circuit", "quit");
+  }, []);
+
+  useEffect(() => {
+    if (won) finishGame("circuit", "won", moves);
+  }, [won, moves]);
+
   function reset(nextLevel) {
+    finishGame("circuit", "quit", moves);
     setLevel(nextLevel);
     setBoard(circuitBoard(nextLevel));
     setMoves(0);
+    startGame("circuit");
   }
 
   function turn(index) {
@@ -177,9 +207,20 @@ export function PacketRun() {
   const [round, setRound] = useState(() => packetRound(0));
   const won = round.board[round.position] === "E" && round.collected.length === 3;
 
+  useEffect(() => {
+    startGame("packet");
+    return () => finishGame("packet", "quit");
+  }, []);
+
+  useEffect(() => {
+    if (won) finishGame("packet", "won", round.moves);
+  }, [won, round.moves]);
+
   function reset(nextLevel) {
+    finishGame("packet", "quit", round.moves);
     setLevel(nextLevel);
     setRound(packetRound(nextLevel));
+    startGame("packet");
   }
 
   function step(next) {

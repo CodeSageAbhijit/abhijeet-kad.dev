@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { finishGame, startGame } from "../utils/analytics";
 
 /**
  * Authentic Windows XP Minesweeper
@@ -58,6 +59,22 @@ export default function RetroMinesweeper() {
   const [faceState, setFaceState] = useState("smile"); // "smile", "scared", "dead", "cool"
   const [timer, setTimer] = useState(0);
   const timerRef = useRef(null);
+  const latestTimer = useRef(0);
+  latestTimer.current = timer;
+
+  useEffect(() => {
+    if (gameState === "playing") {
+      startGame("minesweeper");
+    } else if (gameState === "won" || gameState === "lost") {
+      finishGame("minesweeper", gameState, latestTimer.current);
+    }
+  }, [gameState]);
+
+  useEffect(() => {
+    return () => {
+      finishGame("minesweeper", "quit", latestTimer.current);
+    };
+  }, []);
 
   // Sound generator
   const playSfx = (type) => {
@@ -131,6 +148,7 @@ export default function RetroMinesweeper() {
   const remainingMines = Math.max(0, MINES - flagsUsed);
 
   const resetGame = () => {
+    finishGame("minesweeper", "quit", latestTimer.current);
     setBoard(createBoard());
     setGameState("idle");
     setFaceState("smile");

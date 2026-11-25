@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { WindowsMediaPlayerIcon } from "./RetroIcons";
+import { trackHiddenFeature } from "../utils/analytics";
 
 /**
  * Authentic Windows XP Style Music Player (Windows Media Player 9 Series / Winamp Hybrid)
@@ -348,6 +349,7 @@ export default function RetroMusicPlayer() {
 
   // Audio Event Handlers
   const handlePlay = () => {
+    trackHiddenFeature("retro_music_player");
     setIsPlaying(true);
     setIsBuffering(false);
   };

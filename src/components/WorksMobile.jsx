@@ -5,6 +5,7 @@ import { styles } from "../styles";
 import { projects } from "../constants";
 import { textVariant } from "../utils/motion";
 import { projectAnchor, projectFromHash } from "../utils/portfolioSearch";
+import { track, trackOnce } from "../utils/analytics";
 
 const TYPE_CONFIG = {
   web: { icon: "🌐", label: "Web App", color: "#4fc3f7" },
@@ -119,6 +120,7 @@ const ProjectCard = ({ project, index }) => {
       id={projectAnchor(project.name)}
       data-project-anchor
       tabIndex={-1}
+      onClick={() => trackOnce("Project Opened", { project_name: project.name }, `project_opened:${project.name}`)}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -211,6 +213,11 @@ const ProjectCard = ({ project, index }) => {
               href={project.source_code_link}
               target="_blank"
               rel="noopener noreferrer"
+              data-project-link="true"
+              onClick={(e) => {
+                e.stopPropagation();
+                track("Project Link Clicked", { project_name: project.name, link_type: "github", url: project.source_code_link }, { transport: "sendBeacon" });
+              }}
               style={{
                 flex: "1 1 auto",
                 minWidth: "120px",
@@ -243,6 +250,11 @@ const ProjectCard = ({ project, index }) => {
               href={project.live_link}
               target="_blank"
               rel="noopener noreferrer"
+              data-project-link="true"
+              onClick={(e) => {
+                e.stopPropagation();
+                track("Project Link Clicked", { project_name: project.name, link_type: "live", url: project.live_link }, { transport: "sendBeacon" });
+              }}
               style={{
                 flex: "1 1 auto",
                 minWidth: "120px",
@@ -275,6 +287,11 @@ const ProjectCard = ({ project, index }) => {
               href={project.exe_link}
               target="_blank"
               rel="noopener noreferrer"
+              data-project-link="true"
+              onClick={(e) => {
+                e.stopPropagation();
+                track("Project Link Clicked", { project_name: project.name, link_type: "download", url: project.exe_link }, { transport: "sendBeacon" });
+              }}
               style={{
                 flex: "1 1 auto",
                 minWidth: "120px",

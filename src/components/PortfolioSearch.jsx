@@ -5,6 +5,7 @@ import { unlockStartupSound } from "../retro/startupSound";
 import { searchPortfolio } from "../utils/portfolioSearch";
 import ComputersCanvas from "./canvas/Computers";
 import { createKeyClick } from "./canvas/keyClick";
+import { setPendingRetroEntryPoint, trackHiddenFeature } from "../utils/analytics";
 import "./PortfolioSearch.css";
 
 const MAX_QUERY_LENGTH = 96;
@@ -55,6 +56,7 @@ export default function PortfolioSearch({ isBooting }) {
   }
 
   function bootDesktop() {
+    setPendingRetroEntryPoint("easter_egg");
     if (sound) unlockStartupSound();
     requestDesktopFullscreen();
     navigate("/retro/", { state: { boot: true, sound } });
@@ -71,6 +73,7 @@ export default function PortfolioSearch({ isBooting }) {
   }
 
   function handleModelKey(key) {
+    trackHiddenFeature("search_pc_3d_keyboard");
     playClick(key);
     if (!key) return;
     if (key === "Enter") {
@@ -134,7 +137,7 @@ export default function PortfolioSearch({ isBooting }) {
   }
 
   return (
-    <section id="search" className="portfolio-search" aria-labelledby="portfolio-search-title">
+    <section id="search" data-analytics-section="search" className="portfolio-search" aria-labelledby="portfolio-search-title">
       <h2 id="portfolio-search-title" className="sr-only">Search the portfolio</h2>
       <ComputersCanvas
         display={display}

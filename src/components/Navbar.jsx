@@ -5,6 +5,7 @@ import { styles } from "../styles";
 import { navLinks } from "../constants";
 import { menu, close } from "../assets";
 import LightModePrank from "./LightModePrank";
+import { markEasterEggFound, track } from "../utils/analytics";
 
 const NAV_STYLE = {
   fontFamily: "'Share Tech Mono', monospace",
@@ -87,7 +88,10 @@ const Navbar = () => {
           {navLinks.map((nav) => (
             <li
               key={nav.id}
-              onClick={() => setActive(nav.title)}
+              onClick={() => {
+                track("Nav Clicked", { item: nav.id, from_section: active || "top" });
+                setActive(nav.title);
+              }}
               style={{ position: "relative", cursor: "pointer" }}
             >
               <a
@@ -130,7 +134,11 @@ const Navbar = () => {
           {/* Light Mode Prank Toggle */}
           <li>
              <button
-                onClick={() => setPrankActive(true)}
+                onClick={() => {
+                  markEasterEggFound("light_mode_prank", "click");
+                  track("Theme Toggled", { theme: "light_prank" });
+                  setPrankActive(true);
+                }}
                 title="Toggle Light Mode"
                 style={{
                   background: "transparent", border: "1px solid rgba(255, 235, 59, 0.4)", width: "32px", height: "32px", 
@@ -150,7 +158,11 @@ const Navbar = () => {
         <div className='flex md:hidden flex-1 justify-end items-center gap-4'>
           {/* Light Mode Prank Toggle for Mobile */}
           <button
-            onClick={() => setPrankActive(true)}
+            onClick={() => {
+              markEasterEggFound("light_mode_prank", "click");
+              track("Theme Toggled", { theme: "light_prank" });
+              setPrankActive(true);
+            }}
             title="Toggle Light Mode"
             style={{
               background: "transparent", border: "1px solid rgba(255, 235, 59, 0.4)", width: "32px", height: "32px", 
@@ -186,7 +198,11 @@ const Navbar = () => {
                 {navLinks.map((nav) => (
                   <li
                     key={nav.id}
-                    onClick={() => { setToggle(false); setActive(nav.title); }}
+                    onClick={() => {
+                      track("Nav Clicked", { item: nav.id, from_section: active || "top" });
+                      setToggle(false);
+                      setActive(nav.title);
+                    }}
                   >
                     <a
                       href={`#${nav.id}`}

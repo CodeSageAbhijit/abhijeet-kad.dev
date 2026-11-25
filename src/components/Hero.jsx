@@ -58,7 +58,7 @@ const Hero = ({ children }) => {
   const { text: role, highlighted: highlightedRole } = useTypewriter(ROLES);
 
   return (
-    <section className="relative w-full h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center">
+    <section id="hero" data-analytics-section="hero" className="relative w-full h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center">
       {/* Palette glow */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { styles } from "../styles";
 import TerminalWidget from "./TerminalWidget";
 import HireMeButton from "./HireMeButton";
+import { recordOutboundClick } from "../utils/analytics";
 
 const ROLES = [
   "Full Stack Developer",
@@ -56,7 +57,7 @@ const HeroMobile = ({ children }) => {
   const { text: role, highlighted: highlightedRole } = useTypewriter(ROLES);
 
   return (
-    <section className="relative w-full min-h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center pt-32 pb-20 px-6">
+    <section id="hero" data-analytics-section="hero" className="relative w-full min-h-screen mx-auto overflow-hidden bg-hero-pattern bg-cover bg-no-repeat bg-center pt-32 pb-20 px-6">
       {/* Deep radial glow */}
       <div style={{
         position: "absolute", inset: 0, pointerEvents: "none",
@@ -162,7 +163,10 @@ const HeroMobile = ({ children }) => {
                 cursor: isLeet ? "pointer" : "default",
                 borderRadius: 6,
               }}
-                onClick={isLeet ? () => window.open("https://leetcode.com/u/AbhijitKad/", "_blank") : undefined}
+                onClick={isLeet ? () => {
+                  recordOutboundClick("leetcode", "https://leetcode.com/u/AbhijitKad/", "hero");
+                  window.open("https://leetcode.com/u/AbhijitKad/", "_blank");
+                } : undefined}
               >
                 <span style={{
                   fontFamily: "'Bebas Neue', sans-serif",

@@ -3,6 +3,7 @@ import { authenticatedClient } from "../spirits/api";
 import "./fan.css";
 import FanSculpture from "./FanSculpture";
 import { fireConfetti } from "./confetti";
+import { markEasterEggFound } from "../utils/analytics";
 
 async function fanTotal(join) {
   const client = await authenticatedClient();
@@ -84,6 +85,7 @@ export default function FanButton() {
 
   async function join(e) {
     if (pending) return;
+    markEasterEggFound("onlyfans_fan", "click");
     setHasClicked(true);
     setClickCount((n) => n + 1);
     const id = ++version.current;

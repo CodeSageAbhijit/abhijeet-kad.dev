@@ -6,6 +6,7 @@ import emailjs from "@emailjs/browser";
 import { styles } from "../styles";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
+import { track } from "../utils/analytics";
 
 const ContactMobile = () => {
   const formRef = useRef();
@@ -46,6 +47,7 @@ const ContactMobile = () => {
       .then(
         () => {
           setLoading(false);
+          track("Contact Initiated", { method: "contact_form" });
           alert("Thank you. I will get back to you as soon as possible.");
 
           setForm({

@@ -8,8 +8,11 @@ import AboutMobile from "./components/AboutMobile";
 import ExperienceMobile from "./components/ExperienceMobile";
 import TechMobile from "./components/TechMobile";
 import WorksMobile from "./components/WorksMobile";
+import { usePortfolioSectionTracking } from "./utils/usePortfolioAnalytics";
 
 const AppMobile = ({ isBooting }) => {
+  usePortfolioSectionTracking(!isBooting);
+
   return (
     <div className='relative z-0 bg-primary'>
       {/* Bottom edge glow */}
@@ -69,6 +72,9 @@ const AppMobile = ({ isBooting }) => {
             <a href="https://www.linkedin.com/in/abhijit-kad/" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, textDecoration: "none", letterSpacing: 1 }}>// linkedin</a>
             <a href="mailto:abhijitkad62@gmail.com" style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, textDecoration: "none", letterSpacing: 1 }}>// email</a>
           </div>
+          <p style={{ fontSize: 10, letterSpacing: 0.8, color: "rgba(255,255,255,0.28)", margin: 0 }}>
+            Privacy-friendly analytics enabled (?notrack=1 to opt out)
+          </p>
         </div>
       </footer>
     </div>

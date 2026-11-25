@@ -9,6 +9,7 @@ import { SectionWrapper } from "../hoc";
 import { projects } from "../constants";
 import { textVariant } from "../utils/motion";
 import { projectFromHash } from "../utils/portfolioSearch";
+import { track } from "../utils/analytics";
 
 const TYPE_CONFIG = {
   web:    { icon: "🌐", label: "Web App",    color: "#4fc3f7" },
@@ -294,7 +295,10 @@ const Works = ({ isBooting }) => {
             return (
               <motion.div
                 key={proj.name}
-                onClick={() => setActive(i)}
+                onClick={() => {
+                  setActive(i);
+                  track("Project Opened", { project_name: proj.name });
+                }}
                 whileHover={{ x: 4 }}
                 style={{
                   padding: "12px 16px",
@@ -362,7 +366,10 @@ const Works = ({ isBooting }) => {
                   }}>{current.name}</h3>
                   <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
                   <button
-                    onClick={() => window.open(current.source_code_link, "_blank")}
+                    onClick={() => {
+                      track("Project Link Clicked", { project_name: current.name, link_type: "github", url: current.source_code_link }, { transport: "sendBeacon" });
+                      window.open(current.source_code_link, "_blank");
+                    }}
                     className="cyber-btn"
                     style={{
                       display: "flex", alignItems: "center", gap: 8,
@@ -380,7 +387,10 @@ const Works = ({ isBooting }) => {
                   {/* Web: live button */}
                   {current.type === "web" && current.live_link && (
                     <button
-                      onClick={() => window.open(current.live_link, "_blank")}
+                      onClick={() => {
+                        track("Project Link Clicked", { project_name: current.name, link_type: "live", url: current.live_link }, { transport: "sendBeacon" });
+                        window.open(current.live_link, "_blank");
+                      }}
                       className="cyber-btn glitch-reveal"
                       data-text="// live"
                       style={{
@@ -405,7 +415,10 @@ const Works = ({ isBooting }) => {
                   {/* Desktop: exe download button */}
                   {current.type === "desktop" && current.exe_link && (
                     <button
-                      onClick={() => window.open(current.exe_link, "_blank")}
+                      onClick={() => {
+                        track("Project Link Clicked", { project_name: current.name, link_type: "download", url: current.exe_link }, { transport: "sendBeacon" });
+                        window.open(current.exe_link, "_blank");
+                      }}
                       style={{
                         display: "flex", alignItems: "center", gap: 8,
                         fontFamily: "'Share Tech Mono', monospace",
@@ -424,7 +437,10 @@ const Works = ({ isBooting }) => {
                   {/* Mobile: APK download button */}
                   {current.type === "mobile" && current.apk_link && !current.apk_blocked && (
                     <button
-                      onClick={() => window.open(current.apk_link, "_blank")}
+                      onClick={() => {
+                        track("Project Link Clicked", { project_name: current.name, link_type: "download", url: current.apk_link }, { transport: "sendBeacon" });
+                        window.open(current.apk_link, "_blank");
+                      }}
                       style={{
                         display: "flex", alignItems: "center", gap: 8,
                         fontFamily: "'Share Tech Mono', monospace",

@@ -9,6 +9,7 @@ import {
 } from "react";
 import { guestbook, spiritsEnabled } from "./api";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { markEasterEggFound, trackHiddenFeature } from "../utils/analytics";
 import "./spirits.css";
 
 const Field = createContext(null);
@@ -220,6 +221,7 @@ export function SpiritSlot({ home }) {
   function enter() {
     clearTimeout(leaveTimer.current);
     if (!open && !saving.current) {
+      markEasterEggFound("wandering_spirit", "click");
       if (home === "hero") {
         setAbove(trigger.current?.getBoundingClientRect().bottom > innerHeight / 2);
         setActive(home);
@@ -244,6 +246,7 @@ export function SpiritSlot({ home }) {
         display_name: displayName.trim() || null,
       });
       releasedNotes.current.set(destination, { id: submission.current, body: draft.trim(), display_name: savedName });
+      trackHiddenFeature("spirit_note_released", { destination_home: destination });
       flyToHome(trigger.current, destination);
       setLanding(destination);
       submission.current = null;

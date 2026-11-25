@@ -1,12 +1,14 @@
 import { SpiritField } from "./spirits/SpiritGuestbook";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useState } from "react";
+import { useGlobalAnalytics } from "./utils/usePortfolioAnalytics";
 
 const Portfolio = lazy(() => import("./Portfolio"));
 const RetroStation = lazy(() => import("./retro/RetroStation"));
 
 export default function App() {
   const [hasBooted, setHasBooted] = useState(false);
+  useGlobalAnalytics();
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <SpiritField><Routes>

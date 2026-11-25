@@ -5,6 +5,12 @@ import RetroDesktop from "./RetroDesktop";
 import { exitDesktopFullscreen, requestDesktopFullscreen } from "./fullscreen";
 import { monitorLayout } from "./monitorLayout";
 import {
+  consumeRetroEntryPoint,
+  enterRetroSection,
+  exitRetroSection,
+  trackHiddenFeature,
+} from "../utils/analytics";
+import {
   playShutdownSound,
   playStartupSound,
   releaseStartupSound,
@@ -155,6 +161,7 @@ export default function RetroStation() {
   }
 
   function adjustDisplay(control) {
+    trackHiddenFeature("crt_display_knob", { control });
     const levels = [100, 115, 130, 70, 85];
     const value = levels[(levels.indexOf(display[control]) + 1) % levels.length];
     setDisplay({ ...display, [control]: value });
@@ -192,6 +199,7 @@ export default function RetroStation() {
   }
 
   useEffect(() => {
+    enterRetroSection(consumeRetroEntryPoint("direct_url"));
     const original = document.title;
     document.title = "Retro PC · Abhijeet Kad";
     const wallpaper = new Image();
@@ -201,6 +209,7 @@ export default function RetroStation() {
     const handleFullscreen = () => setFullscreen(Boolean(document.fullscreenElement));
     document.addEventListener("fullscreenchange", handleFullscreen);
     return () => {
+      exitRetroSection();
       document.title = original;
       document.removeEventListener("fullscreenchange", handleFullscreen);
       exitDesktopFullscreen();
@@ -244,10 +253,19 @@ export default function RetroStation() {
       if (!sound) unlockStartupSound();
       setSound(!sound);
     },
-    onScanlines: () => setScanlines(!scanlines),
+    onScanlines: () => {
+      trackHiddenFeature("crt_scanlines_toggle");
+      setScanlines(!scanlines);
+    },
     // onCameos: () => setCameos((enabled) => !enabled),
-    onFocus: () => setFocused(!focused),
-    onFullscreen: fullscreen ? exitDesktopFullscreen : requestDesktopFullscreen,
+    onFocus: () => {
+      trackHiddenFeature("crt_zoom_toggle");
+      setFocused(!focused);
+    },
+    onFullscreen: () => {
+      trackHiddenFeature("crt_fullscreen_toggle");
+      (fullscreen ? exitDesktopFullscreen : requestDesktopFullscreen)();
+    },
   };
   const layout = viewport ? monitorLayout(viewport.width, viewport.height, focused) : null;
   const busy = ["starting", "welcome", "shutting_down"].includes(phase);
@@ -299,7 +317,9 @@ export default function RetroStation() {
                     <button type="button" onClick={toggles.onFullscreen}>
                       {fullscreen ? "Exit full screen" : "Full screen"}
                     </button>
-                    <Link to="/#search">Back to portfolio</Link>
+                    <Link to="/#search" onClick={() => exitRetroSection({ destinationSection: "search" })}>
+                      Back to portfolio
+                    </Link>
                   </div>
                 </div>
               ) : phase === "starting" ? (

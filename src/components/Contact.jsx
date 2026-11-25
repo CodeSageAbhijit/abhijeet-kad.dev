@@ -8,6 +8,7 @@ import { EarthCanvas } from "./canvas";
 import CanvasBoundary from "./canvas/CanvasBoundary";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
+import { track } from "../utils/analytics";
 
 const Contact = () => {
   const formRef = useRef();
@@ -48,6 +49,7 @@ const Contact = () => {
       .then(
         () => {
           setLoading(false);
+          track("Contact Initiated", { method: "contact_form" });
           alert("Thank you. I will get back to you as soon as possible.");
 
           setForm({

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Link } from "react-router-dom";
 import { designFocus, experiences, projects, technologies } from "../constants";
 import { InternetExplorerIcon, MyDocumentsIcon } from "./RetroIcons";
+import { track, trackHiddenFeature } from "../utils/analytics";
 
 const site = "abhijit-kad.dev";
 const pages = { home: "Home", projects: "Projects", experience: "Experience", contact: "Contact" };
@@ -25,11 +26,23 @@ function ProjectDetails({ project }) {
         ))}
       </ul>
       <div className="retro-project-links">
-        <a href={project.source_code_link} target="_blank" rel="noreferrer">
+        <a
+          href={project.source_code_link}
+          target="_blank"
+          rel="noreferrer"
+          data-project-link="true"
+          onClick={() => track("Project Link Clicked", { project_name: project.name, link_type: "github", url: project.source_code_link }, { transport: "sendBeacon" })}
+        >
           Source code ↗
         </a>
         {project.live_link && (
-          <a href={project.live_link} target="_blank" rel="noreferrer">
+          <a
+            href={project.live_link}
+            target="_blank"
+            rel="noreferrer"
+            data-project-link="true"
+            onClick={() => track("Project Link Clicked", { project_name: project.name, link_type: "live", url: project.live_link }, { transport: "sendBeacon" })}
+          >
             Live site ↗
           </a>
         )}
@@ -83,6 +96,7 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
   const profile = profiles[currentTab];
 
   function navigate(page, step) {
+    trackHiddenFeature("ie7_portfolio_browser");
     // if (page !== currentTab) onNavigate(page);
     setUrl(pageAddress(page));
     setError(false);
@@ -231,7 +245,15 @@ export function ProjectFiles({ onOpenPictures }) {
         ) : (
           <div className="retro-items-grid retro-project-folder">
             {projects.map((item) => (
-              <button className="retro-item-tile" type="button" key={item.name} onClick={() => setProject(item)}>
+              <button
+                className="retro-item-tile"
+                type="button"
+                key={item.name}
+                onClick={() => {
+                  track("Project Opened", { project_name: item.name });
+                  setProject(item);
+                }}
+              >
                 <MyDocumentsIcon size={28} /><span>{item.name}</span>
               </button>
             ))}

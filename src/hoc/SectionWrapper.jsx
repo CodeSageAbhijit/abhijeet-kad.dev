@@ -3,11 +3,20 @@ import { motion } from "framer-motion";
 import { styles } from "../styles";
 import { staggerContainer } from "../utils/motion";
 
+const SECTION_NAME_MAP = {
+  about: "about",
+  work: "experience",
+  skills: "skills",
+  projects: "projects",
+  contact: "contact",
+};
+
 const StarWrapper = (Component, idName, tone) =>
   function HOC(props) {
     return (
       <motion.section
         data-tone={tone}
+        data-analytics-section={SECTION_NAME_MAP[idName] || idName}
         variants={staggerContainer()}
         initial='hidden'
         whileInView='show'

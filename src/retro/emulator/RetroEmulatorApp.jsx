@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { GAME_CONTROLS } from "./gameControls";
+import { finishGame, startGame, trackHiddenFeature } from "../../utils/analytics";
 
 /**
  * Console metadata specifications
@@ -132,6 +133,7 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
   // Handle local file drop or selection
   function handleFileSelected(file) {
     if (!file) return;
+    trackHiddenFeature("emulator_custom_rom");
     cleanupBlobs();
     const url = URL.createObjectURL(file);
     fileBlobRef.current = url;
@@ -180,6 +182,14 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
       focusGame();
     }
   }, [active, gameUrl, focusGame]);
+
+  useEffect(() => {
+    if (!gameUrl) return;
+    startGame(gameId);
+    return () => {
+      finishGame(gameId, "quit");
+    };
+  }, [gameId, gameUrl]);
 
   // Handle Fullscreen via Fullscreen API with iOS Safari fallback
   const toggleFullscreen = useCallback(() => {
@@ -343,6 +353,7 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
             className={`retro-emulator-tool-btn ${crtShader ? "active" : ""}`}
             onClick={(e) => {
               e.currentTarget.blur();
+              trackHiddenFeature("emulator_crt_shader");
               setCrtShader(!crtShader);
               focusGame();
             }}
@@ -355,6 +366,7 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
             className={`retro-emulator-tool-btn ${controlsHintPulse ? "is-highlighted" : ""} ${showControls ? "active" : ""}`}
             onClick={(e) => {
               e.currentTarget.blur();
+              trackHiddenFeature("emulator_controls_sheet");
               setControlsHintPulse(false);
               setShowControls(!showControls);
             }}

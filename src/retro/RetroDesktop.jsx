@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 // import { useCallback } from "react";
 import { Link } from "react-router-dom";
+import { exitRetroSection } from "../utils/analytics";
 import { CircuitGrid, PacketRun, TileMatch } from "./RetroGames";
 import { DisplaySettings, Notes, PortfolioBrowser, ProjectFiles } from "./RetroPrograms";
 import RetroCalendar from "./RetroCalendar";
@@ -524,7 +525,13 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
                   }}>Replay cartoon cameo</button>
                 )}
                 */}
-                <Link className="retro-menu-right-item" to="/#search">Back to portfolio ↗</Link>
+                <Link
+                  className="retro-menu-right-item"
+                  to="/#search"
+                  onClick={() => exitRetroSection({ destinationSection: "search" })}
+                >
+                  Back to portfolio ↗
+                </Link>
               </div>
             </div>
             <div className="retro-menu-footer">
