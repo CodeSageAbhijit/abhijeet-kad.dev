@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { GAME_CONTROLS } from "./gameControls";
 
 /**
  * Console metadata specifications
@@ -70,6 +71,7 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
   const [isPreconfigured, setIsPreconfigured] = useState(false);
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [showControls, setShowControls] = useState(false);
+  const [controlsHintPulse, setControlsHintPulse] = useState(true);
   const [crtShader, setCrtShader] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -166,6 +168,12 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
       // Cross-origin safe
     }
   }, []);
+
+  useEffect(() => {
+    setControlsHintPulse(true);
+    const timer = setTimeout(() => setControlsHintPulse(false), 6000);
+    return () => clearTimeout(timer);
+  }, [gameId]);
 
   useEffect(() => {
     if (active && gameUrl) {
@@ -344,12 +352,13 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
           </button>
           <button
             type="button"
-            className="retro-emulator-tool-btn"
+            className={`retro-emulator-tool-btn ${controlsHintPulse ? "is-highlighted" : ""} ${showControls ? "active" : ""}`}
             onClick={(e) => {
               e.currentTarget.blur();
+              setControlsHintPulse(false);
               setShowControls(!showControls);
             }}
-            title="View keyboard and gamepad cheat-sheet"
+            title="View game-specific controls & keybindings"
           >
             🎮 Controls
           </button>
@@ -458,137 +467,72 @@ export default function RetroEmulatorApp({ gameId = "mario", active = true }) {
         )}
 
         {/* Controls Cheat Sheet Modal */}
-        {showControls && (
-          <div className="retro-emulator-controls-overlay" onClick={() => setShowControls(false)}>
-            <div className="retro-emulator-controls-modal" onClick={(e) => e.stopPropagation()}>
-              <div className="retro-emulator-modal-header">
-                <h4>Game Controls Cheat-Sheet</h4>
-                <button type="button" onClick={() => setShowControls(false)}>
-                  ×
-                </button>
-              </div>
-              <div className="retro-emulator-modal-body">
-                <div className="retro-controls-grid">
-                  <div className="retro-controls-section">
-                    <h5>⌨ Keyboard Layout ({spec.system})</h5>
-                    <table>
-                      <tbody>
-                        <tr>
-                          <td><strong>D-Pad</strong></td>
-                          <td>Arrow Keys (↑, ↓, ←, →)</td>
-                        </tr>
-                        {spec.core === "segaMD" ? (
-                          <>
-                            <tr>
-                              <td><strong>A Button</strong></td>
-                              <td><kbd>Z</kbd></td>
-                            </tr>
-                            <tr>
-                              <td><strong>B Button</strong></td>
-                              <td><kbd>X</kbd></td>
-                            </tr>
-                            <tr>
-                              <td><strong>C Button</strong></td>
-                              <td><kbd>C</kbd></td>
-                            </tr>
-                            <tr>
-                              <td><strong>X / Y / Z</strong></td>
-                              <td><kbd>A</kbd> / <kbd>S</kbd> / <kbd>D</kbd></td>
-                            </tr>
-                            <tr>
-                              <td><strong>Start</strong></td>
-                              <td><kbd>Enter</kbd></td>
-                            </tr>
-                            <tr>
-                              <td><strong>Mode</strong></td>
-                              <td><kbd>Shift</kbd></td>
-                            </tr>
-                          </>
-                        ) : (
-                          <>
-                            <tr>
-                              <td><strong>A Button{gameId === "mario" ? " (Jump)" : gameId === "gta" ? " (Gas / Action)" : ""}</strong></td>
-                              <td><kbd>X</kbd></td>
-                            </tr>
-                            <tr>
-                              <td><strong>B Button{gameId === "mario" ? " (Run / Fire)" : gameId === "gta" ? " (Brake / Reverse)" : ""}</strong></td>
-                              <td><kbd>Z</kbd></td>
-                            </tr>
-                            {(spec.core === "snes" || spec.core === "nds") && (
-                              <>
-                                <tr>
-                                  <td><strong>X Button{gameId === "gta" ? " (Attack)" : ""}</strong></td>
-                                  <td><kbd>S</kbd></td>
-                                </tr>
-                                <tr>
-                                  <td><strong>Y Button{gameId === "gta" ? " (Enter / Exit Car)" : ""}</strong></td>
-                                  <td><kbd>A</kbd></td>
-                                </tr>
-                              </>
+        {showControls && (() => {
+          const gameControlSpec = GAME_CONTROLS[gameId];
+          return (
+            <div className="retro-emulator-controls-overlay" onClick={() => { setShowControls(false); focusGame(); }}>
+              <div className="retro-emulator-controls-modal" onClick={(e) => e.stopPropagation()}>
+                <div className="retro-emulator-modal-header">
+                  <h4>{spec.title} — Controls</h4>
+                  <button type="button" onClick={() => { setShowControls(false); focusGame(); }}>
+                    ×
+                  </button>
+                </div>
+                <div className="retro-emulator-modal-body">
+                  <div className="retro-controls-grid">
+                    {gameControlSpec?.sections.map((section, sectionIdx) => (
+                      <div key={section.title} className="retro-controls-section">
+                        <h5>{section.title}</h5>
+                        <table>
+                          <tbody>
+                            {section.rows.map((row) => (
+                              <tr key={row.action}>
+                                <td><strong>{row.action}</strong></td>
+                                <td>
+                                  {row.keys.map((k, idx) => (
+                                    <span key={k}>
+                                      {idx > 0 && " / "}
+                                      <kbd>{k}</kbd>
+                                    </span>
+                                  ))}
+                                </td>
+                              </tr>
+                            ))}
+                            {sectionIdx === gameControlSpec.sections.length - 1 && (
+                              <tr>
+                                <td><strong>Fullscreen</strong></td>
+                                <td><kbd>F</kbd></td>
+                              </tr>
                             )}
-                            {(spec.core === "snes" || spec.core === "nds" || spec.core === "gba") && (
-                              <>
-                                <tr>
-                                  <td><strong>L Shoulder{gameId === "gta" ? " (Handbrake)" : ""}</strong></td>
-                                  <td><kbd>Q</kbd></td>
-                                </tr>
-                                <tr>
-                                  <td><strong>R Shoulder{gameId === "gta" ? " (Aim / Camera)" : ""}</strong></td>
-                                  <td><kbd>E</kbd></td>
-                                </tr>
-                              </>
-                            )}
-                            <tr>
-                              <td><strong>Start</strong></td>
-                              <td><kbd>Enter</kbd></td>
-                            </tr>
-                            <tr>
-                              <td><strong>Select</strong></td>
-                              <td><kbd>Shift</kbd></td>
-                            </tr>
-                          </>
-                        )}
-                        <tr>
-                          <td><strong>Fullscreen</strong></td>
-                          <td><kbd>F</kbd></td>
-                        </tr>
-                        {spec.core === "nds" && (
-                          <tr>
-                            <td><strong>DS Stylus</strong></td>
-                            <td>Mouse click & drag on bottom screen</td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
+                          </tbody>
+                        </table>
+                      </div>
+                    ))}
 
-                  <div className="retro-controls-section">
-                    <h5>🎮 Gamepad & Features</h5>
-                    <p>Standard USB & Bluetooth controllers are automatically mapped.</p>
-                    <ul>
-                      {spec.aspectRatio === "2/3" && (
-                        <li><strong>Touchscreen:</strong> The bottom DS screen responds directly to mouse clicks and drag gestures.</li>
-                      )}
-                      <li><strong>Remapping:</strong> Click the in-emulator ⚙ gear menu to rebind any key or controller button.</li>
-                      <li><strong>Touch:</strong> On-screen virtual gamepad enabled on touchscreens.</li>
-                      <li><strong>Save States:</strong> Available directly from the emulator menu. Progress is saved locally in your browser.</li>
-                    </ul>
+                    <div className="retro-controls-section">
+                      <h5>🎮 Gamepad & Features</h5>
+                      <p>Standard USB & Bluetooth controllers are automatically mapped.</p>
+                      <ul>
+                        {spec.aspectRatio === "2/3" && (
+                          <li><strong>Touchscreen:</strong> The bottom DS screen responds directly to mouse clicks and drag gestures.</li>
+                        )}
+                        <li><strong>Remapping:</strong> Click the in-emulator ⚙ gear menu to rebind any key or controller button.</li>
+                        <li><strong>Touch:</strong> On-screen virtual gamepad enabled on touchscreens.</li>
+                        <li><strong>Save States:</strong> Available directly from the emulator menu. Progress is saved locally in your browser.</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
 
       {/* Footer Info & Disclaimer */}
       <footer className="retro-emulator-footer">
         <div className="retro-emulator-help-hint">
-          {gameId === "mario"
-            ? "⌨ Move: ←/→ | Jump: X | Run: Z | Pipe: ↓ | Start: Enter | 1P/2P: Shift | Fullscreen: F"
-            : gameId === "gta"
-            ? "⌨ Walk/Steer: Arrows | Gas/A: X | Brake/Rev/B: Z | Car/Y: A | Handbrake/L: Q | Stylus: Bottom Screen"
-            : `⌨ D-Pad: Arrows | A: X | B: Z | Start: Enter | Select: Shift | Fullscreen: F`}
+          {GAME_CONTROLS[gameId]?.footer || "⌨ D-Pad: Arrows | A: X | B: Z | Start: Enter | Select: Shift | Fullscreen: F"}
         </div>
         <div className="retro-emulator-disclaimer">
           Game files are provided by the user. All trademarks belong to their respective owners.

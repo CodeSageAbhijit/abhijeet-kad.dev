@@ -126,11 +126,49 @@
       margin-top: 12px;
       font-size: 10px;
       color: #cbd5e1;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 6px 12px;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.85);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(125, 211, 252, 0.25);
       line-height: 1.5;
+      max-width: 370px;
+      width: 100%;
+    }
+    .retro-key-group-title {
+      font-size: 9px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #7dd3fc;
+      margin: 4px 0 3px;
+    }
+    .retro-key-group-title:first-child {
+      margin-top: 0;
+    }
+    .retro-key-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 10px;
+    }
+    .retro-key-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #e2e8f0;
+      font-size: 10px;
+    }
+    .retro-key-badge kbd {
+      display: inline-block;
+      padding: 1px 5px;
+      font-family: "Lucida Console", monospace;
+      font-size: 10px;
+      font-weight: bold;
+      color: #0f172a;
+      background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
+      border: 1px solid #94a3b8;
+      border-radius: 3px;
+      box-shadow: 0 1px 0 #475569;
     }
   </style>
 </head>
@@ -188,18 +226,42 @@
         overlaySystem.innerText = sysNames[core] || core.toUpperCase();
       }
       if (overlayControls) {
+        const badge = (label, keys) =>
+          `<span class="retro-key-badge"><span>${label}</span>${keys.map(k => `<kbd>${k}</kbd>`).join('')}</span>`;
+        const row = (items) => `<div class="retro-key-row">${items.join('')}</div>`;
+        const lowerName = gameName.toLowerCase();
+
         if (core === 'segaMD') {
-          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrow keys | <strong>A:</strong> Z | <strong>B:</strong> X | <strong>C:</strong> C<br><strong>Start:</strong> Enter | <strong>Mode:</strong> Shift | <strong>X/Y/Z:</strong> A/S/D';
+          overlayControls.innerHTML =
+            '<div class="retro-key-group-title">Sonic Controls</div>' +
+            row([badge('Run', ['←', '→']), badge('Spin Dash', ['↓']), badge('Jump', ['Z', 'X', 'C']), badge('Start', ['Enter'])]);
         } else if (core === 'nds') {
-          overlayControls.innerHTML = '⌨ <strong>Walk / Steer:</strong> Arrows | <strong>Gas / A:</strong> X | <strong>Brake & Rev / B:</strong> Z | <strong>Enter Car / Y:</strong> A<br><strong>Handbrake / L:</strong> Q | <strong>Attack / X:</strong> S | <strong>Start:</strong> Enter | <strong>Stylus:</strong> Bottom Screen';
+          overlayControls.innerHTML =
+            '<div class="retro-key-group-title">On Foot</div>' +
+            row([badge('Walk', ['↑↓←→']), badge('Sprint', ['Z']), badge('Attack', ['S']), badge('Enter Car', ['A'])]) +
+            '<div class="retro-key-group-title">In Car (Driving)</div>' +
+            row([badge('Steer', ['←', '→']), badge('Gas', ['X']), badge('Brake/Rev', ['Z']), badge('Drift', ['Q']), badge('Exit Car', ['A'])]) +
+            '<div class="retro-key-group-title">Touchscreen & Menu</div>' +
+            row([badge('Start', ['Enter']), badge('Stylus', ['Mouse on Bottom Screen'])]);
         } else if (core === 'snes') {
-          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>X:</strong> S | <strong>Y:</strong> A<br><strong>Start:</strong> Enter | <strong>Select:</strong> Shift | <strong>L/R:</strong> Q/E';
+          overlayControls.innerHTML =
+            '<div class="retro-key-group-title">Zelda: ALTTP Controls</div>' +
+            row([badge('Walk', ['↑↓←→']), badge('Sword', ['A']), badge('Lift/Talk', ['X']), badge('Item', ['S']), badge('Cancel', ['Z']), badge('Menu', ['Enter'])]);
         } else if (core === 'gba') {
-          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>Start:</strong> Enter | <strong>Select:</strong> Shift | <strong>L/R:</strong> Q/E';
-        } else if (gameName.toLowerCase().includes('mario')) {
-          overlayControls.innerHTML = '⌨ <strong>Move:</strong> ← / → | <strong>Jump (A):</strong> X | <strong>Run / Fire (B):</strong> Z | <strong>Crouch / Pipe:</strong> ↓<br><strong>Start:</strong> Enter | <strong>1P/2P (Select):</strong> Shift';
+          overlayControls.innerHTML =
+            '<div class="retro-key-group-title">Pokémon Emerald Controls</div>' +
+            row([badge('Walk', ['↑↓←→']), badge('Confirm/Talk', ['X']), badge('Back/Run', ['Z']), badge('Menu', ['Enter']), badge('Select', ['Shift'])]);
+        } else if (lowerName.includes('mario')) {
+          overlayControls.innerHTML =
+            '<div class="retro-key-group-title">Super Mario Bros. Controls</div>' +
+            row([badge('Move', ['←', '→']), badge('Jump', ['X']), badge('Run/Fire', ['Z']), badge('Pipe', ['↓']), badge('Start', ['Enter']), badge('1P/2P', ['Shift'])]);
+        } else if (lowerName.includes('pac')) {
+          overlayControls.innerHTML =
+            '<div class="retro-key-group-title">Pac-Man Controls</div>' +
+            row([badge('Steer Maze', ['↑↓←→']), badge('Start', ['Enter']), badge('1P/2P', ['Shift'])]);
         } else {
-          overlayControls.innerHTML = '⌨ <strong>D-Pad:</strong> Arrows | <strong>A:</strong> X | <strong>B:</strong> Z | <strong>Start:</strong> Enter | <strong>Select:</strong> Shift';
+          overlayControls.innerHTML =
+            row([badge('D-Pad', ['↑↓←→']), badge('A', ['X']), badge('B', ['Z']), badge('Start', ['Enter']), badge('Select', ['Shift'])]);
         }
       }
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GAME_CONTROLS } from "./emulator/gameControls";
 import {
   MarioIcon,
   SonicIcon,
@@ -190,7 +191,7 @@ export default function RetroGamesDirectory({ onLaunch }) {
           className={`retro-gtab ${filter === "console" ? "is-active" : ""}`}
           onClick={() => setFilter("console")}
         >
-          🎮 Console Emulators (NES, SNES, Genesis, GBA, PS1)
+          🎮 Console Emulators (NES, SNES, Genesis, GBA, DS)
         </button>
         <button
           type="button"
@@ -242,6 +243,30 @@ export default function RetroGamesDirectory({ onLaunch }) {
               </div>
             </div>
           </div>
+
+          {/* Controls Summary Box */}
+          {GAME_CONTROLS[selectedGame.id] && (
+            <div className="retro-gpanel">
+              <header className="retro-gpanel-head">Controls</header>
+              <div className="retro-gpanel-body retro-gcontrols-body">
+                {GAME_CONTROLS[selectedGame.id].sections.map((section) => (
+                  <div key={section.title} className="retro-gcontrols-section">
+                    <div className="retro-gcontrols-subhead">{section.title}</div>
+                    {section.rows.map((row) => (
+                      <div key={row.action} className="retro-gcontrols-row">
+                        <span>{row.action}</span>
+                        <span className="retro-gcontrols-keys">
+                          {row.keys.map((k) => (
+                            <kbd key={k} className="retro-gcontrols-kbd">{k}</kbd>
+                          ))}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </aside>
 
         {/* Right Games Grid */}
