@@ -143,6 +143,19 @@ export const GAME_CONTROLS = {
       },
     ],
   },
+  pinball: {
+    sections: [
+      {
+        title: "🚀 Midnight Transit Pinball",
+        rows: [
+          { action: "Left Flipper", keys: ["←", "A", "Left Shift"] },
+          { action: "Right Flipper", keys: ["→", "D", "Right Shift"] },
+          { action: "Launch Plunger", keys: ["Space"] },
+          { action: "Pause / Resume", keys: ["P"] },
+        ],
+      },
+    ],
+  },
   memory: {
     sections: [
       {

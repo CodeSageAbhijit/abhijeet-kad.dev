@@ -5,24 +5,24 @@ import {
   SonicIcon,
   PokemonIcon,
   GtaIcon,
-  ViceCityIcon,
   ZeldaIcon,
   PacmanIcon,
   MinesweeperIcon,
+  PinballIcon,
   TileIcon,
   GamesFolderIcon,
 } from "./RetroIcons";
 
 export const GAMES_CATALOG = [
   {
-    id: "vicecity",
-    name: "Grand Theft Auto: Vice City",
-    category: "3D Open World Action",
-    system: "PC / WebGL",
-    year: "2002",
-    publisher: "Rockstar Games",
-    description: "Welcome to 1986 Vice City. Step into Tommy Vercetti's shoes with full 3D open-world gameplay, 80s synth radio, sports cars, and neon-lit streets.",
-    icon: <ViceCityIcon size={32} />,
+    id: "pinball",
+    name: "Midnight Transit Pinball",
+    category: "Windows Classic",
+    system: "Windows XP Pinball Engine",
+    year: "2001",
+    publisher: "Abhijit Retro Suite",
+    description: "Retro Windows XP arcade pinball table with neon rail bumpers, slingshots, multiplier ramps, and synth chimes.",
+    icon: <PinballIcon size={32} />,
     rating: "★★★★★",
   },
   {
@@ -138,7 +138,7 @@ export const GAMES_CATALOG = [
 ];
 
 export default function RetroGamesDirectory({ onLaunch }) {
-  const [selectedId, setSelectedId] = useState("mario");
+  const [selectedId, setSelectedId] = useState("pinball");
   const [filter, setFilter] = useState("all");
 
   const selectedGame = GAMES_CATALOG.find((g) => g.id === selectedId) || GAMES_CATALOG[0];

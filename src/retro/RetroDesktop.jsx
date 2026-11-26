@@ -14,6 +14,8 @@ import RetroMinesweeper from "./RetroMinesweeper";
 import RetroGamesDirectory from "./RetroGamesDirectory";
 import RetroEmulatorApp from "./emulator/RetroEmulatorApp";
 import RetroViceCity from "./RetroViceCity";
+import RetroPinball from "./pinball/RetroPinball";
+import RetroVideoPlayer from "./RetroVideoPlayer";
 import { playWindowSound } from "./startupSound";
 import {
   ControlPanelIcon,
@@ -22,15 +24,21 @@ import {
   ViceCityIcon,
   InternetExplorerIcon,
   MarioIcon,
+  MediaPlayerClassicIcon,
   MinesweeperIcon,
   MyComputerIcon,
   NotepadIcon,
   PacmanIcon,
   PaintIcon,
   PalmAvatar,
+  PinballIcon,
   PokemonIcon,
+  ShowDesktopIcon,
   SonicIcon,
   TileIcon,
+  TrayNetworkIcon,
+  TrayShieldIcon,
+  TrayVolumeIcon,
   TurnOffComputerIcon,
   WindowsFlagIcon,
   WindowsMediaPlayerIcon,
@@ -155,6 +163,24 @@ const applications = {
     height: 340,
     Program: Notes,
   },
+  pinball: {
+    name: "Midnight Transit Pinball",
+    shortName: "Pinball",
+    icon: <PinballIcon size={16} />,
+    largeIcon: <PinballIcon size={32} />,
+    width: 600,
+    height: 520,
+    Program: RetroPinball,
+  },
+  mpc: {
+    name: "Media Player Classic - v6.4.9.1",
+    shortName: "Media Player Classic",
+    icon: <MediaPlayerClassicIcon size={16} />,
+    largeIcon: <MediaPlayerClassicIcon size={32} />,
+    width: 600,
+    height: 430,
+    Program: RetroVideoPlayer,
+  },
   pictures: {
     name: "Pictures",
     shortName: "Pictures",
@@ -191,24 +217,19 @@ const desktopShortcuts = [
   "files",
   "browser",
   "music",
+  "mpc",
   "games",
-  "vicecity",
-  "mario",
-  "sonic",
-  "pokemon",
-  "gta",
-  "zelda",
-  "pacman",
-  "minesweeper",
   "notes",
+  "vicecity",
 ];
-const startPrograms = ["browser", "music", "games", "vicecity", "mario", "sonic", "pokemon", "gta", "zelda", "pacman", "minesweeper", "notes"];
+const startPinned = ["browser", "mpc"];
+const startPrograms = ["music", "games", "vicecity", "pinball", "notes"];
 const startPlaces = ["files", "pictures", "calendar", "settings"];
 
 function Games({ onLaunch }) {
   return (
     <div className="retro-game-list">
-      {["vicecity", "mario", "sonic", "pokemon", "gta", "zelda", "pacman", "minesweeper"].map((id) => (
+      {["pinball", "mario", "sonic", "pokemon", "gta", "zelda", "pacman", "minesweeper"].map((id) => (
         <button type="button" className="retro-native-button" key={id} onClick={() => onLaunch(id)}>
           {applications[id].icon} {applications[id].name}
         </button>
@@ -422,7 +443,10 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
     desktopSnapshot.current = [];
     setWindows((current) => {
       const offset = (Object.keys(current).length % 5) * 16;
-      const position = { x: 30 + offset, y: 15 + offset };
+      const position =
+        id === "pinball"
+          ? { x: 40, y: 10 }
+          : { x: 30 + offset, y: 15 + offset };
       return {
         ...current,
         [id]: { ...position, maximized: false, ...current[id], ...options, order: top, minimized: false },
@@ -469,7 +493,7 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
           if (event.target === event.currentTarget && menu.current) menu.current.open = false;
         }}
       >
-        {/* Classic Windows XP Desktop Shortcuts (left vertical column) */}
+        {/* Classic Windows XP Desktop Shortcuts (aligned vertical columns) */}
         <nav className="retro-shortcuts" aria-label="Desktop shortcuts">
           {desktopShortcuts.map((id) => (
             <button type="button" key={id} onClick={() => launch(id)}>
@@ -518,11 +542,11 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
         {/* Start Button & Start Menu */}
         <details className="retro-menu" ref={menu}>
           <summary title="Click here to begin">
-            <WindowsFlagIcon size={16} />
-            <span className="retro-start-text">start</span>
+            <WindowsFlagIcon size={17} />
+            <span className="retro-start-text">Start</span>
           </summary>
 
-          {/* Windows XP Authentic Two-Tone Start Menu (Image 3) */}
+          {/* Windows XP Authentic Two-Tone Start Menu */}
           <div className="retro-menu-panel">
             {/* Top User Banner */}
             <div className="retro-menu-user-banner">
@@ -534,11 +558,34 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
 
             <div className="retro-menu-columns">
               <div className="retro-menu-left-col">
+                {startPinned.map((id) => (
+                  <button
+                    type="button"
+                    key={id}
+                    className="retro-menu-item-prominent"
+                    onClick={() => launch(id)}
+                  >
+                    {applications[id].icon}
+                    <div>
+                      <strong>{applications[id].shortName}</strong>
+                      <small>{id === "browser" ? "Portfolio Explorer" : "Classic Video Player"}</small>
+                    </div>
+                  </button>
+                ))}
+                <div className="retro-menu-sep" />
                 {startPrograms.map((id) => (
                   <button type="button" key={id} className="retro-menu-item" onClick={() => launch(id)}>
                     {applications[id].icon}<span>{applications[id].shortName}</span>
                   </button>
                 ))}
+                <button
+                  type="button"
+                  className="retro-menu-all-programs"
+                  onClick={() => launch("games")}
+                >
+                  <span>All Programs</span>
+                  <span className="retro-all-programs-arrow">▶</span>
+                </button>
               </div>
               <div className="retro-menu-right-col">
                 {startPlaces.map((id) => (
@@ -577,10 +624,34 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
             </div>
           </div>
         </details>
-        <div className="retro-quick-launch">
-          <button type="button" className="retro-ql-btn" onClick={toggleDesktop}
-            title="Show or restore desktop" aria-label="Show or restore desktop">
-            <MyComputerIcon size={16} />
+        <div className="retro-quick-launch" aria-label="Quick Launch">
+          <span className="retro-ql-gripper" aria-hidden="true" />
+          <button
+            type="button"
+            className="retro-ql-btn"
+            onClick={toggleDesktop}
+            title="Show Desktop"
+            aria-label="Show or restore desktop"
+          >
+            <ShowDesktopIcon size={16} />
+          </button>
+          <button
+            type="button"
+            className="retro-ql-btn"
+            onClick={() => launch("browser")}
+            title="Launch Internet Explorer"
+            aria-label="Launch Internet Explorer"
+          >
+            <InternetExplorerIcon size={15} />
+          </button>
+          <button
+            type="button"
+            className="retro-ql-btn"
+            onClick={() => launch("mpc")}
+            title="Media Player Classic"
+            aria-label="Launch Media Player Classic"
+          >
+            <MediaPlayerClassicIcon size={15} />
           </button>
         </div>
 
@@ -605,6 +676,16 @@ export default function RetroDesktop({ userName, toggles, onType, onRestart, onP
 
         {/* Notification Area / System Tray (Right) */}
         <div className="retro-system-tray">
+          <span className="retro-tray-chevron" aria-hidden="true">‹</span>
+          <span className="retro-tray-icon" title="Windows Security Center: Alerts">
+            <TrayShieldIcon size={13} />
+          </span>
+          <span className="retro-tray-icon" title="Local Area Connection: Connected">
+            <TrayNetworkIcon size={13} />
+          </span>
+          <span className="retro-tray-icon" title="Volume">
+            <TrayVolumeIcon size={13} />
+          </span>
           <TrayPhoneRingtone />
           <DesktopClock onOpen={() => launch("calendar")} />
         </div>

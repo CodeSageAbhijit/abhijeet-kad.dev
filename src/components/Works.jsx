@@ -56,7 +56,6 @@ const SecretRouteScreen = ({ route, name, defaultUrl, onReset }) => {
           <div style={{ color: "#94a3b8" }}>BUGS_FIXED=<span style={{ color: "#4ade80" }}>42</span></div>
           <div style={{ color: "#94a3b8" }}>BUGS_CREATED=<span style={{ color: "#ff5f57" }}>43</span></div>
           <div style={{ color: "#94a3b8" }}>HIRE_SIGNAL=<span style={{ color: "#4fc3f7" }}>STRONG_YES</span></div>
-          <div style={{ color: "#94a3b8" }}>SECRET_NOTE=<span style={{ color: "#c084fc" }}>"nice_curiosity_recruiter"</span></div>
         </div>
       ) : route === "admin" ? (
         <div style={{ margin: "auto 0", textAlign: "center" }}>

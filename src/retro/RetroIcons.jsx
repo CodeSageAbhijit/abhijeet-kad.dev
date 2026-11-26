@@ -605,3 +605,105 @@ export function SolitaireIcon({ size = 32 }) {
     </svg>
   );
 }
+
+export function PinballIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      <rect x="6" y="4" width="20" height="24" rx="2" fill="#101428" stroke="#506080" strokeWidth="1" />
+      <circle cx="16" cy="13" r="5" stroke="#7040D0" strokeWidth="1.5" />
+      <circle cx="16" cy="13" r="2" fill="#FFC820" />
+      <circle cx="11" cy="9" r="2" fill="#E03020" stroke="#FFFFFF" strokeWidth="0.8" />
+      <circle cx="21" cy="9" r="2" fill="#E03020" stroke="#FFFFFF" strokeWidth="0.8" />
+      <line x1="10" y1="23" x2="14" y2="22" stroke="#FF4020" strokeWidth="2" strokeLinecap="round" />
+      <line x1="22" y1="23" x2="18" y2="22" stroke="#FF4020" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="18" cy="17" r="1.8" fill="url(#pinballBallGrad)" />
+      <defs>
+        <radialGradient id="pinballBallGrad" cx="30%" cy="30%" r="70%">
+          <stop stopColor="#FFFFFF" />
+          <stop offset="0.6" stopColor="#C0C8D0" />
+          <stop offset="1" stopColor="#506070" />
+        </radialGradient>
+      </defs>
+    </svg>
+  );
+}
+
+export function ShowDesktopIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      {/* Classic XP desk blotter & notepad sheet */}
+      <rect x="2" y="10" width="20" height="10" rx="1.5" fill="#1E5DC8" stroke="#0C2E6E" strokeWidth="1.2" />
+      <rect x="4" y="12" width="16" height="6" fill="#5BA6F8" />
+      <rect x="7" y="4" width="10" height="12" rx="1" fill="#FFFDF5" stroke="#64748B" strokeWidth="1" />
+      <line x1="9" y1="7" x2="15" y2="7" stroke="#60A5FA" strokeWidth="1.2" />
+      <line x1="9" y1="10" x2="15" y2="10" stroke="#94A3B8" strokeWidth="1.2" />
+      {/* Tiny yellow pencil */}
+      <path d="M16 6L19 9L14 14L11 11L16 6Z" fill="#FBBF24" stroke="#B45309" strokeWidth="0.8" />
+    </svg>
+  );
+}
+
+export function TrayVolumeIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+      <path d="M3 8H6.5L11 4V16L6.5 12H3V8Z" fill="#E0F2FE" stroke="#0C4A6E" strokeWidth="1" />
+      <path d="M13.5 7.2C14.7 8.4 14.7 11.6 13.5 12.8" stroke="#BAE6FD" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M15.8 5.2C17.8 7.6 17.8 12.4 15.8 14.8" stroke="#7DD3FC" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function TrayShieldIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+      {/* Classic XP Windows Security Center shield (matches win32.run tray) */}
+      <path d="M10 2L16.5 4.8V9.5C16.5 13.6 13.7 16.9 10 18C6.3 16.9 3.5 13.6 3.5 9.5V4.8L10 2Z" fill="#DC2626" stroke="#F8FAFC" strokeWidth="1.1" />
+      <path d="M10 4L14.8 6V9.4C14.8 12.6 12.7 15.1 10 16V4Z" fill="#EF4444" />
+      <path d="M9.3 7.5H10.7V11.2H9.3V7.5ZM9.3 12.2H10.7V13.6H9.3V12.2Z" fill="#FFFFFF" />
+    </svg>
+  );
+}
+
+export function TrayNetworkIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+      <rect x="2" y="4" width="9" height="7" rx="1" fill="#38BDF8" stroke="#0C4A6E" strokeWidth="1" />
+      <rect x="9" y="8" width="9" height="7" rx="1" fill="#60A5FA" stroke="#0C4A6E" strokeWidth="1" />
+      <rect x="4" y="5.5" width="5" height="3.5" fill="#0EA5E9" />
+      <rect x="11" y="9.5" width="5" height="3.5" fill="#93C5FD" />
+    </svg>
+  );
+}
+
+export function MediaPlayerClassicIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+      {/* Classic Gabest 321 Clapperboard icon */}
+      <g transform="rotate(-7 16 6)">
+        <rect x="4" y="4" width="23" height="5.5" rx="1" fill="#18181B" stroke="#09090B" strokeWidth="1" />
+        <polygon points="7,4.5 10.5,4.5 8.5,9 5,9" fill="#F8FAFC" />
+        <polygon points="14,4.5 17.5,4.5 15.5,9 12,9" fill="#F8FAFC" />
+        <polygon points="21,4.5 24.5,4.5 22.5,9 19,9" fill="#F8FAFC" />
+      </g>
+      {/* Green/white/red rounded body */}
+      <rect x="4" y="10" width="24" height="17" rx="2.5" fill="#E2E8F0" stroke="#1E293B" strokeWidth="1.2" />
+      <rect x="5" y="11" width="22" height="15" rx="1.8" fill="#16A34A" />
+      <rect x="6" y="12" width="20" height="13" rx="1.2" fill="#FFFFFF" />
+      {/* Classic 321 Film Numbering */}
+      <text
+        x="16"
+        y="21.5"
+        textAnchor="middle"
+        fill="#111827"
+        fontFamily="Arial Black, Impact, Tahoma, sans-serif"
+        fontWeight="900"
+        fontSize="9.5"
+        letterSpacing="-0.5"
+      >
+        321
+      </text>
+      {/* Red corner play accent */}
+      <rect x="5.5" y="22.5" width="21" height="2.2" fill="#DC2626" rx="0.5" />
+    </svg>
+  );
+}

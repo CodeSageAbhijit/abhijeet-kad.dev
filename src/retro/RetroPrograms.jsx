@@ -3,7 +3,16 @@ import { authenticatedClient, spiritsEnabled } from "../spirits/api";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Link } from "react-router-dom";
 import { designFocus, experiences, projects, technologies } from "../constants";
-import { InternetExplorerIcon, MyDocumentsIcon } from "./RetroIcons";
+import {
+  ControlPanelIcon,
+  GamesFolderIcon,
+  InternetExplorerIcon,
+  MediaPlayerClassicIcon,
+  MyComputerIcon,
+  MyDocumentsIcon,
+  PaintIcon,
+  WindowsMediaPlayerIcon,
+} from "./RetroIcons";
 import { markEasterEggFound, track, trackHiddenFeature } from "../utils/analytics";
 
 const site = "abhijit-kad.dev";
@@ -544,40 +553,324 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
   );
 }
 
-export function ProjectFiles({ onOpenPictures }) {
-  const [project, setProject] = useState(null);
+export function ProjectFiles({ onOpenPictures, onLaunch }) {
+  const [navHistory, setNavHistory] = useState([{ view: "root", project: null }]);
+  const [navIdx, setNavIdx] = useState(0);
+  const current = navHistory[navIdx] || { view: "root", project: null };
+
+  function go(nextEntry) {
+    setNavHistory((prev) => [...prev.slice(0, navIdx + 1), nextEntry]);
+    setNavIdx((idx) => idx + 1);
+  }
+
+  function stepBack() {
+    if (navIdx > 0) setNavIdx((idx) => idx - 1);
+  }
+
+  function stepForward() {
+    if (navIdx < navHistory.length - 1) setNavIdx((idx) => idx + 1);
+  }
+
+  function stepUp() {
+    if (current.view === "detail") go({ view: "projects", project: null });
+    else if (current.view !== "root") go({ view: "root", project: null });
+  }
+
+  const addressText =
+    current.view === "root"
+      ? "My Computer"
+      : current.view === "sysinfo"
+        ? "Control Panel\\System Information"
+        : current.view === "projects"
+          ? "D:\\Portfolio Projects"
+          : `D:\\Portfolio Projects\\${current.project?.name || ""}`;
 
   return (
-    <div className="retro-explorer-window">
-      <div className="retro-explorer-addressbar">
-        <button type="button" className="retro-native-button" disabled={!project} onClick={() => setProject(null)}>‹ Projects</button>
-        {project && <span>{project.name}</span>}
+    <div className="retro-explorer-window retro-xp-explorer">
+      {/* Classic Explorer Menu & Navigation Toolbar */}
+      <div className="retro-exp-toolbar">
+        <div className="retro-exp-toolbtn-group">
+          <button
+            type="button"
+            className="retro-exp-toolbtn"
+            disabled={navIdx === 0}
+            onClick={stepBack}
+          >
+            <span className="exp-arrow">◀</span> Back
+          </button>
+          <button
+            type="button"
+            className="retro-exp-toolbtn"
+            disabled={navIdx >= navHistory.length - 1}
+            onClick={stepForward}
+          >
+            <span className="exp-arrow">▶</span>
+          </button>
+          <button
+            type="button"
+            className="retro-exp-toolbtn"
+            disabled={current.view === "root"}
+            onClick={stepUp}
+          >
+            ▲ Up
+          </button>
+          <div className="retro-exp-sep" />
+          <button
+            type="button"
+            className="retro-exp-toolbtn"
+            onClick={() => go({ view: "projects", project: null })}
+          >
+            📁 Projects
+          </button>
+          <button
+            type="button"
+            className="retro-exp-toolbtn"
+            onClick={() => go({ view: "sysinfo", project: null })}
+          >
+            🖥 System
+          </button>
+        </div>
       </div>
-      <div className="retro-ie-content-area">
-        {project ? (
-          <section className="retro-web-content">
-            <ProjectDetails project={project} />
-            {!!project.images?.length && <button type="button" className="retro-native-button" onClick={() => onOpenPictures(project.name)}>View screenshots</button>}
-          </section>
-        ) : (
-          <div className="retro-items-grid retro-project-folder">
-            {projects.map((item) => (
+
+      {/* Address Bar */}
+      <div className="retro-exp-address-row">
+        <span className="retro-exp-address-label">Address</span>
+        <div className="retro-exp-address-box">
+          <MyComputerIcon size={15} />
+          <span className="retro-exp-address-path">{addressText}</span>
+        </div>
+      </div>
+
+      {/* Two-Pane XP Explorer Body */}
+      <div className="retro-xp-body">
+        <aside className="retro-games-sidebar retro-xp-sidebar">
+          <div className="retro-gpanel">
+            <header className="retro-gpanel-head">System Tasks</header>
+            <div className="retro-gpanel-body">
               <button
-                className="retro-item-tile"
                 type="button"
-                key={item.name}
-                onClick={() => {
-                  track("Project Opened", { project_name: item.name });
-                  setProject(item);
-                }}
+                className="retro-glink-btn"
+                onClick={() => go({ view: "sysinfo", project: null })}
               >
-                <MyDocumentsIcon size={28} /><span>{item.name}</span>
+                ⓘ View system information
               </button>
-            ))}
+              <button
+                type="button"
+                className="retro-glink-btn"
+                onClick={() => go({ view: "projects", project: null })}
+              >
+                📂 Browse built projects ({projects.length})
+              </button>
+              <button
+                type="button"
+                className="retro-glink-btn"
+                onClick={() => onLaunch?.("settings")}
+              >
+                ⚙ Change settings
+              </button>
+            </div>
           </div>
-        )}
+
+          <div className="retro-gpanel">
+            <header className="retro-gpanel-head">Other Places</header>
+            <div className="retro-gpanel-body">
+              <button
+                type="button"
+                className="retro-glink-btn"
+                onClick={() => go({ view: "root", project: null })}
+              >
+                💻 My Computer
+              </button>
+              <button
+                type="button"
+                className="retro-glink-btn"
+                onClick={() => onLaunch?.("music")}
+              >
+                🎵 My Music
+              </button>
+              <button
+                type="button"
+                className="retro-glink-btn"
+                onClick={() => onOpenPictures?.()}
+              >
+                🖼 My Pictures
+              </button>
+              <button
+                type="button"
+                className="retro-glink-btn"
+                onClick={() => onLaunch?.("mpc")}
+              >
+                🎬 Media Player Classic
+              </button>
+              <button
+                type="button"
+                className="retro-glink-btn"
+                onClick={() => onLaunch?.("games")}
+              >
+                🎮 Games Directory
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <div className="retro-xp-content">
+          {current.view === "root" && (
+            <div className="retro-xp-sections">
+              <section className="retro-xp-group">
+                <h4>Files Stored on This Computer</h4>
+                <div className="retro-xp-tile-grid">
+                  <button
+                    type="button"
+                    className="retro-xp-tile"
+                    onClick={() => onLaunch?.("music")}
+                  >
+                    <WindowsMediaPlayerIcon size={32} />
+                    <span>My Music</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="retro-xp-tile"
+                    onClick={() => onOpenPictures?.()}
+                  >
+                    <PaintIcon size={32} />
+                    <span>My Pictures</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="retro-xp-tile"
+                    onClick={() => onLaunch?.("mpc")}
+                  >
+                    <MediaPlayerClassicIcon size={32} />
+                    <span>My Videos</span>
+                  </button>
+                </div>
+              </section>
+
+              <section className="retro-xp-group">
+                <h4>Hard Disk Drives</h4>
+                <div className="retro-xp-tile-grid">
+                  <button
+                    type="button"
+                    className="retro-xp-tile"
+                    onClick={() => go({ view: "sysinfo", project: null })}
+                  >
+                    <ControlPanelIcon size={32} />
+                    <span>Local Disk (C:)</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="retro-xp-tile"
+                    onClick={() => go({ view: "projects", project: null })}
+                  >
+                    <MyDocumentsIcon size={32} />
+                    <span>Projects (D:)</span>
+                  </button>
+                </div>
+              </section>
+
+              <section className="retro-xp-group">
+                <h4>Devices with Removable Storage</h4>
+                <div className="retro-xp-tile-grid">
+                  <button
+                    type="button"
+                    className="retro-xp-tile"
+                    onClick={() => onLaunch?.("games")}
+                  >
+                    <GamesFolderIcon size={32} />
+                    <span>Retro Disc (E:)</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="retro-xp-tile"
+                    onClick={() => onLaunch?.("vicecity")}
+                  >
+                    <MyComputerIcon size={32} />
+                    <span>Vice City (F:)</span>
+                  </button>
+                </div>
+              </section>
+            </div>
+          )}
+
+          {current.view === "sysinfo" && (
+            <div className="retro-xp-sysinfo">
+              <div className="retro-xp-sys-head">
+                <MyComputerIcon size={40} />
+                <div>
+                  <strong>Microsoft Windows XP</strong>
+                  <div>Home Edition · Retro Edition</div>
+                  <div>Service Pack 3 (Mumbai Node)</div>
+                </div>
+              </div>
+              <dl className="retro-xp-sys-specs">
+                <div><dt>Processor</dt><dd>Intel® Pentium® 4 CPU 2.80GHz</dd></div>
+                <div><dt>Memory (RAM)</dt><dd>512 MB DDR SDRAM</dd></div>
+                <div><dt>Graphics</dt><dd>3D WebGL Shader Accelerator</dd></div>
+                <div><dt>Audio</dt><dd>Sound Blaster Retro Synth</dd></div>
+                <div><dt>Built Projects</dt><dd>{projects.length} Installed in D:\</dd></div>
+              </dl>
+              <button
+                type="button"
+                className="retro-native-button"
+                onClick={() => go({ view: "projects", project: null })}
+              >
+                Open Projects Drive (D:)
+              </button>
+            </div>
+          )}
+
+          {current.view === "projects" && (
+            <div className="retro-xp-sections">
+              <section className="retro-xp-group">
+                <h4>D:\Portfolio Projects ({projects.length})</h4>
+                <div className="retro-xp-tile-grid">
+                  {projects.map((item) => (
+                    <button
+                      className="retro-xp-tile"
+                      type="button"
+                      key={item.name}
+                      onClick={() => {
+                        track("Project Opened", { project_name: item.name });
+                        go({ view: "detail", project: item });
+                      }}
+                    >
+                      <MyDocumentsIcon size={32} />
+                      <span>{item.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            </div>
+          )}
+
+          {current.view === "detail" && current.project && (
+            <section className="retro-web-content">
+              <ProjectDetails project={current.project} />
+              {!!current.project.images?.length && (
+                <button
+                  type="button"
+                  className="retro-native-button"
+                  onClick={() => onOpenPictures?.(current.project.name)}
+                >
+                  View screenshots
+                </button>
+              )}
+            </section>
+          )}
+        </div>
       </div>
-      <footer className="retro-explorer-statusbar">{project ? project.type : `${projects.length} projects`}</footer>
+
+      <footer className="retro-explorer-statusbar">
+        <span>
+          {current.view === "root"
+            ? "7 objects (My Computer)"
+            : current.view === "sysinfo"
+              ? "System Properties · Windows XP SP3"
+              : current.view === "detail"
+                ? `${current.project?.type} application`
+                : `${projects.length} portfolio projects`}
+        </span>
+      </footer>
     </div>
   );
 }
