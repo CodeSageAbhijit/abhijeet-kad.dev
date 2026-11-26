@@ -30,19 +30,19 @@ const AppMobile = ({ isBooting }) => {
         <Navbar />
         <HeroMobile />
       </div>
-      
+
       <PortfolioSearch isBooting={isBooting} />
       {!isBooting && <SpiritSlot home="search" />}
       <AboutMobile />
       {!isBooting && <SpiritSlot home="overview" />}
       <ExperienceMobile />
-      
+
       {/* Optionally hide Tech if it's too heavy on Mobile or keep it */}
       {!isBooting && <SpiritSlot home="work" />}
       <TechMobile />
       {!isBooting && <SpiritSlot home="projects" />}
       <WorksMobile isBooting={isBooting} />
-      
+
       <div className='relative z-0'>
         <ContactMobile isBooting={isBooting} />
       </div>
@@ -72,9 +72,7 @@ const AppMobile = ({ isBooting }) => {
             <a href="https://www.linkedin.com/in/abhijit-kad/" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, textDecoration: "none", letterSpacing: 1 }}>// linkedin</a>
             <a href="mailto:abhijitkad62@gmail.com" style={{ color: "rgba(255,255,255,0.7)", fontSize: 14, textDecoration: "none", letterSpacing: 1 }}>// email</a>
           </div>
-          <p style={{ fontSize: 10, letterSpacing: 0.8, color: "rgba(255,255,255,0.28)", margin: 0 }}>
-            Privacy-friendly analytics enabled (?notrack=1 to opt out)
-          </p>
+
         </div>
       </footer>
     </div>

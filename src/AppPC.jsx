@@ -35,12 +35,12 @@ const AppPC = ({ isBooting }) => {
       <About />
       {!isBooting && <SpiritSlot home="overview" />}
       <Experience />
-      
+
       {!isBooting && <SpiritSlot home="work" />}
       <Tech isBooting={isBooting} />
       {!isBooting && <SpiritSlot home="projects" />}
       <Works isBooting={isBooting} />
-      
+
       <div className='relative z-0'>
         <Contact isBooting={isBooting} />
         {!isBooting && <CanvasBoundary><StarsCanvas /></CanvasBoundary>}
@@ -73,9 +73,7 @@ const AppPC = ({ isBooting }) => {
               <a href="mailto:abhijitkad62@gmail.com" style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, textDecoration: "none", letterSpacing: 1, transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = "var(--accent)"} onMouseLeave={e => e.target.style.color = "rgba(255,255,255,0.5)"}>// email</a>
             </div>
           </div>
-          <div style={{ fontSize: 10, letterSpacing: 1, color: "rgba(255,255,255,0.24)", textAlign: "right" }}>
-            Privacy-friendly analytics enabled (?notrack=1 to opt out)
-          </div>
+
         </div>
       </footer>
     </div>
