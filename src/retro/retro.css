@@ -1348,7 +1348,13 @@
 }
 */
 .retro-window[hidden] { display: none; }
-.retro-window.retro-window-maximized { inset: 0; width: 100%; height: 100% !important; }
+.retro-window.retro-window-maximized {
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-width: 0 !important;
+  border-radius: 0 !important;
+}
 .retro-window-controls { flex: none; }
 .retro-window-controls button { font-family: Tahoma, sans-serif; }
 .retro-taskbar {
@@ -1921,6 +1927,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  width: 100%;
   min-height: 0;
   background: #141b24;
   color: #e2e8f0;
@@ -3187,9 +3194,75 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  width: 100%;
   min-height: 0;
   background: #ECE9D8;
   font-family: Tahoma, sans-serif;
+  position: relative;
+}
+.retro-mpc-window.is-fullscreen {
+  width: 100% !important;
+  height: 100% !important;
+  background: #000 !important;
+}
+.retro-mpc-fullscreen-fallback {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 99999 !important;
+  background: #000 !important;
+}
+.retro-mpc-window.is-fullscreen .retro-mpc-main {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+.retro-mpc-window.is-fullscreen .retro-mpc-stage {
+  width: 100%;
+  height: 100%;
+}
+.retro-mpc-window.is-fullscreen .retro-mpc-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  background: rgba(15, 18, 24, 0.84);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+}
+.retro-mpc-window.is-fullscreen .retro-mpc-now {
+  color: #F8FAFC;
+}
+.retro-mpc-window.is-fullscreen .retro-mpc-statusbar {
+  display: none;
+}
+.retro-mpc-fs-menu-btn {
+  margin-left: auto;
+  font-weight: 700;
+}
+.retro-mpc-exit-fs-pill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 8;
+  padding: 5px 10px;
+  background: rgba(15, 18, 24, 0.78);
+  color: #F8FAFC;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 4px;
+  font: 700 11px Tahoma, sans-serif;
+  cursor: pointer;
+}
+.retro-mpc-exit-fs-pill:hover {
+  background: #316AC5;
+  border-color: #fff;
+}
+.retro-mpc-fs-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-weight: 700;
 }
 .retro-mpc-menubar {
   display: flex;

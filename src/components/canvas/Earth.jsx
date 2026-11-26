@@ -25,7 +25,7 @@ const GLOBE_RADIUS = 1.98;
 const DEFAULT_CAMERA_POS = latLonToVec3(20, 62, 6.45);
 const INDIA_CENTER_DIR = latLonToVec3(20.5, 78.5, 1).normalize();
 const NASA_ISS_VIDEO_ID = "ROboUHfPUrU";
-const NASA_ISS_EMBED_URL = `https://www.youtube.com/embed/${NASA_ISS_VIDEO_ID}?autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1`;
+const NASA_ISS_EMBED_URL = `https://www.youtube.com/embed/${NASA_ISS_VIDEO_ID}?autoplay=1&mute=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&rel=0&playsinline=1`;
 const NASA_ISS_WATCH_URL = `https://www.youtube.com/watch?v=${NASA_ISS_VIDEO_ID}`;
 
 function getCameraLod(camDist) {
@@ -1419,15 +1419,14 @@ const EarthCanvas = () => {
               </div>
             </div>
 
-            <div className="relative aspect-video w-full bg-black">
+            <div className="relative aspect-video w-full bg-black overflow-hidden">
               <iframe
                 src={NASA_ISS_EMBED_URL}
                 title="Live High-Definition Views from the International Space Station (Official NASA Stream)"
-                className="w-full h-full border-0 block"
+                className="w-full h-full border-0 block pointer-events-none"
                 credentialless=""
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
               />
             </div>
           </div>
