@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" fill="none">
+  <!-- Mixpanel iconic purple three-circle dot triad -->
+  <circle cx="34" cy="64" r="18" fill="#8B5CF6" />
+  <circle cx="71" cy="64" r="13" fill="#A78BFA" />
+  <circle cx="101" cy="64" r="8.5" fill="#C4B5FD" />
+  <!-- Subtle outer accent ring for balance -->
+  <circle cx="64" cy="64" r="52" stroke="#7856FF" stroke-opacity="0.35" stroke-width="3" />
+</svg>

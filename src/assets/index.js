@@ -13,13 +13,15 @@ import figma from "./tech/figma.png";
 import git from "./tech/git.png";
 import html from "./tech/html.png";
 import javascript from "./tech/javascript.png";
-import mongodb from "./tech/mongodb.png";
+import supabase from "./tech/supabase.svg";
 import nodejs from "./tech/nodejs.png";
 import reactjs from "./tech/reactjs.png";
-import redux from "./tech/redux.png";
+import redis from "./tech/redis.svg";
 import tailwind from "./tech/tailwind.png";
 import typescript from "./tech/typescript.png";
 import threejs from "./tech/threejs.svg";
+import aws from "./tech/aws.svg";
+import mixpanel from "./tech/mixpanel.svg";
 
 import afiml from "./company/AFIML.jpg";
 import irlLogo from "./company/irl_logo.jpeg";
@@ -61,13 +63,15 @@ export {
   git,
   html,
   javascript,
-  mongodb,
+  supabase,
   nodejs,
   reactjs,
-  redux,
+  redis,
   tailwind,
   typescript,
   threejs,
+  aws,
+  mixpanel,
   afiml,
   irlLogo,
   irlInventory,

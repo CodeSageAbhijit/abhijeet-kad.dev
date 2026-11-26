@@ -8,13 +8,15 @@ import {
   html,
   css,
   reactjs,
-  redux,
+  redis,
   tailwind,
   nodejs,
-  mongodb,
+  supabase,
   git,
   figma,
   docker,
+  aws,
+  mixpanel,
   afiml,
   irlLogo,
   irlInventory,
@@ -103,8 +105,8 @@ const technologies = [
     icon: reactjs,
   },
   {
-    name: "Redux Toolkit",
-    icon: redux,
+    name: "Redis",
+    icon: redis,
   },
   {
     name: "Tailwind CSS",
@@ -115,8 +117,8 @@ const technologies = [
     icon: nodejs,
   },
   {
-    name: "MongoDB",
-    icon: mongodb,
+    name: "Supabase",
+    icon: supabase,
   },
   {
     name: "Three JS",
@@ -134,6 +136,14 @@ const technologies = [
     name: "docker",
     icon: docker,
   },
+  {
+    name: "AWS",
+    icon: aws,
+  },
+  {
+    name: "Mixpanel",
+    icon: mixpanel,
+  },
 ];
 
 const experiences = [
@@ -144,7 +154,7 @@ const experiences = [
     icon: afiml,
     iconBg: "var(--panel-raised)",
     date: "May – Aug 2025",
-    subtitle: "Pune, India (remote)",
+    subtitle: "Pune, India",
     points: [
       "Built and deployed full-stack application features using React, Node.js, Express, Prisma and PostgreSQL.",
       "Shipped features and fixes through 50+ merged pull requests over three months and resolved 10+ merge conflicts.",
@@ -211,6 +221,7 @@ const projects = [
   {
     name: "RawTorrent",
     type: "desktop",
+    metrics: ["Multi-Process IPC", "Sequential Pipeline", "Geo Swarm + DHT"],
     description:
       "A high-performance modern Desktop BitTorrent client built with web technologies but designed to operate seamlessly as a native desktop application. Implements an isomorphic, multi-process architecture with a Next.js frontend and a backend daemon powered by Node.js, Express, WebTorrent, and bittorrent-dht to bypass Electron memory constraints. Features granular protocol controls including geospatial swarm mapping, live WebSocket integration, and a dedicated sequential writing pipeline.",
     tags: [
@@ -229,6 +240,7 @@ const projects = [
   {
     name: "I&RL Inventory Dashboard",
     type: "web",
+    metrics: ["80% Less Overhead", "Real-Time Sync", "Role-Based Approvals"],
     description:
       "Flutter + Firebase inventory management system for the Innovation & Robotics Lab. Tracks equipment requests, approvals, and stock levels — reducing manual tracking overhead by 80%.",
     tags: [
@@ -244,6 +256,7 @@ const projects = [
   {
     name: "Mini Cloud",
     type: "web",
+    metrics: ["Raspberry Pi Host", "Ngrok Tunneling", "Zero Cloud Cost"],
     description:
       "Converted old hard drives into a personal cloud system using a Raspberry Pi (Ubuntu), accessible over the internet via Ngrok tunneling and port forwarding. Built a simple web UI with Flask.",
     tags: [
@@ -262,6 +275,7 @@ const projects = [
   {
     name: "I&RL Inventory App",
     type: "mobile",
+    metrics: ["100+ Active Students", "Live Checkout Flow", "Wishlist + Queue"],
     description:
       "Flutter mobile app built for the Innovation & Robotics Lab robotics society to digitalise component borrowing. Features real-time request management, wishlist, and admin approval flow — actively serving 100+ students.",
     tags: [
@@ -276,6 +290,7 @@ const projects = [
   {
     name: "My Health App",
     type: "mobile",
+    metrics: ["1000+ Users", "Booking + Wallet", "Realtime Support Chat"],
     description:
       "Freelance Flutter app connecting patients with psychiatrists, counselors, and wellness buddies. Features mood tracking, session booking, real-time chat, and a wallet system — serving 1000+ users via REST API backend.",
     tags: [

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="supaGradA" x1="56" y1="68" x2="108" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#249361" />
+      <stop offset="100%" stop-color="#3ECF8E" />
+    </linearGradient>
+    <linearGradient id="supaGradB" x1="20" y1="30" x2="72" y2="82" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3ECF8E" />
+      <stop offset="100%" stop-color="#1E8759" />
+    </linearGradient>
+  </defs>
+  <path d="M71.5 113.2c-2.6 3.3-7.9 1.5-8-2.7l-.9-55.5h39.2c7.1 0 11.1 8.2 6.6 13.7L71.5 113.2z" fill="url(#supaGradA)" />
+  <path d="M56.5 14.8c2.6-3.3 7.9-1.5 8 2.7l.5 55.5H26.2c-7.1 0-11.1-8.2-6.6-13.7L56.5 14.8z" fill="url(#supaGradB)" />
+  <path d="M71.5 113.2c-2.6 3.3-7.9 1.5-8-2.7l-.9-55.5h39.2c7.1 0 11.1 8.2 6.6 13.7L71.5 113.2z" fill="#3ECF8E" fill-opacity="0.25" />
+</svg>

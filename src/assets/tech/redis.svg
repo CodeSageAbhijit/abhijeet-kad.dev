@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" fill="none">
+  <!-- Bottom stack layer -->
+  <path d="M112 81.8c0 5.4-21.5 13.8-48 13.8s-48-8.4-48-13.8V70.4c0 5.4 21.5 13.8 48 13.8s48-8.4 48-13.8v11.4z" fill="#A41E11" />
+  <ellipse cx="64" cy="70.4" rx="48" ry="13.8" fill="#D82C20" />
+  <!-- Middle stack layer -->
+  <path d="M112 63.6c0 5.4-21.5 13.8-48 13.8s-48-8.4-48-13.8V52.2c0 5.4 21.5 13.8 48 13.8s48-8.4 48-13.8v11.4z" fill="#A41E11" />
+  <ellipse cx="64" cy="52.2" rx="48" ry="13.8" fill="#DC382D" />
+  <!-- Top stack layer -->
+  <path d="M112 45.4c0 5.4-21.5 13.8-48 13.8s-48-8.4-48-13.8V34c0 5.4 21.5 13.8 48 13.8s48-8.4 48-13.8v11.4z" fill="#A41E11" />
+  <ellipse cx="64" cy="34" rx="48" ry="13.8" fill="#EF4444" />
+  <!-- Iconic Redis geometric shapes -->
+  <polygon points="62,22 65.5,27 72,27.5 66.8,31 68.2,36 62,33.2 55.8,36 57.2,31 52,27.5 58.5,27" fill="#FFFFFF" />
+  <ellipse cx="40" cy="35" rx="9" ry="4.2" fill="#FFFFFF" />
+  <polygon points="82,30 96,34.5 82,39" fill="#FFFFFF" />
+  <polygon points="58,41 72,38 76,43.5 62,46.5" fill="#A41E11" />
+  <polygon points="58,40.5 71,37.8 75,42.8 62,45.5" fill="#FFFFFF" />
+</svg>
