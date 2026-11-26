@@ -5,6 +5,7 @@ import { useGlobalAnalytics } from "./utils/usePortfolioAnalytics";
 
 const Portfolio = lazy(() => import("./Portfolio"));
 const RetroStation = lazy(() => import("./retro/RetroStation"));
+const EarthCanvas = lazy(() => import("./components/canvas/Earth"));
 
 export default function App() {
   const [hasBooted, setHasBooted] = useState(false);
@@ -15,6 +16,11 @@ export default function App() {
         <Route path="/retro" element={
           <Suspense fallback={<div className="fixed inset-0 grid place-items-center bg-primary text-white" role="status">Starting the desktop…</div>}>
             <RetroStation />
+          </Suspense>
+        } />
+        <Route path="/globe" element={
+          <Suspense fallback={<div className="fixed inset-0 grid place-items-center bg-[#040812] text-[#00f5ff] font-mono text-xs uppercase tracking-widest" role="status">Initializing Orbital Globe…</div>}>
+            <EarthCanvas fullscreenPage />
           </Suspense>
         } />
         <Route path="*" element={

@@ -22,6 +22,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/pulse/, ''),
       },
+      '/sdo': {
+        target: 'https://sdo.gsfc.nasa.gov',
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/sdo/, '/assets/img/latest'),
+      },
     },
   },
   optimizeDeps: {
