@@ -535,8 +535,37 @@ export function PortfolioBrowser({ onOpenProjects /* , onNavigate */ }) {
               )}
             </>
           )}
-          <SpiritSlot home="retro" />
         </div>
+        {({
+          google: "retro-google",
+          home: "retro",
+          projects: "retro-projects",
+          experience: "retro-work",
+          contact: "retro-contact",
+          orkut: "retro-orkut",
+          github: "retro-github",
+        })[currentTab] && (
+          <SpiritSlot
+            key={({
+              google: "retro-google",
+              home: "retro",
+              projects: "retro-projects",
+              experience: "retro-work",
+              contact: "retro-contact",
+              orkut: "retro-orkut",
+              github: "retro-github",
+            })[currentTab]}
+            home={({
+              google: "retro-google",
+              home: "retro",
+              projects: "retro-projects",
+              experience: "retro-work",
+              contact: "retro-contact",
+              orkut: "retro-orkut",
+              github: "retro-github",
+            })[currentTab]}
+          />
+        )}
       </div>
       <footer className="retro-ie-statusbar">
         <span>

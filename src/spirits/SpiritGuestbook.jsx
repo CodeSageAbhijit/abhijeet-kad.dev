@@ -13,7 +13,21 @@ import { markEasterEggFound, trackHiddenFeature } from "../utils/analytics";
 import "./spirits.css";
 
 const Field = createContext(null);
-const names = { hero: "Welcome", search: "Search", overview: "Overview", work: "Experience", projects: "Projects", contact: "Contact", retro: "the XP portfolio" };
+const names = {
+  hero: "Welcome",
+  search: "Search",
+  overview: "Overview",
+  work: "Experience",
+  projects: "Projects",
+  contact: "Contact",
+  retro: "the XP portfolio",
+  "retro-google": "Retro Google",
+  "retro-projects": "Retro Projects",
+  "retro-work": "Retro Experience",
+  "retro-contact": "Retro Contact",
+  "retro-orkut": "Retro Orkut",
+  "retro-github": "Retro GitHub",
+};
 const prompts = {
   hero: "What would you tell a friend to try here first?",
   search: "What did you discover on the retro computer?",
@@ -22,6 +36,12 @@ const prompts = {
   projects: "Which project deserves a closer look, and why?",
   contact: "What will you remember from this visit?",
   retro: "What should the next visitor try on this old PC?",
+  "retro-google": "What should the next explorer search on Google India?",
+  "retro-projects": "Which retro project caught your eye?",
+  "retro-work": "What stood out in the experience log?",
+  "retro-contact": "Leave a quick signal for the next explorer.",
+  "retro-orkut": "Drop a nostalgic Orkut-era thought!",
+  "retro-github": "Which repository should someone star next?",
 };
 export function SpiritField({ children }) {
   const [homes, setHomes] = useState({});
