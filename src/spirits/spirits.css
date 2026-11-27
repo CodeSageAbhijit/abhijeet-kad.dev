@@ -84,10 +84,36 @@
   font: 13px system-ui;
 }
 /* The inset desktop browser has its own scrolling viewport. */
-.spirit-lane-retro:has(.spirit-bubble) {height:auto; min-height:64px;}
-.spirit-lane-retro .spirit-perch:has(.spirit-bubble) {height:auto;width:min(100%,235px);}
-.spirit-lane-retro .spirit-trigger {width:52px;height:62px;margin-left:auto;}
-.spirit-lane-retro .spirit-bubble {position:relative;max-width:100%;margin-left:auto;}
+.spirit-lane-retro {
+  margin: 8px 0 4px;
+  padding: 0 14px;
+  height: 68px;
+}
+.spirit-lane-retro .spirit-perch {
+  height: 68px;
+  width: 58px;
+}
+.spirit-lane-retro .spirit-trigger {
+  width: 52px;
+  height: 62px;
+  margin-left: auto;
+}
+.spirit-lane-retro .spirit-bubble {
+  position: absolute;
+  top: auto;
+  bottom: calc(100% + 4px);
+  right: 0;
+  left: auto;
+  width: max-content;
+  max-width: min(230px, 54vw);
+  font-size: 12.5px;
+  z-index: 35;
+}
+@media (prefers-reduced-motion:no-preference) {
+  .spirit-lane-retro .spirit-perch:has(.spirit-trigger) {
+    transform: translate(calc(var(--inward)*var(--travel)*var(--flight-x,0)), var(--flight-y,0px));
+  }
+}
 
 /* Travel inward from the margin. The footprint stays on the ground plane. */
 .spirit-lane { --travel:clamp(38px,8vw,100px); --inward:-1; }
